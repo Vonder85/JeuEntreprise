@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Event;
+use App\models\Category;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+
+class EventController extends AbstractController
+{
+    /**
+     * @Route("/event", name="event")
+     */
+    public function index()
+    {
+        $event = new Event();
+        return $this->render('event/index.html.twig', [
+            'controller_name' => 'EventController',
+        ]);
+    }
+
+
+}
