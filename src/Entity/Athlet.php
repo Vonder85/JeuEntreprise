@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AthletRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -84,7 +85,53 @@ class Athlet extends Participant
         return $this;
     }
 
+    public function __construct()
+    {
+        $this->teamCreated = new ArrayCollection();
+    }
+
     /**
-     *
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="athlet")
      */
+    private $teamCreated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="athlets")
+     */
+    private $company;
+
+    /**
+     * @return mixed
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param mixed $company
+     */
+    public function setCompany($company): void
+    {
+        $this->company = $company;
+    }
+
+
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTeamCreated(): ArrayCollection
+    {
+        return $this->teamCreated;
+    }
+
+    /**
+     * @param ArrayCollection $teamCreated
+     */
+    public function setTeamCreated(ArrayCollection $teamCreated): void
+    {
+        $this->teamCreated = $teamCreated;
+    }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TeamRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,26 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Team extends Participant
 {
-    /**
-     * @ORM\Column(type="string", length=120)
-     */
-    private $name;
 
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function __construct()
     {
-        return $this->name;
+        $this->teamCreated = new ArrayCollection();
     }
 
     /**
-     * @param mixed $name
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="team")
      */
-    public function setName($name): void
-    {
-        $this->name = $name;
-    }
-
+    private $teamCreated;
 
 }

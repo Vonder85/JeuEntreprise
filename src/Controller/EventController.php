@@ -14,7 +14,6 @@ class EventController extends AbstractController
      */
     public function index()
     {
-        $event = new Event();
         return $this->render('event/index.html.twig', [
             'controller_name' => 'EventController',
         ]);
