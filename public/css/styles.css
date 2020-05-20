@@ -1,0 +1,15 @@
+#listHome{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+#cardHome{
+    flex-direction: row;
+    list-style-type: none;
+    justify-content: space-between
+}
+
+.bouton{
+    width: 400px;
+    margin: 15px;
+}

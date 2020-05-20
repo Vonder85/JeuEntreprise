@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+                   aria-controls="v-pills-home" aria-selected="true">Home</a>
+                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-add" role="tab"
+                   aria-controls="v-pills-profile" aria-selected="false">Add</a>
+                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
+                   aria-controls="v-pills-messages" aria-selected="false">Messages</a>
+                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"
+                   aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+            </div>
+        </div>
+        <div class="col-9" id="doForm">
+
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">Welcome to the back-office to manage !
+                </div>
+                <div class="tab-pane fade" id="v-pills-add" role="tabpanel" aria-labelledby="v-pills-add-tab">
+
+                    <div class="row">
+
+                        <div class="col-6">
+
+                            <button class="btn btn-light text-light bg-dark bouton " id="discipline">Add a discipline</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="event">Add an event</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton " id="category">Add a category</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="type">Add a type</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="athlets">add athlets</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton " id="company">Add a company</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton " id="team">Add a team</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="user">Add an user</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                    ...
+                </div>
+                <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="disciplineForm" class="col-6 form">
+        <h1>Add a Discipline</h1>
+        {{ form_start(disciplineForm) }}
+        {{ form_widget(disciplineForm) }}
+        <button type="submit">Save</button>
+        {{ form_end(disciplineForm) }}
+    </div>
+    <div id="categoryForm" class="col-6 form">
+        <h1>Add a Category</h1>
+        {{ form_start(categoryForm) }}
+        {{ form_widget(categoryForm) }}
+        <button type="submit">Save</button>
+        {{ form_end(categoryForm) }}
+    </div>
+    <div id="typeForm" class="col-6 form">
+        <h1>Add a Type</h1>
+        {{ form_start(typeForm) }}
+        {{ form_widget(typeForm) }}
+        <button type="submit">Save</button>
+        {{ form_end(typeForm) }}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        var disciplineForm = $('#disciplineForm');
+        var categoryForm = $('#categoryForm');
+        var typeForm = $('#typeForm');
+
+        $(document).ready(function(){
+            $('.form').hide();
+            $('#v-pills-profile-tab, #v-pills-home-tab').on('click', function(){
+                $('.bouton').show();
+                $('.form').hide();
+            })
+            $('#discipline').on('click', function () {
+                clickDiscipline();
+            })
+            $('#category').on('click', function () {
+                clickCategory();
+            })
+            $('#type').on('click', function () {
+                clickType();
+            })
+
+        })
+
+        function clickDiscipline(){
+            $('.bouton').hide();
+            $('#doForm').append(disciplineForm.show());
+        }
+        function clickCategory(){
+            $('.bouton').hide();
+            $('#doForm').append(categoryForm.show());
+        }
+        function clickType(){
+            $('.bouton').hide();
+            $('#doForm').append(typeForm.show());
+        }
+
+
+    </script>
+{% endblock %}
