@@ -7,19 +7,52 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\teamRepository")
  */
-class Team extends Participant
+class Team
 {
 
-    public function __construct()
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=120)
+     */
+    private $name;
+
+    public function getId(): ?int
     {
-        $this->teamCreated = new ArrayCollection();
+        return $this->id;
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="team")
+     * @return mixed
      */
-    private $teamCreated;
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    public function __construct()
+    {
+        $this->participant = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="team")
+     */
+    private $participant;
 
 }

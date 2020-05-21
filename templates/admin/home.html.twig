@@ -63,38 +63,65 @@
                     ...
                 </div>
                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                    ...
+                    <div id="disciplineForm" class="col-6 form">
+                        <h1>Add a Discipline</h1>
+                        {{ form_start(disciplineForm) }}
+                        {{ form_widget(disciplineForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(disciplineForm) }}
+                    </div>
+                    <div id="categoryForm" class="col-6 form">
+                        <h1>Add a Category</h1>
+                        {{ form_start(categoryForm) }}
+                        {{ form_widget(categoryForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(categoryForm) }}
+                    </div>
+                    <div id="typeForm" class="col-6 form">
+                        <h1>Add a Type</h1>
+                        {{ form_start(typeForm) }}
+                        {{ form_widget(typeForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(typeForm) }}
+                    </div>
+                    <div id="companyForm" class="col-6 form">
+                        <h1>Add a Company</h1>
+                        {{ form_start(companyForm) }}
+                        {{ form_widget(companyForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(companyForm) }}
+                    </div>
+                    <div id="athletForm" class="col-6 form">
+                        <h1>Add an Athlet</h1>
+                        {{ form_start(athletForm) }}
+                        {{ form_widget(athletForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(athletForm) }}
+                    </div>
+                   <<div id="teamForm" class="col-6 form">
+                        <h1>Add a Team</h1>
+                        {{ form_start(teamForm) }}
+                        {{ form_widget(teamForm) }}
+                        {{ form_start(participantForm) }}
+                        {{ form_widget(participantForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(teamForm) }}
+                        {{ form_end(participantForm) }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div id="disciplineForm" class="col-6 form">
-        <h1>Add a Discipline</h1>
-        {{ form_start(disciplineForm) }}
-        {{ form_widget(disciplineForm) }}
-        <button type="submit">Save</button>
-        {{ form_end(disciplineForm) }}
-    </div>
-    <div id="categoryForm" class="col-6 form">
-        <h1>Add a Category</h1>
-        {{ form_start(categoryForm) }}
-        {{ form_widget(categoryForm) }}
-        <button type="submit">Save</button>
-        {{ form_end(categoryForm) }}
-    </div>
-    <div id="typeForm" class="col-6 form">
-        <h1>Add a Type</h1>
-        {{ form_start(typeForm) }}
-        {{ form_widget(typeForm) }}
-        <button type="submit">Save</button>
-        {{ form_end(typeForm) }}
-    </div>
+
 {% endblock %}
 {% block javascripts %}
     <script>
         var disciplineForm = $('#disciplineForm');
         var categoryForm = $('#categoryForm');
         var typeForm = $('#typeForm');
+        var companyForm = $('#companyForm');
+        var athletForm = $('#athletForm');
+        var teamForm = $('#teamForm');
 
         $(document).ready(function(){
             $('.form').hide();
@@ -103,28 +130,52 @@
                 $('.form').hide();
             })
             $('#discipline').on('click', function () {
-                clickDiscipline();
+                showDisciplineForm();
             })
             $('#category').on('click', function () {
-                clickCategory();
+                showCategoryForm();
             })
             $('#type').on('click', function () {
-                clickType();
+                showTypeForm();
+            })
+            $('#company').on('click', function () {
+                showCompanyForm();
+            })
+            $('#athlets').on('click', function () {
+                showAthletForm();
+            })
+           $('#team').on('click', function () {
+                showTeamForm();
             })
 
         })
 
-        function clickDiscipline(){
+        /**
+         * functions show differents forms
+         */
+        function showDisciplineForm(){
             $('.bouton').hide();
             $('#doForm').append(disciplineForm.show());
         }
-        function clickCategory(){
+        function showCategoryForm(){
             $('.bouton').hide();
             $('#doForm').append(categoryForm.show());
         }
-        function clickType(){
+        function showTypeForm(){
             $('.bouton').hide();
             $('#doForm').append(typeForm.show());
+        }
+        function showCompanyForm(){
+            $('.bouton').hide();
+            $('#doForm').append(companyForm.show());
+        }
+        function showAthletForm(){
+            $('.bouton').hide();
+            $('#doForm').append(athletForm.show());
+        }
+       function showTeamForm(){
+            $('.bouton').hide();
+            $('#doForm').append(teamForm.show());
         }
 
 

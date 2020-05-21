@@ -7,10 +7,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\AthletRepository")
  */
-class Athlet extends Participant
+class Athlet
 {
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
     /**
      * @ORM\Column(type="string", length=120)
      */
@@ -30,6 +37,11 @@ class Athlet extends Participant
      * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $reference;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     /**
      * @return mixed
@@ -87,18 +99,22 @@ class Athlet extends Participant
 
     public function __construct()
     {
-        $this->teamCreated = new ArrayCollection();
+        $this->participant = new ArrayCollection();
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="athlet")
+     * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="athlet")
      */
-    private $teamCreated;
+    private $participant;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="athlets")
      */
     private $company;
+
+
+
+
 
     /**
      * @return mixed
@@ -116,22 +132,21 @@ class Athlet extends Participant
         $this->company = $company;
     }
 
-
-
     /**
-     * @return ArrayCollection
+     * @return mixed
      */
-    public function getTeamCreated(): ArrayCollection
+    public function getParticipant()
     {
-        return $this->teamCreated;
+        return $this->participant;
     }
 
     /**
-     * @param ArrayCollection $teamCreated
+     * @param mixed $participant
      */
-    public function setTeamCreated(ArrayCollection $teamCreated): void
+    public function setParticipant($participant): void
     {
-        $this->teamCreated = $teamCreated;
+        $this->participant = $participant;
     }
+
 
 }
