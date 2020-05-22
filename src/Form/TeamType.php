@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Athlet;
 use App\Entity\Team;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,6 +22,7 @@ class TeamType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Team::class,
+            'allow_extra_fields' => true,
         ]);
     }
 }

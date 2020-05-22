@@ -10,8 +10,8 @@
                    aria-controls="v-pills-home" aria-selected="true">Home</a>
                 <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-add" role="tab"
                    aria-controls="v-pills-profile" aria-selected="false">Add</a>
-                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
-                   aria-controls="v-pills-messages" aria-selected="false">Messages</a>
+                <a class="nav-link" id="v-pills-update-tab" data-toggle="pill" href="#v-pills-update" role="tab"
+                   aria-controls="v-pills-update" aria-selected="false">See / Update</a>
                 <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"
                    aria-controls="v-pills-settings" aria-selected="false">Settings</a>
             </div>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="athlets">add athlets</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="athlet">add athlet</button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-light text-light bg-dark bouton " id="company">Add a company</button>
@@ -59,8 +59,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
-                    ...
+                <div class="tab-pane fade" id="v-pills-update" role="tabpanel" aria-labelledby="v-pills-update-tab">
+                    <div class="row">
+
+                        <div class="col-6">
+
+                            <button class="btn btn-light text-light bg-dark bouton " id="disciplines">Disciplines</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="events">Events</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton " id="categories">Categories</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="types">Types</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="athlets">Athlets</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton " id="companies">Companies</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton " id="teams">Teams</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="users">Users</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
                     <div id="disciplineForm" class="col-6 form">
@@ -98,15 +131,61 @@
                         <button type="submit">Save</button>
                         {{ form_end(athletForm) }}
                     </div>
-                   <<div id="teamForm" class="col-6 form">
+                   <div id="teamForm" class="col-6 form">
                         <h1>Add a Team</h1>
                         {{ form_start(teamForm) }}
                         {{ form_widget(teamForm) }}
-                        {{ form_start(participantForm) }}
-                        {{ form_widget(participantForm) }}
                         <button type="submit">Save</button>
                         {{ form_end(teamForm) }}
-                        {{ form_end(participantForm) }}
+                    </div>
+
+                    <div id="table" class="col-6 table">
+                        <h1 id="title"></h1>
+                        <table>
+                            <thead id="contenuThead">
+                            <tr>
+                                <th class="th-sm">#</th>
+                                <th class="th-sm">Name</th>
+                                <th class="th-sm">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="contenuTableau">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="tableCompany" class="col-6 table">
+                        <h1 id="title">Companies</h1>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="th-sm">#</th>
+                                <th class="th-sm">Name</th>
+                                <th class="th-sm">Country</th>
+                                <th class="th-sm">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="contenuTableauCompany">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="tableAthlet" class="col-6 table">
+                        <h1 id="title">Athlets</h1>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="th-sm">#</th>
+                                <th class="th-sm">Lastname</th>
+                                <th class="th-sm">Firstname</th>
+                                <th class="th-sm">Date of Birth</th>
+                                <th class="th-sm">Company</th>
+                                <th class="th-sm">Country</th>
+                                <th class="th-sm">Reference</th>
+                                <th class="th-sm">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="contenuTableauAthlets">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -125,9 +204,11 @@
 
         $(document).ready(function(){
             $('.form').hide();
-            $('#v-pills-profile-tab, #v-pills-home-tab').on('click', function(){
-                $('.bouton').show();
+            $('#v-pills-profile-tab, #v-pills-home-tab, #v-pills-update-tab').on('click', function(){
                 $('.form').hide();
+                $('.table').hide();
+                $('.bouton').show();
+                viderData();
             })
             $('#discipline').on('click', function () {
                 showDisciplineForm();
@@ -141,11 +222,29 @@
             $('#company').on('click', function () {
                 showCompanyForm();
             })
-            $('#athlets').on('click', function () {
+            $('#athlet').on('click', function () {
                 showAthletForm();
             })
            $('#team').on('click', function () {
                 showTeamForm();
+            })
+            $('#disciplines').on('click', function () {
+                showDisciplines();
+            })
+            $('#categories').on('click', function () {
+                showCategories();
+            })
+            $('#types').on('click', function () {
+                showTypes();
+            })
+            $('#teams').on('click', function () {
+                showTeams();
+            })
+            $('#companies').on('click', function () {
+                showCompanies();
+            })
+            $('#athlets').on('click', function () {
+                showAthlets();
             })
 
         })
@@ -178,6 +277,112 @@
             $('#doForm').append(teamForm.show());
         }
 
+        function showDisciplines(){
+            $('.bouton').hide();
+
+            $.ajax({
+                url: '{{ path('admin_disciplines') }}',
+                method: 'get'
+            }).done(function (msg){
+                showList(msg);
+            });
+
+        }
+
+        function showCategories(){
+            $('.bouton').hide();
+
+            $.ajax({
+                url: '{{ path('admin_categories') }}',
+                method: 'get'
+            }).done(function (msg){
+                showList(msg);
+            });
+        }
+
+        function showTypes(){
+            $('.bouton').hide();
+
+            $.ajax({
+                url: '{{ path('admin_types') }}',
+                method: 'get'
+            }).done(function (msg){
+                showList(msg);
+            });
+        }
+        function showTeams(){
+            $('.bouton').hide();
+
+            $.ajax({
+                url: '{{ path('admin_teams') }}',
+                method: 'get'
+            }).done(function (msg){
+                showList(msg);
+            });
+        }
+        function showCompanies(){
+            $('.bouton').hide();
+
+            $.ajax({
+                url: '{{ path('admin_companies') }}',
+                method: 'get'
+            }).done(function (msg){
+                showList(msg);
+            });
+        }
+        function showAthlets(){
+            $('.bouton').hide();
+
+            $.ajax({
+                url: '{{ path('admin_athlets') }}',
+                method: 'get'
+            }).done(function (msg){
+                showList(msg);
+            });
+        }
+        function showList(msg)
+        {
+
+            for (const unMsg of msg) {
+
+                var elTrTd = $('<tr></tr>'); //création d'un élément tr
+                var eltTdId = $('<td></td>').html(unMsg.id ); //création d'un élément td pour le pseudo avec le lien du profil
+                var eltTdName = $('<td></td>').text(unMsg.name); // création d'un élément td pour le prénom et le nom
+
+                if(unMsg.dateBirth) {
+                    var eltTdFirstname = $('<td></td>').text(unMsg.firstname);
+                    var eltTdDatebirth = $('<td></td>').text(unMsg.dateBirth);
+                    var eltTdCompany = $('<td></td>').text(unMsg.company);
+                    var eltTdCountry = $('<td></td>').text(unMsg.country);
+                    var eltTdReference = $('<td></td>').text(unMsg.reference);
+
+                    $(elTrTd).append(eltTdId, eltTdName, eltTdFirstname, eltTdDatebirth, eltTdCompany, eltTdCountry,eltTdReference);
+                    $('#contenuTableauAthlets').append(elTrTd);
+                    $('#doForm').append($('#tableAthlet').show());
+
+                }else if(unMsg.country){
+                    var eltTdCountry = $('<td></td>').text(unMsg.country);
+                    $(elTrTd).append(eltTdId, eltTdName, eltTdCountry );
+                    $('#contenuTableauCompany').append(elTrTd);
+                    $('#doForm').append($('#tableCompany').show());
+                }else{
+                    $(elTrTd).append(eltTdId, eltTdName);
+                    $('#contenuTableau').append(elTrTd);
+                    $('#doForm').append($('#table').show());
+                }
+
+            }
+            msg.splice(0);
+        }
+
+        function viderData(){
+            $.ajax({
+                url: '{{ path('admin_vider') }}',
+                method: 'get'
+            }).done(function (msg){
+                msg.deleteData();
+            });
+        }
 
     </script>
 {% endblock %}

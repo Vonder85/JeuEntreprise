@@ -24,6 +24,7 @@ class Team
      */
     private $name;
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +45,7 @@ class Team
     {
         $this->name = $name;
     }
+
 
     public function __construct()
     {

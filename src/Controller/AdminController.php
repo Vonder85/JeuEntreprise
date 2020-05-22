@@ -6,21 +6,22 @@ use App\Entity\Athlet;
 use App\Entity\Category;
 use App\Entity\Company;
 use App\Entity\Discipline;
-use App\Entity\Participant;
+use App\Entity\Event;
 use App\Entity\Team;
-use App\Entity\TeamCreated;
 use App\Entity\Type;
+use App\Entity\User;
 use App\Form\AthletType;
 use App\Form\CategoryType;
 use App\Form\CompanyType;
 use App\Form\DisciplineType;
-use App\Form\ParticipantType;
-use App\Form\TeamCreatedType;
 use App\Form\TeamType;
 use App\Form\TypeType;
+use App\Repository\TeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -33,6 +34,7 @@ class AdminController extends AbstractController
      */
     public function home(Request $request, EntityManagerInterface $em)
     {
+
         /**
          * Add discipline Form
          */
@@ -112,14 +114,10 @@ class AdminController extends AbstractController
          */
         $team = new Team();
         $teamForm = $this->createForm(TeamType::class, $team);
-        $participant = new Participant();
-        $participantForm = $this->createForm(ParticipantType::class, $participant);
 
         $teamForm->handleRequest($request);
-        $participantForm->handleRequest($request);
-        if($teamForm->isSubmitted() && $teamForm->isValid() && $participantForm->isSubmitted()&& $participantForm->isValid()){
+        if($teamForm->isSubmitted() && $teamForm->isValid()){
             $em->persist($team);
-            $em->persist($participant);
             $em->flush();
             $this->addFlash('success', 'Team added');
 
@@ -134,7 +132,172 @@ class AdminController extends AbstractController
             'companyForm' => $companyForm->createView(),
             'athletForm' => $athletForm->createView(),
             'teamForm' => $teamForm->createView(),
-            'participantForm' => $participantForm->createView()
         ]);
+    }
+
+    /**
+     * @Route("/disciplines", name="disciplines")
+     */
+    public function getDisciplines(EntityManagerInterface $em, Request $req){
+
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            $disciplines = $em->getRepository(Discipline::class)->findAll();
+            dump($disciplines);
+            for($i=0; $i < sizeof($disciplines); $i++){
+                $data[$i] = [
+                    'id' => $disciplines[$i]->getId(),
+                    'name' => $disciplines[$i]->getName()];
+            }
+            return new JsonResponse($data);
+        }
+          return new Response("Erreur lors de la requête", 400);
+    }
+
+    /**
+     * @Route("/categories", name="categories")
+     */
+    public function getCategories(EntityManagerInterface $em, Request $req){
+
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            $categories = $em->getRepository(Category::class)->findAll();
+            for($i=0; $i < sizeof($categories); $i++){
+                $data[$i] = [
+                    'id' => $categories[$i]->getId(),
+                    'name' => $categories[$i]->getName()];
+            }
+            return new JsonResponse($data);
+        }
+        return new Response("Erreur lors de la requête", 400);
+    }
+
+    /**
+     * @Route("/types", name="types")
+     */
+    public function getTypes(EntityManagerInterface $em, Request $req){
+
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            $types = $em->getRepository(Type::class)->findAll();
+            for($i=0; $i < sizeof($types); $i++){
+                $data[$i] = [
+                    'id' => $types[$i]->getId(),
+                    'name' => $types[$i]->getName()];
+            }
+            return new JsonResponse($data);
+        }
+        return new Response("Erreur lors de la requête", 400);
+    }
+
+    /**
+     * @Route("/athlets", name="athlets")
+     */
+    public function getAthlets(EntityManagerInterface $em, Request $req){
+
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            $athlets = $em->getRepository(Athlet::class)->findAll();
+            for($i=0; $i < sizeof($athlets); $i++){
+                $data[$i] = [
+                    'id' => $athlets[$i]->getId(),
+                    'name' => $athlets[$i]->getName(),
+                    'firstname' => $athlets[$i]->getFirstname(),
+                    'dateBirth' => $athlets[$i]->getDateBirth(),
+                    'company' => $athlets[$i]->getCompany()->getName(),
+                    'country' => $athlets[$i]->getCompany()->getCountry(),
+                    'reference' => $athlets[$i]->getReference()];
+            }
+            return new JsonResponse($data);
+        }
+        return new Response("Erreur lors de la requête", 400);
+    }
+
+    /**
+     * @Route("/teams", name="teams")
+     */
+    public function getTeams(EntityManagerInterface $em, Request $req, TeamRepository $tr){
+
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            $teams = $tr->findAll();
+            for($i=0; $i < sizeof($teams); $i++){
+                $data[$i] = [
+                    'id' => $teams[$i]->getId(),
+                    'name' => $teams[$i]->getName()];
+            }
+            return new JsonResponse($data);
+        }
+        return new Response("Erreur lors de la requête", 400);
+    }
+
+    /**
+     * @Route("/companies", name="companies")
+     */
+    public function getCompanies(EntityManagerInterface $em, Request $req){
+
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            $companies = $em->getRepository(Company::class)->findAll();
+            for($i=0; $i < sizeof($companies); $i++){
+                $data[$i] = [
+                    'id' => $companies[$i]->getId(),
+                    'name' => $companies[$i]->getName(),
+                    'country' => $companies[$i]->getCountry()];
+            }
+            return new JsonResponse($data);
+        }
+        return new Response("Erreur lors de la requête", 400);
+    }
+
+    /**
+     * @Route("/events", name="events")
+     */
+    public function getEvents(EntityManagerInterface $em, Request $req){
+
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            $events = $em->getRepository(Event::class)->findAll();
+            for($i=0; $i < sizeof($events); $i++){
+                $data[$i] = [
+                    'id' => $events[$i]->getId(),
+                    'type' => $events[$i]->getType()->getName(),
+                    'category' => $events[$i]->getCategory()->getName(),
+                    'gender' => $events[$i]->getGender()];
+            }
+            return new JsonResponse($data);
+        }
+        return new Response("Erreur lors de la requête", 400);
+    }
+
+    /**
+     * @Route("/users", name="users")
+     */
+    public function getUsers(EntityManagerInterface $em, Request $req){
+
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            $users = $em->getRepository(User::class)->findAll();
+            for($i=0; $i < sizeof($users); $i++){
+                $data[$i] = [
+                    'id' => $users[$i]->getId(),
+                    'lastname' => $users[$i]->getLastname(),
+                    'firstname' => $users[$i]->getFirstname(),
+                    'email' => $users[$i]->getEmail()];
+            }
+            return new JsonResponse($data);
+        }
+        return new Response("Erreur lors de la requête", 400);
+    }
+
+    /**
+     * @Route("/vider", name="vider")
+     */
+    public function vider(Request $req){
+        if($req->isXmlHttpRequest()){
+            $data = [];
+            return new JsonResponse($data);
+        }
+        return new Response("Erreur lors de la requête", 400);
     }
 }

@@ -6,7 +6,7 @@ use App\Repository\DisciplineRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=DisciplineRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\DisciplineRepository")
  */
 class Discipline
 {
