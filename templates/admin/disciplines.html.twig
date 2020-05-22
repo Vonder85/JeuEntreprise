@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Disciplines !{% endblock %}
+{% block body %}
+<table class="table mb-0 mt-4">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set i = 1 %}
+    {% for discipline  in disciplines %}
+
+        <tr>
+            <th scope="row">{{ i }}</th>
+            <td>{{ discipline.name }}</td>
+            <td>
+                <button>
+                    <a href="#">Edit</a>
+                </button>
+                <button>
+                    <a href="#">Delete</a>
+                </button>
+            </td>
+        </tr>
+        {% set i = i+1 %}
+    {% endfor %}
+    </tbody>
+</table>
+<div class="text-center">
+    <a class="btn btn-primary" href="{{ path('admin_home') }}">Back</a>
+</div>
+
+{% endblock %}

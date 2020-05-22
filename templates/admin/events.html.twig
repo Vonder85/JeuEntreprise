@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Events !{% endblock %}
+{% block body %}
+<table class="table mb-0 mt-4">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Type</th>
+        <th scope="col">Category</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set i = 1 %}
+    {% for event  in events %}
+
+        <tr>
+            <th scope="row">{{ i }}</th>
+            <td>{{ event.type.name }}</td>
+            <td>{{ event.category.name }}</td>
+            <td>{{ event.gender}}</td>
+            <td>
+                <button>
+                    <a href="#">Modifier</a>
+                </button>
+                <button>
+                    <a href="#">Effacer</a>
+                </button>
+            </td>
+        </tr>
+        {% set i = i+1 %}
+    {% endfor %}
+    </tbody>
+</table>
+<div class="text-center">
+    <a class="btn btn-primary" href="{{ path('admin_home') }}">Back</a>
+</div>
+
+{% endblock %}

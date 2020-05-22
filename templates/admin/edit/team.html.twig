@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit a Team !{% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Edit a team</h1>
+    <h3>{{ team.name }}</h3>
+    <form method="post">
+        <label for="athlet">Add an athlet</label>
+        <select>
+            {% for athlet in athlets %}
+            <option value="{{ athlet.id }}" name="athlet1">{{ athlet.name }} {{ athlet.firstname }}</option>
+            {% endfor %}
+        </select><br>
+        <select>
+            {% for athlet in athlets %}
+                <option value="{{ athlet.id }}" name="athlet2">{{ athlet.name }} {{ athlet.firstname }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Save">
+    </form>
+</div>
+{% endblock %}
