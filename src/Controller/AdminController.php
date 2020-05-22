@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @Route("/admin", name="admin_")
@@ -199,11 +200,13 @@ class AdminController extends AbstractController
             $data = [];
             $athlets = $em->getRepository(Athlet::class)->findAll();
             for($i=0; $i < sizeof($athlets); $i++){
+                $date = $athlets[$i]->getDateBirth();
+                $dateOk = date_format($date, "d/m/Y");
                 $data[$i] = [
                     'id' => $athlets[$i]->getId(),
                     'name' => $athlets[$i]->getName(),
                     'firstname' => $athlets[$i]->getFirstname(),
-                    'dateBirth' => $athlets[$i]->getDateBirth(),
+                    'dateBirth' => $dateOk,
                     'company' => $athlets[$i]->getCompany()->getName(),
                     'country' => $athlets[$i]->getCompany()->getCountry(),
                     'reference' => $athlets[$i]->getReference()];
@@ -281,8 +284,9 @@ class AdminController extends AbstractController
             for($i=0; $i < sizeof($users); $i++){
                 $data[$i] = [
                     'id' => $users[$i]->getId(),
-                    'lastname' => $users[$i]->getLastname(),
+                    'name' => $users[$i]->getLastname(),
                     'firstname' => $users[$i]->getFirstname(),
+                    'username' => $users[$i]->getUsername(),
                     'email' => $users[$i]->getEmail()];
             }
             return new JsonResponse($data);

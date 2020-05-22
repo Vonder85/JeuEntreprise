@@ -28,7 +28,8 @@
 
                         <div class="col-6">
 
-                            <button class="btn btn-light text-light bg-dark bouton " id="discipline">Add a discipline</button>
+                            <button class="btn btn-light text-light bg-dark bouton " id="discipline">Add a discipline
+                            </button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-light text-light bg-dark bouton" id="event">Add an event</button>
@@ -36,7 +37,8 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton " id="category">Add a category</button>
+                            <button class="btn btn-light text-light bg-dark bouton " id="category">Add a category
+                            </button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-light text-light bg-dark bouton" id="type">Add a type</button>
@@ -64,7 +66,8 @@
 
                         <div class="col-6">
 
-                            <button class="btn btn-light text-light bg-dark bouton " id="disciplines">Disciplines</button>
+                            <button class="btn btn-light text-light bg-dark bouton " id="disciplines">Disciplines
+                            </button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-light text-light bg-dark bouton" id="events">Events</button>
@@ -131,7 +134,7 @@
                         <button type="submit">Save</button>
                         {{ form_end(athletForm) }}
                     </div>
-                   <div id="teamForm" class="col-6 form">
+                    <div id="teamForm" class="col-6 form">
                         <h1>Add a Team</h1>
                         {{ form_start(teamForm) }}
                         {{ form_widget(teamForm) }}
@@ -187,6 +190,38 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="tableUser" class="col-6 table">
+                        <h1 id="title">Users</h1>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="th-sm">#</th>
+                                <th class="th-sm">Lastname</th>
+                                <th class="th-sm">Firstname</th>
+                                <th class="th-sm">Username</th>
+                                <th class="th-sm">Email</th>
+                                <th class="th-sm">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="contenuTableauUser">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="tableEvent" class="col-6 table">
+                        <h1 id="title">Events</h1>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="th-sm">#</th>
+                                <th class="th-sm">Type</th>
+                                <th class="th-sm">Category</th>
+                                <th class="th-sm">Gender</th>
+                            </tr>
+                            </thead>
+                            <tbody id="contenuTableauEvents">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -202,9 +237,9 @@
         var athletForm = $('#athletForm');
         var teamForm = $('#teamForm');
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('.form').hide();
-            $('#v-pills-profile-tab, #v-pills-home-tab, #v-pills-update-tab').on('click', function(){
+            $('#v-pills-profile-tab, #v-pills-home-tab, #v-pills-update-tab').on('click', function () {
                 $('.form').hide();
                 $('.table').hide();
                 $('.bouton').show();
@@ -225,7 +260,7 @@
             $('#athlet').on('click', function () {
                 showAthletForm();
             })
-           $('#team').on('click', function () {
+            $('#team').on('click', function () {
                 showTeamForm();
             })
             $('#disciplines').on('click', function () {
@@ -246,142 +281,205 @@
             $('#athlets').on('click', function () {
                 showAthlets();
             })
+            $('#users').on('click', function () {
+                showUsers();
+            })
+            $('#events').on('click', function () {
+                showEvents();
+            })
 
         })
 
         /**
          * functions show differents forms
          */
-        function showDisciplineForm(){
+        function showDisciplineForm() {
             $('.bouton').hide();
             $('#doForm').append(disciplineForm.show());
         }
-        function showCategoryForm(){
+
+        function showCategoryForm() {
             $('.bouton').hide();
             $('#doForm').append(categoryForm.show());
         }
-        function showTypeForm(){
+
+        function showTypeForm() {
             $('.bouton').hide();
             $('#doForm').append(typeForm.show());
         }
-        function showCompanyForm(){
+
+        function showCompanyForm() {
             $('.bouton').hide();
             $('#doForm').append(companyForm.show());
         }
-        function showAthletForm(){
+
+        function showAthletForm() {
             $('.bouton').hide();
             $('#doForm').append(athletForm.show());
         }
-       function showTeamForm(){
+
+        function showTeamForm() {
             $('.bouton').hide();
             $('#doForm').append(teamForm.show());
         }
 
-        function showDisciplines(){
+        function showDisciplines() {
             $('.bouton').hide();
 
             $.ajax({
                 url: '{{ path('admin_disciplines') }}',
                 method: 'get'
-            }).done(function (msg){
+            }).done(function (msg) {
                 showList(msg);
             });
 
         }
 
-        function showCategories(){
+        function showCategories() {
             $('.bouton').hide();
 
             $.ajax({
                 url: '{{ path('admin_categories') }}',
                 method: 'get'
-            }).done(function (msg){
+            }).done(function (msg) {
                 showList(msg);
             });
         }
 
-        function showTypes(){
+        function showTypes() {
             $('.bouton').hide();
 
             $.ajax({
                 url: '{{ path('admin_types') }}',
                 method: 'get'
-            }).done(function (msg){
+            }).done(function (msg) {
                 showList(msg);
             });
         }
-        function showTeams(){
+
+        function showTeams() {
             $('.bouton').hide();
 
             $.ajax({
                 url: '{{ path('admin_teams') }}',
                 method: 'get'
-            }).done(function (msg){
+            }).done(function (msg) {
                 showList(msg);
             });
         }
-        function showCompanies(){
+
+        function showCompanies() {
             $('.bouton').hide();
 
             $.ajax({
                 url: '{{ path('admin_companies') }}',
                 method: 'get'
-            }).done(function (msg){
+            }).done(function (msg) {
                 showList(msg);
             });
         }
-        function showAthlets(){
+
+        function showAthlets() {
             $('.bouton').hide();
 
             $.ajax({
                 url: '{{ path('admin_athlets') }}',
                 method: 'get'
-            }).done(function (msg){
+            }).done(function (msg) {
                 showList(msg);
             });
         }
-        function showList(msg)
-        {
 
+        function showUsers() {
+            $('.bouton').hide();
+
+            $.ajax({
+                url: '{{ path('admin_users') }}',
+                method: 'get'
+            }).done(function (msg) {
+                showList(msg);
+            });
+        }
+
+        function showEvents() {
+            $('.bouton').hide();
+
+            $.ajax({
+                url: '{{ path('admin_events') }}',
+                method: 'get'
+            }).done(function (msg) {
+                showListEvent(msg);
+            });
+        }
+
+        function showList(msg) {
+            var i = 1;
             for (const unMsg of msg) {
 
                 var elTrTd = $('<tr></tr>'); //création d'un élément tr
-                var eltTdId = $('<td></td>').html(unMsg.id ); //création d'un élément td pour le pseudo avec le lien du profil
+                var eltTdId = $('<td></td>').html(i); //création d'un élément td pour le pseudo avec le lien du profil
                 var eltTdName = $('<td></td>').text(unMsg.name); // création d'un élément td pour le prénom et le nom
-
-                if(unMsg.dateBirth) {
+                i++;
+                if (unMsg.dateBirth) {
                     var eltTdFirstname = $('<td></td>').text(unMsg.firstname);
                     var eltTdDatebirth = $('<td></td>').text(unMsg.dateBirth);
                     var eltTdCompany = $('<td></td>').text(unMsg.company);
                     var eltTdCountry = $('<td></td>').text(unMsg.country);
                     var eltTdReference = $('<td></td>').text(unMsg.reference);
 
-                    $(elTrTd).append(eltTdId, eltTdName, eltTdFirstname, eltTdDatebirth, eltTdCompany, eltTdCountry,eltTdReference);
+                    $(elTrTd).append(eltTdId, eltTdName, eltTdFirstname, eltTdDatebirth, eltTdCompany, eltTdCountry, eltTdReference);
                     $('#contenuTableauAthlets').append(elTrTd);
                     $('#doForm').append($('#tableAthlet').show());
 
-                }else if(unMsg.country){
+                } else if (unMsg.email) {
+                    var eltTdFirstname = $('<td></td>').text(unMsg.firstname);
+                    var eltTdUsername = $('<td></td>').text(unMsg.username);
+                    var eltTdEmail = $('<td></td>').text(unMsg.email);
+
+                    $(elTrTd).append(eltTdId, eltTdName, eltTdFirstname, eltTdUsername, eltTdEmail);
+                    $('#contenuTableauUser').append(elTrTd);
+                    $('#doForm').append($('#tableUser').show());
+                } else if (unMsg.country) {
                     var eltTdCountry = $('<td></td>').text(unMsg.country);
-                    $(elTrTd).append(eltTdId, eltTdName, eltTdCountry );
+                    $(elTrTd).append(eltTdId, eltTdName, eltTdCountry);
                     $('#contenuTableauCompany').append(elTrTd);
                     $('#doForm').append($('#tableCompany').show());
-                }else{
+                } else {
                     $(elTrTd).append(eltTdId, eltTdName);
                     $('#contenuTableau').append(elTrTd);
                     $('#doForm').append($('#table').show());
                 }
 
+
             }
             msg.splice(0);
         }
 
-        function viderData(){
-            $.ajax({
-                url: '{{ path('admin_vider') }}',
-                method: 'get'
-            }).done(function (msg){
-                msg.deleteData();
-            });
+        function showListEvent(msg) {
+            var i = 1;
+            for (const unMsg of msg) {
+
+                var elTrTd = $('<tr></tr>'); //création d'un élément tr
+                var eltTdId = $('<td></td>').html(i); //création d'un élément td pour le pseudo avec le lien du profil
+                i++;
+                var eltTdType = $('<td></td>').text(unMsg.type); // création d'un élément td pour le prénom et le nom
+                var eltTdCategory = $('<td></td>').text(unMsg.category);
+                var eltTdGender = $('<td></td>').text(unMsg.gender);
+
+
+                $(elTrTd).append(eltTdId, eltTdType, eltTdCategory, eltTdGender);
+                $('#contenuTableauEvents').append(elTrTd);
+                $('#doForm').append($('#tableEvent').show());
+
+                function viderData() {
+                    $.ajax({
+                        url: '{{ path('admin_vider') }}',
+                        method: 'get'
+                    }).done(function (msg) {
+                        msg.deleteData();
+                    });
+                }
+            }
         }
 
     </script>
