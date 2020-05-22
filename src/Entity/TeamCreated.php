@@ -21,4 +21,46 @@ class TeamCreated
     {
         return $this->id;
     }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Athlet", inversedBy="teamCreated")
+     */
+    protected $athlet;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Team", inversedBy="teamCreated")
+     */
+    protected $team;
+
+    /**
+     * @return mixed
+     */
+    public function getAthlet()
+    {
+        return $this->athlet;
+    }
+
+    /**
+     * @param mixed $athlet
+     */
+    public function setAthlet($athlet): void
+    {
+        $this->athlet = $athlet;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTeam()
+    {
+        return $this->team;
+    }
+
+    /**
+     * @param mixed $team
+     */
+    public function setTeam($team): void
+    {
+        $this->team = $team;
+    }
 }

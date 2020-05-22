@@ -14,8 +14,10 @@ use App\Form\AthletType;
 use App\Form\CategoryType;
 use App\Form\CompanyType;
 use App\Form\DisciplineType;
+use App\Form\ParticipantType;
 use App\Form\TeamType;
 use App\Form\TypeType;
+use App\Repository\AthletRepository;
 use App\Repository\TeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -136,172 +138,124 @@ class AdminController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/disciplines", name="disciplines")
-     */
-    public function getDisciplines(EntityManagerInterface $em, Request $req){
-
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            $disciplines = $em->getRepository(Discipline::class)->findAll();
-            dump($disciplines);
-            for($i=0; $i < sizeof($disciplines); $i++){
-                $data[$i] = [
-                    'id' => $disciplines[$i]->getId(),
-                    'name' => $disciplines[$i]->getName()];
-            }
-            return new JsonResponse($data);
-        }
-          return new Response("Erreur lors de la requête", 400);
-    }
 
     /**
      * @Route("/categories", name="categories")
+     * show all categories
      */
-    public function getCategories(EntityManagerInterface $em, Request $req){
+    public function getCategories(EntityManagerInterface $em){
 
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            $categories = $em->getRepository(Category::class)->findAll();
-            for($i=0; $i < sizeof($categories); $i++){
-                $data[$i] = [
-                    'id' => $categories[$i]->getId(),
-                    'name' => $categories[$i]->getName()];
-            }
-            return new JsonResponse($data);
-        }
-        return new Response("Erreur lors de la requête", 400);
+        $categories = $em->getRepository(Category::class)->findAll();
+
+        return $this->render('admin/categories.html.twig', [
+            "categories" => $categories
+        ]);
     }
 
     /**
      * @Route("/types", name="types")
+     * show all Types
      */
-    public function getTypes(EntityManagerInterface $em, Request $req){
+    public function getTypes(EntityManagerInterface $em){
 
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            $types = $em->getRepository(Type::class)->findAll();
-            for($i=0; $i < sizeof($types); $i++){
-                $data[$i] = [
-                    'id' => $types[$i]->getId(),
-                    'name' => $types[$i]->getName()];
-            }
-            return new JsonResponse($data);
-        }
-        return new Response("Erreur lors de la requête", 400);
+        $types = $em->getRepository(Type::class)->findAll();
+
+        return $this->render('admin/types.html.twig', [
+            "types" => $types
+        ]);
     }
 
     /**
      * @Route("/athlets", name="athlets")
+     * show all athlets
      */
-    public function getAthlets(EntityManagerInterface $em, Request $req){
+    public function getAthlets(EntityManagerInterface $em){
 
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            $athlets = $em->getRepository(Athlet::class)->findAll();
-            for($i=0; $i < sizeof($athlets); $i++){
-                $date = $athlets[$i]->getDateBirth();
-                $dateOk = date_format($date, "d/m/Y");
-                $data[$i] = [
-                    'id' => $athlets[$i]->getId(),
-                    'name' => $athlets[$i]->getName(),
-                    'firstname' => $athlets[$i]->getFirstname(),
-                    'dateBirth' => $dateOk,
-                    'company' => $athlets[$i]->getCompany()->getName(),
-                    'country' => $athlets[$i]->getCompany()->getCountry(),
-                    'reference' => $athlets[$i]->getReference()];
-            }
-            return new JsonResponse($data);
-        }
-        return new Response("Erreur lors de la requête", 400);
+        $athlets = $em->getRepository(Athlet::class)->findAll();
+
+        return $this->render('admin/athlets.html.twig', [
+            "athlets" => $athlets
+        ]);
     }
 
     /**
      * @Route("/teams", name="teams")
+     * show all teams
      */
-    public function getTeams(EntityManagerInterface $em, Request $req, TeamRepository $tr){
+    public function getTeams(EntityManagerInterface $em, TeamRepository $tr){
 
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            $teams = $tr->findAll();
-            for($i=0; $i < sizeof($teams); $i++){
-                $data[$i] = [
-                    'id' => $teams[$i]->getId(),
-                    'name' => $teams[$i]->getName()];
-            }
-            return new JsonResponse($data);
-        }
-        return new Response("Erreur lors de la requête", 400);
+        $teams = $tr->findAll();
+
+        return $this->render('admin/teams.html.twig', [
+            "teams" => $teams
+        ]);
     }
 
     /**
      * @Route("/companies", name="companies")
+     * show all companies
      */
-    public function getCompanies(EntityManagerInterface $em, Request $req){
+    public function getCompanies(EntityManagerInterface $em){
 
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            $companies = $em->getRepository(Company::class)->findAll();
-            for($i=0; $i < sizeof($companies); $i++){
-                $data[$i] = [
-                    'id' => $companies[$i]->getId(),
-                    'name' => $companies[$i]->getName(),
-                    'country' => $companies[$i]->getCountry()];
-            }
-            return new JsonResponse($data);
-        }
-        return new Response("Erreur lors de la requête", 400);
+        $companies = $em->getRepository(Company::class)->findAll();
+
+        return $this->render('admin/companies.html.twig', [
+            "companies" => $companies
+        ]);
     }
 
     /**
      * @Route("/events", name="events")
+     * show all events
      */
-    public function getEvents(EntityManagerInterface $em, Request $req){
+    public function getEvents(EntityManagerInterface $em){
 
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            $events = $em->getRepository(Event::class)->findAll();
-            for($i=0; $i < sizeof($events); $i++){
-                $data[$i] = [
-                    'id' => $events[$i]->getId(),
-                    'type' => $events[$i]->getType()->getName(),
-                    'category' => $events[$i]->getCategory()->getName(),
-                    'gender' => $events[$i]->getGender()];
-            }
-            return new JsonResponse($data);
-        }
-        return new Response("Erreur lors de la requête", 400);
+        $events = $em->getRepository(Event::class)->findAll();
+
+        return $this->render('admin/events.html.twig', [
+            "events" => $events
+        ]);
     }
 
     /**
      * @Route("/users", name="users")
+     * show all users
      */
-    public function getUsers(EntityManagerInterface $em, Request $req){
+    public function getUsers(EntityManagerInterface $em){
 
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            $users = $em->getRepository(User::class)->findAll();
-            for($i=0; $i < sizeof($users); $i++){
-                $data[$i] = [
-                    'id' => $users[$i]->getId(),
-                    'name' => $users[$i]->getLastname(),
-                    'firstname' => $users[$i]->getFirstname(),
-                    'username' => $users[$i]->getUsername(),
-                    'email' => $users[$i]->getEmail()];
-            }
-            return new JsonResponse($data);
-        }
-        return new Response("Erreur lors de la requête", 400);
+        $users = $em->getRepository(User::class)->findAll();
+
+        return $this->render('admin/users.html.twig', [
+            "users" => $users
+        ]);
     }
 
     /**
-     * @Route("/vider", name="vider")
+     * @Route("/disciplines", name="discipline")
+     * show all disciplines
      */
-    public function vider(Request $req){
-        if($req->isXmlHttpRequest()){
-            $data = [];
-            return new JsonResponse($data);
-        }
-        return new Response("Erreur lors de la requête", 400);
+    public function getDisciplines(EntityManagerInterface $em){
+
+            $disciplines = $em->getRepository(Discipline::class)->findAll();
+
+            return $this->render('admin/disciplines.html.twig', [
+                "disciplines" => $disciplines
+            ]);
     }
+
+    /**
+     * @Route("/team/edit/{id}", name="edit_team", requirements={"id": "\d+"})
+     * Edit Team
+     */
+    public function editTeam($id, TeamRepository $tr, AthletRepository $ar, Request $req){
+        $athlets = $ar->findAll();
+        $team = $tr->find($id);
+
+
+        return $this->render('admin/edit/team.html.twig', [
+            "athlets" => $athlets,
+            "team" => $team
+        ]);
+    }
+
 }

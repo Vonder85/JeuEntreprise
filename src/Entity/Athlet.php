@@ -100,6 +100,7 @@ class Athlet
     public function __construct()
     {
         $this->participant = new ArrayCollection();
+        $this->teamCreated = new ArrayCollection();
     }
 
     /**
@@ -112,9 +113,26 @@ class Athlet
      */
     private $company;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="athlet", cascade={"remove"})
+     */
+    private $teamCreated;
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getTeamCreated(): ArrayCollection
+    {
+        return $this->teamCreated;
+    }
 
-
+    /**
+     * @param ArrayCollection $teamCreated
+     */
+    public function setTeamCreated(ArrayCollection $teamCreated): void
+    {
+        $this->teamCreated = $teamCreated;
+    }
 
     /**
      * @return mixed

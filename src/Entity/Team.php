@@ -50,11 +50,50 @@ class Team
     public function __construct()
     {
         $this->participant = new ArrayCollection();
+        $this->teamCreated = new ArrayCollection();
     }
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="team")
      */
     private $participant;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="team", cascade={"remove"})
+     */
+    private $teamCreated;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getParticipant(): ArrayCollection
+    {
+        return $this->participant;
+    }
+
+    /**
+     * @param ArrayCollection $participant
+     */
+    public function setParticipant(ArrayCollection $participant): void
+    {
+        $this->participant = $participant;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTeamCreated(): ArrayCollection
+    {
+        return $this->teamCreated;
+    }
+
+    /**
+     * @param ArrayCollection $teamCreated
+     */
+    public function setTeamCreated(ArrayCollection $teamCreated): void
+    {
+        $this->teamCreated = $teamCreated;
+    }
+
 
 }
