@@ -20,7 +20,7 @@
 
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
-                     aria-labelledby="v-pills-home-tab">Welcome to the back-office to manage !
+                     aria-labelledby="v-pills-home-tab"><a href="{{ path('admin_create_meet') }}"><button>Create meet</button></a>
                 </div>
                 <div class="tab-pane fade" id="v-pills-add" role="tabpanel" aria-labelledby="v-pills-add-tab">
 
@@ -68,6 +68,13 @@
                             <button class="btn btn-light text-light bg-dark bouton" id="competition">Add a competition</button>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton " id="round">Add a round</button>
+                        </div>
+                        <div class="col-6">
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-update" role="tabpanel" aria-labelledby="v-pills-update-tab">
                     <div class="row">
@@ -111,6 +118,13 @@
                         </div>
                         <div class="col-6">
                             <a href="{{ path('admin_competitions') }}"><button class="btn btn-light text-light bg-dark bouton" id="competitions">Competitions</button></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="{{ path('admin_rounds') }}"><button class="btn btn-light text-light bg-dark bouton " id="rounds">Rounds</button></a>
+                        </div>
+                        <div class="col-6">
                         </div>
                     </div>
                 </div>
@@ -182,6 +196,20 @@
                         <button type="submit">Save</button>
                         {{ form_end(competitionForm) }}
                     </div>
+                    <div id="eventForm" class="col-6 form">
+                        <h1>Add an Event</h1>
+                        {{ form_start(eventForm) }}
+                        {{ form_widget(eventForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(eventForm) }}
+                    </div>
+                    <div id="roundForm" class="col-6 form">
+                        <h1>Add a Round</h1>
+                        {{ form_start(roundForm) }}
+                        {{ form_widget(roundForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(roundForm) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,6 +227,8 @@
         var userForm = $('#userForm');
         var fieldForm = $('#fieldForm');
         var competitionForm = $('#competitionForm');
+        var eventForm = $('#eventForm');
+        var roundForm = $('#roundForm');
 
         $(document).ready(function () {
             $('.form').hide();
@@ -233,6 +263,12 @@
             })
             $('#competition').on('click', function () {
                 showCompetitionForm();
+            })
+            $('#event').on('click', function () {
+                showEventForm();
+            })
+            $('#round').on('click', function () {
+                showRoundForm();
             })
         })
 
@@ -279,6 +315,14 @@
         function showCompetitionForm() {
             $('.bouton').hide();
             $('#doForm').append(competitionForm.show());
+        }
+        function showEventForm() {
+            $('.bouton').hide();
+            $('#doForm').append(eventForm.show());
+        }
+        function showRoundForm() {
+            $('.bouton').hide();
+            $('#doForm').append(roundForm.show());
         }
 
     </script>

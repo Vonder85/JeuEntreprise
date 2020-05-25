@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,6 +17,11 @@ class Event
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="string", length=150)
+     */
+    private $name;
 
     /**
      * @ORM\Column(type="string", length=25, nullable=true)
@@ -47,6 +53,17 @@ class Event
         return $this->id;
     }
 
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 
     public function getGender(): ?string
     {
@@ -119,6 +136,11 @@ class Event
     private $type;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Round", inversedBy="events")
+     */
+    private $round;
+
+    /**
      * @return mixed
      */
     public function getCategory()
@@ -151,6 +173,30 @@ class Event
     }
 
     /**
+     * @return mixed
+     */
+    public function getRound()
+    {
+        return $this->round;
+    }
+
+    /**
+     * @param mixed $round
+     */
+    public function setRound($round): void
+    {
+        $this->round = $round;
+    }
+
+
+
+    public function __construct()
+    {
+        $this->participation = new ArrayCollection();
+        $this->eventWithParticipation = new ArrayCollection();
+    }
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Participation", mappedBy="event")
      */
     private $participation;
@@ -164,6 +210,11 @@ class Event
     }
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\EventWithParticipation", mappedBy="event")
+     */
+    private $eventWithParticipation;
+
+    /**
      * @param mixed $participation
      */
     public function setParticipation($participation): void
@@ -171,4 +222,82 @@ class Event
         $this->participation = $participation;
     }
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Field", inversedBy="events")
+     */
+    private $field;
+
+    /**
+     * @return mixed
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * @param mixed $field
+     */
+    public function setField($field): void
+    {
+        $this->field = $field;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Competition", inversedBy="events")
+     */
+    private $competition;
+
+    /**
+     * @return mixed
+     */
+    public function getCompetition()
+    {
+        return $this->competition;
+    }
+
+    /**
+     * @param mixed $competition
+     */
+    public function setCompetition($competition): void
+    {
+        $this->competition = $competition;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Discipline", inversedBy="events")
+     */
+    private $discipline;
+
+    /**
+     * @return mixed
+     */
+    public function getDiscipline()
+    {
+        return $this->discipline;
+    }
+
+    /**
+     * @param mixed $discipline
+     */
+    public function setDiscipline($discipline): void
+    {
+        $this->discipline = $discipline;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getEventWithParticipation(): ArrayCollection
+    {
+        return $this->eventWithParticipation;
+    }
+
+    /**
+     * @param ArrayCollection $eventWithParticipation
+     */
+    public function setEventWithParticipation(ArrayCollection $eventWithParticipation): void
+    {
+        $this->eventWithParticipation = $eventWithParticipation;
+    }
 }

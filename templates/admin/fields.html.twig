@@ -19,10 +19,10 @@
             <td>{{ field.name }}</td>
             <td>
                 <button>
-                    <a href="#">Edit</a>
+                    <a href="{{ path('admin_edit_field', {"id": field.id}) }}">Edit</a>
                 </button>
                 <button>
-                    <a href="#">Delete</a>
+                    <a href="{{ path('admin_delete_field', {"id": field.id}) }}">Delete</a>
                 </button>
             </td>
         </tr>

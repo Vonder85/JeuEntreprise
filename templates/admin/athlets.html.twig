@@ -28,10 +28,10 @@
 
             <td>
                 <button>
-                    <a href="#">Edit</a>
+                    <a href="{{ path('admin_edit_athlet', {"id": athlet.id}) }}">Edit</a>
                 </button>
                 <button>
-                    <a href="#">Delete</a>
+                    <a href="{{ path('admin_delete_athlet', {"id": athlet.id}) }}">Delete</a>
                 </button>
             </td>
         </tr>

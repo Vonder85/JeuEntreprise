@@ -63,7 +63,7 @@ class Company
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Athlet", mappedBy="company")
+     * @ORM\OneToMany(targetEntity="App\Entity\Athlet", mappedBy="company", cascade={"remove"})
      */
     private $athlets;
 

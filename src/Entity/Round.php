@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\DisciplineRepository;
+use App\Repository\RoundRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\DisciplineRepository")
+ * @ORM\Entity(repositoryClass=RoundRepository::class)
  */
-class Discipline
+class Round
 {
     /**
      * @ORM\Id()
@@ -19,7 +19,7 @@ class Discipline
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=150)
+     * @ORM\Column(type="string", length=80)
      */
     private $name;
 
@@ -39,14 +39,13 @@ class Discipline
 
         return $this;
     }
-
     public function __construct()
     {
         $this->events = new ArrayCollection();
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="discipline")
+     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="round")
      */
     private $events;
 
@@ -65,6 +64,4 @@ class Discipline
     {
         $this->events = $events;
     }
-
-
 }

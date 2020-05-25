@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ParticipationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,14 +58,9 @@ class Participation
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Participant", inversedBy="participation")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participant")
      */
     protected $participant;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="participation")
-     */
-    protected $event;
 
     /**
      * @return mixed
@@ -82,6 +78,15 @@ class Participation
         $this->participant = $participant;
     }
 
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="participation")
+     */
+    protected $event;
+
+
+
     /**
      * @return mixed
      */
@@ -97,6 +102,55 @@ class Participation
     {
         $this->event = $event;
     }
+
+    public function __construct()
+    {
+        $this->meets = new ArrayCollection();
+        $this->eventWithParticipation = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Meet", mappedBy="participation")
+     */
+    private $meets;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\EventWithParticipation", mappedBy="participation")
+     */
+    private $eventWithParticipation;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getMeets(): ArrayCollection
+    {
+        return $this->meets;
+    }
+
+    /**
+     * @param ArrayCollection $meets
+     */
+    public function setMeets(ArrayCollection $meets): void
+    {
+        $this->meets = $meets;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getEventWithParticipation(): ArrayCollection
+    {
+        return $this->eventWithParticipation;
+    }
+
+    /**
+     * @param ArrayCollection $eventWithParticipation
+     */
+    public function setEventWithParticipation(ArrayCollection $eventWithParticipation): void
+    {
+        $this->eventWithParticipation = $eventWithParticipation;
+    }
+
 
 
 }

@@ -23,10 +23,10 @@
             <td>{{ user.email }}</td>
             <td>
                 <button>
-                    <a href="#">Edit</a>
+                    <a href="{{ path('admin_edit_user', {"id": user.id}) }}">Edit</a>
                 </button>
                 <button>
-                    <a href="#">Delete</a>
+                    <a href="{{ path('admin_delete_user', {"id": user.id}) }}">Delete</a>
                 </button>
             </td>
         </tr>

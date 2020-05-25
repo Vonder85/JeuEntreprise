@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MatchRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,17 +27,12 @@ class Match
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $scoreEquipe2;
+    private $scoreTeam2;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $heure;
-
-    /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     */
-    private $round;
 
     public function getId(): ?int
     {
@@ -55,17 +51,23 @@ class Match
         return $this;
     }
 
-    public function getScoreEquipe2(): ?int
+    /**
+     * @return mixed
+     */
+    public function getScoreTeam2()
     {
-        return $this->scoreEquipe2;
+        return $this->scoreTeam2;
     }
 
-    public function setScoreEquipe2(?int $scoreEquipe2): self
+    /**
+     * @param mixed $scoreTeam2
+     */
+    public function setScoreTeam2($scoreTeam2): void
     {
-        $this->scoreEquipe2 = $scoreEquipe2;
-
-        return $this;
+        $this->scoreTeam2 = $scoreTeam2;
     }
+
+
 
     public function getHeure(): ?\DateTimeInterface
     {
@@ -79,15 +81,52 @@ class Match
         return $this;
     }
 
-    public function getRound(): ?string
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Field", inversedBy="matchs")
+     */
+    private $field;
+
+    /**
+     * @return mixed
+     */
+    public function getField()
     {
-        return $this->round;
+        return $this->field;
     }
 
-    public function setRound(?string $round): self
+    /**
+     * @param mixed $field
+     */
+    public function setField($field): void
     {
-        $this->round = $round;
-
-        return $this;
+        $this->field = $field;
     }
+
+    public function __construct()
+    {
+        $this->meets = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Meet", mappedBy="match")
+     */
+    private $meets;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getMeets(): ArrayCollection
+    {
+        return $this->meets;
+    }
+
+    /**
+     * @param ArrayCollection $meets
+     */
+    public function setMeets(ArrayCollection $meets): void
+    {
+        $this->meets = $meets;
+    }
+
 }

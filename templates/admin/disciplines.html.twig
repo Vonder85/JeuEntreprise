@@ -19,10 +19,10 @@
             <td>{{ discipline.name }}</td>
             <td>
                 <button>
-                    <a href="#">Edit</a>
+                    <a href="{{ path('admin_edit_discipline', {'id': discipline.id}) }}">Edit</a>
                 </button>
                 <button>
-                    <a href="#">Delete</a>
+                    <a href="{{ path('admin_delete_discipline', {'id': discipline.id}) }}">Delete</a>
                 </button>
             </td>
         </tr>

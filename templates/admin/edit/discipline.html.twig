@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit a Discipline !{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1>Edit a Discipline</h1>
+                <h3>{{ discipline.name }}</h3>
+                {{ form_start(disciplineForm) }}
+                {{ form_widget(disciplineForm) }}
+                <button type="submit" id="btnSave">Save</button>
+                {{ form_end(disciplineForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

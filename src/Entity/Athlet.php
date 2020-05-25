@@ -104,7 +104,7 @@ class Athlet
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="athlet")
+     * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="athlet", cascade={"remove"})
      */
     private $participant;
 
@@ -114,7 +114,7 @@ class Athlet
     private $company;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="athlet", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="athlet")
      */
     private $teamCreated;
 

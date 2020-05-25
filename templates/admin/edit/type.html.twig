@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit a Type !{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1>Edit a type</h1>
+                <h3>{{ type.name }}</h3>
+                {{ form_start(typeForm) }}
+                {{ form_widget(typeForm) }}
+                <button type="submit" id="btnSave">Save</button>
+                {{ form_end(typeForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

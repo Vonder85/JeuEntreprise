@@ -25,10 +25,10 @@
             <td>{{ competition.place }}</td>
             <td>
                 <button>
-                    <a href="#">Edit</a>
+                    <a href="{{ path('admin_edit_competition', {"id": competition.id}) }}">Edit</a>
                 </button>
                 <button>
-                    <a href="#">Delete</a>
+                    <a href="{{ path('admin_delete_competition', {"id": competition.id}) }}">Delete</a>
                 </button>
             </td>
         </tr>

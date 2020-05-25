@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\FieldRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,4 +40,55 @@ class Field
 
         return $this;
     }
+
+    public function __construct()
+    {
+        $this->matchs = new ArrayCollection();
+        $this->events = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Match", mappedBy="field", cascade={"remove"})
+     */
+    private $matchs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="field", cascade={"remove"})
+     *
+     */
+    private $events;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getMatchs(): ArrayCollection
+    {
+        return $this->matchs;
+    }
+
+    /**
+     * @param ArrayCollection $matchs
+     */
+    public function setMatchs(ArrayCollection $matchs): void
+    {
+        $this->matchs = $matchs;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getEvents(): ArrayCollection
+    {
+        return $this->events;
+    }
+
+    /**
+     * @param ArrayCollection $events
+     */
+    public function setEvents(ArrayCollection $events): void
+    {
+        $this->events = $events;
+    }
+
+
 }

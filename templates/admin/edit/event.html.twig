@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit an Event !{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1>Edit an event</h1>
+                <h3>{{ event.name }}</h3>
+                {{ form_start(eventForm) }}
+                {{ form_widget(eventForm) }}
+                <button type="submit" id="btnSave">Save</button>
+                {{ form_end(eventForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

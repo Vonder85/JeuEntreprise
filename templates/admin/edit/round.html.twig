@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit a Round !{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1>Edit a round</h1>
+                <h3>{{ round.name }}</h3>
+                {{ form_start(roundForm) }}
+                {{ form_widget(roundForm) }}
+                <button type="submit" id="btnSave">Save</button>
+                {{ form_end(roundForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

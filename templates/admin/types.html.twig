@@ -19,10 +19,10 @@
             <td>{{ type.name }}</td>
             <td>
                 <button>
-                    <a href="#">Edit</a>
+                    <a href="{{ path('admin_edit_type', {"id": type.id}) }}">Edit</a>
                 </button>
                 <button>
-                    <a href="#">Delete</a>
+                    <a href="{{ path('admin_delete_type', {"id": type.id}) }}">Delete</a>
                 </button>
             </td>
         </tr>

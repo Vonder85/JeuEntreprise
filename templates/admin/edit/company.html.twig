@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit a Company !{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1>Edit a company</h1>
+                <h3>{{ company.name }}</h3>
+                {{ form_start(companyForm) }}
+                {{ form_widget(companyForm) }}
+                <button type="submit" id="btnSave">Save</button>
+                {{ form_end(companyForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -6,9 +6,11 @@
     <thead>
     <tr>
         <th scope="col">#</th>
-        <th scope="col">Type</th>
-        <th scope="col">Category</th>
+        <th scope="col">Discipline</th>
+        <th scope="col">Name</th>
         <th scope="col">Gender</th>
+        <th scope="col">Category</th>
+        <th scope="col">Type</th>
         <th scope="col">Actions</th>
     </tr>
     </thead>
@@ -18,15 +20,17 @@
 
         <tr>
             <th scope="row">{{ i }}</th>
-            <td>{{ event.type.name }}</td>
-            <td>{{ event.category.name }}</td>
+            <td>{{ event.discipline.name }}</td>
+            <td>{{ event.name }}</td>
             <td>{{ event.gender}}</td>
+            <td>{{ event.category.name }}</td>
+            <td>{{ event.type.name }}</td>
             <td>
                 <button>
-                    <a href="#">Modifier</a>
+                    <a href="{{ path('admin_edit_event', {"id": event.id}) }}">Edit</a>
                 </button>
                 <button>
-                    <a href="#">Effacer</a>
+                    <a href="{{ path('admin_delete_event', {"id": event.id}) }}">Delete</a>
                 </button>
             </td>
         </tr>

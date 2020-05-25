@@ -12,17 +12,17 @@
     </thead>
     <tbody>
     {% set i = 1 %}
-    {% for categorie  in categories %}
+    {% for category  in categories %}
 
         <tr>
             <th scope="row">{{ i }}</th>
-            <td>{{ categorie.name }}</td>
+            <td>{{ category.name }}</td>
             <td>
                 <button>
-                    <a href="#">Edit</a>
+                    <a href="{{ path('admin_edit_category', {'id': category.id}) }}">Edit</a>
                 </button>
                 <button>
-                    <a href="#">Delete</a>
+                    <a href="{{path('admin_delete_category', {'id': category.id}) }}">Delete</a>
                 </button>
             </td>
         </tr>
