@@ -6,7 +6,7 @@ use App\Repository\TeamCreatedRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=TeamCreatedRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\TeamCreatedRepository")
  */
 class TeamCreated
 {

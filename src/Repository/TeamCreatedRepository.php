@@ -19,6 +19,33 @@ class TeamCreatedRepository extends ServiceEntityRepository
         parent::__construct($registry, TeamCreated::class);
     }
 
+    /**
+     * get athlet where id team
+     */
+    public function athletinTeam($idTeam){
+        $qb = $this->createQueryBuilder('t');
+        $qb->andWhere("t.team = :team")
+            ->setParameter("team", $idTeam);
+        $qb->join('t.athlet', 'a');
+        $qb->leftJoin('t.team', 'team');
+        $qb->select('team.id, team.name, a.id, a.name, a.firstname, a.dateBirth, a.reference');
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * delete athlet in team
+     */
+    public function deleteAthletinTeam($idAthlet, $idTeam){
+        $qb = $this->createQueryBuilder('t');
+        $qb->delete('App:TeamCreated', 't')
+        ->andWhere("t.athlet = :athlet")
+            ->setParameter("athlet", $idAthlet)
+        ->andWhere("t.team = :team")
+            ->setParameter("team", $idTeam);
+        return $qb->getQuery()->execute();
+
+    }
+
     // /**
     //  * @return TeamCreated[] Returns an array of TeamCreated objects
     //  */

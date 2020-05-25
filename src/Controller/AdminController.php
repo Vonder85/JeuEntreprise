@@ -8,6 +8,7 @@ use App\Entity\Company;
 use App\Entity\Discipline;
 use App\Entity\Event;
 use App\Entity\Team;
+use App\Entity\TeamCreated;
 use App\Entity\Type;
 use App\Entity\User;
 use App\Form\AthletType;
@@ -15,9 +16,11 @@ use App\Form\CategoryType;
 use App\Form\CompanyType;
 use App\Form\DisciplineType;
 use App\Form\ParticipantType;
+use App\Form\TeamCreatedType;
 use App\Form\TeamType;
 use App\Form\TypeType;
 use App\Repository\AthletRepository;
+use App\Repository\TeamCreatedRepository;
 use App\Repository\TeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -247,15 +250,37 @@ class AdminController extends AbstractController
      * @Route("/team/edit/{id}", name="edit_team", requirements={"id": "\d+"})
      * Edit Team
      */
-    public function editTeam($id, TeamRepository $tr, AthletRepository $ar, Request $req){
-        $athlets = $ar->findAll();
+    public function editTeam($id, TeamRepository $tr, AthletRepository $ar, Request $req, EntityManagerInterface $em){
         $team = $tr->find($id);
+        $teamCreated = new TeamCreated();
+        $teamCreated->setTeam($team);
+
+        $teamCreatedForm = $this->createForm(TeamCreatedType::class, $teamCreated);
+
+        $teamCreatedForm->handleRequest($req);
+        if($teamCreatedForm->isSubmitted() && $teamCreatedForm->isValid()){
+
+            $em->persist($teamCreated);
+            $em->flush();
+        }
+
+        $athletsTeam = $em->getRepository(TeamCreated::class)->athletinTeam($id);
 
 
         return $this->render('admin/edit/team.html.twig', [
-            "athlets" => $athlets,
-            "team" => $team
+            "teamCreatedForm" => $teamCreatedForm->createView(),
+            "team" => $team,
+            "athletsTeam" => $athletsTeam
         ]);
     }
 
+   /**
+    * @Route("/team/edit/{idTeam}/{idAthlet}", name="delete_athlet", requirements={"idTeam": "\d+", "idAthlet": "\d+"})
+    */
+   public function deleteAthletinTeam($idAthlet, $idTeam, TeamCreatedRepository $tcr){
+
+        $tcr->deleteAthletinTeam($idAthlet, $idTeam);
+
+        return $this->redirectToRoute('admin_teams');
+   }
 }

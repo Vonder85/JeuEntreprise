@@ -2,22 +2,48 @@
 
 {% block title %}Edit a Team !{% endblock %}
 {% block body %}
-<div class="container">
-    <h1>Edit a team</h1>
-    <h3>{{ team.name }}</h3>
-    <form method="post">
-        <label for="athlet">Add an athlet</label>
-        <select>
-            {% for athlet in athlets %}
-            <option value="{{ athlet.id }}" name="athlet1">{{ athlet.name }} {{ athlet.firstname }}</option>
-            {% endfor %}
-        </select><br>
-        <select>
-            {% for athlet in athlets %}
-                <option value="{{ athlet.id }}" name="athlet2">{{ athlet.name }} {{ athlet.firstname }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Save">
-    </form>
-</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+        <h1>Edit a team</h1>
+        <h3>{{ team.name }}</h3>
+        {{ form_start(teamCreatedForm)}}
+        {{ form_widget(teamCreatedForm)}}
+        <button type="submit" id="btnSave">Save</button>
+        {{ form_end(teamCreatedForm)}}
+            </div>
+            <div class="col-6">
+                <table class="table mb-0 mt-4">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Lastname Firstname</th>
+                        <th scope="col">Date of birth</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set i = 1 %}
+                    {% for athlet  in athletsTeam %}
+
+                        <tr>
+                            <th scope="row">{{ i }}</th>
+                            <td>{{ athlet.name }} {{ athlet.firstname }}</td>
+                            <td>{{ athlet.dateBirth|date("d/m/Y") }}</td>
+                            <td>{{ athlet.reference }}</td>
+                            <td>
+                                <button>
+                                    <a href="{{ path('admin_delete_athlet', {'idTeam': team.id, 'idAthlet': athlet.id}) }}">Delete</a>
+                                </button>
+                            </td>
+                        </tr>
+                        {% set i = i+1 %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
