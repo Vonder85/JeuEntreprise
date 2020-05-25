@@ -60,6 +60,14 @@
                             <button class="btn btn-light text-light bg-dark bouton" id="user">Add an user</button>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton " id="field">Add a field</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-light text-light bg-dark bouton" id="competition">Add a competition</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-update" role="tabpanel" aria-labelledby="v-pills-update-tab">
                     <div class="row">
@@ -95,6 +103,14 @@
                         </div>
                         <div class="col-6">
                             <a href="{{ path('admin_users') }}"><button class="btn btn-light text-light bg-dark bouton" id="users">Users</button></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="{{ path('admin_fields') }}"><button class="btn btn-light text-light bg-dark bouton " id="fields">Fields</button></a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ path('admin_competitions') }}"><button class="btn btn-light text-light bg-dark bouton" id="competitions">Competitions</button></a>
                         </div>
                     </div>
                 </div>
@@ -141,6 +157,31 @@
                         <button type="submit">Save</button>
                         {{ form_end(teamForm) }}
                     </div>
+                    <div id="userForm" class="col-6 form">
+                        <h1>Add an User</h1>
+                        {{ form_start(userForm) }}
+                        {{ form_widget(userForm) }}
+                        <input type="radio" name="role" value="user" checked>
+                        <label for="user">Referent</label><br>
+                        <input type="radio" name="role" value="admin">
+                        <label for="admin">Admin</label><br><br>
+                        <button type="submit">Save</button>
+                        {{ form_end(userForm) }}
+                    </div>
+                    <div id="fieldForm" class="col-6 form">
+                        <h1>Add a Field</h1>
+                        {{ form_start(fieldForm) }}
+                        {{ form_widget(fieldForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(fieldForm) }}
+                    </div>
+                    <div id="competitionForm" class="col-6 form">
+                        <h1>Add a Competition</h1>
+                        {{ form_start(competitionForm) }}
+                        {{ form_widget(competitionForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(competitionForm) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,10 +196,13 @@
         var companyForm = $('#companyForm');
         var athletForm = $('#athletForm');
         var teamForm = $('#teamForm');
+        var userForm = $('#userForm');
+        var fieldForm = $('#fieldForm');
+        var competitionForm = $('#competitionForm');
 
         $(document).ready(function () {
             $('.form').hide();
-            $('#v-pills-profile-tab, #v-pills-home-tab, #v-pills-update-tab').on('click', function () {
+            $('#v-pills-add-tab, #v-pills-home-tab, #v-pills-update-tab').on('click', function () {
                 $('.form').hide();
                 $('.table').hide();
                 $('.bouton').show();
@@ -180,6 +224,15 @@
             })
             $('#team').on('click', function () {
                 showTeamForm();
+            })
+            $('#user').on('click', function () {
+                showUserForm();
+            })
+            $('#field').on('click', function () {
+                showFieldForm();
+            })
+            $('#competition').on('click', function () {
+                showCompetitionForm();
             })
         })
 
@@ -214,6 +267,18 @@
         function showTeamForm() {
             $('.bouton').hide();
             $('#doForm').append(teamForm.show());
+        }
+        function showUserForm() {
+            $('.bouton').hide();
+            $('#doForm').append(userForm.show());
+        }
+        function showFieldForm() {
+            $('.bouton').hide();
+            $('#doForm').append(fieldForm.show());
+        }
+        function showCompetitionForm() {
+            $('.bouton').hide();
+            $('#doForm').append(competitionForm.show());
         }
 
     </script>

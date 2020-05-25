@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Athlet;
 use App\Entity\Category;
 use App\Entity\Company;
+use App\Entity\Competition;
 use App\Entity\Discipline;
 use App\Entity\Event;
+use App\Entity\Field;
 use App\Entity\Team;
 use App\Entity\TeamCreated;
 use App\Entity\Type;
@@ -14,21 +16,21 @@ use App\Entity\User;
 use App\Form\AthletType;
 use App\Form\CategoryType;
 use App\Form\CompanyType;
+use App\Form\CompetitionType;
 use App\Form\DisciplineType;
-use App\Form\ParticipantType;
+use App\Form\FieldType;
 use App\Form\TeamCreatedType;
 use App\Form\TeamType;
 use App\Form\TypeType;
+use App\Form\UserType;
 use App\Repository\AthletRepository;
 use App\Repository\TeamCreatedRepository;
 use App\Repository\TeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/admin", name="admin_")
@@ -38,7 +40,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function home(Request $request, EntityManagerInterface $em)
+    public function home(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
     {
 
         /**
@@ -116,6 +118,33 @@ class AdminController extends AbstractController
         }
 
         /**
+         * Add User Form
+         */
+        $user = new User();
+        $userForm = $this->createForm(UserType::class, $user);
+
+
+        $userForm->handleRequest($request);
+        if($userForm->isSubmitted() && $userForm->isValid()){
+            //Hasher le password
+            $hashed = $encoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($hashed);
+            $role = $request->request->get('role');
+            if($role === 'admin'){
+                $roles[] = 'ROLE_ADMIN';
+            }else{
+                $roles[] = 'ROLE_USER';
+            }
+            $user->setRoles($roles);
+
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('success', 'User added');
+
+            return $this->redirectToRoute('admin_home');
+        }
+
+        /**
          * Add Team Form
          */
         $team = new Team();
@@ -130,6 +159,37 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_home');
         }
 
+        /**
+         * Add Field Form
+         */
+        $field = new Field();
+        $fieldForm = $this->createForm(FieldType::class, $field);
+
+
+        $fieldForm->handleRequest($request);
+        if($fieldForm->isSubmitted() && $fieldForm->isValid()){
+            $em->persist($field);
+            $em->flush();
+            $this->addFlash('success', 'Field added');
+
+            return $this->redirectToRoute('admin_home');
+        }
+
+        /**
+         * Add Competition Form
+         */
+        $competition = new Competition();
+        $competitionForm = $this->createForm(CompetitionType::class, $competition);
+
+        $competitionForm->handleRequest($request);
+        if($competitionForm->isSubmitted() && $competitionForm->isValid()){
+            $em->persist($competition);
+            $em->flush();
+            $this->addFlash('success', 'Competition added');
+
+            return $this->redirectToRoute('admin_home');
+        }
+
 
         return $this->render('admin/home.html.twig', [
             'disciplineForm' => $disciplineForm->createView(),
@@ -138,6 +198,9 @@ class AdminController extends AbstractController
             'companyForm' => $companyForm->createView(),
             'athletForm' => $athletForm->createView(),
             'teamForm' => $teamForm->createView(),
+            'userForm' => $userForm->createView(),
+            'fieldForm' => $fieldForm->createView(),
+            'competitionForm' => $competitionForm->createView()
         ]);
     }
 
@@ -245,6 +308,33 @@ class AdminController extends AbstractController
                 "disciplines" => $disciplines
             ]);
     }
+
+    /**
+     * @Route("/fields", name="fields")
+     * show all fields
+     */
+    public function getFields(EntityManagerInterface $em){
+
+        $fields = $em->getRepository(Field::class)->findAll();
+
+        return $this->render('admin/fields.html.twig', [
+            "fields" => $fields
+        ]);
+    }
+
+    /**
+     * @Route("/competition", name="competitions")
+     * show all competitions
+     */
+    public function getCompetitions(EntityManagerInterface $em){
+
+        $competitions = $em->getRepository(Competition::class)->findAll();
+
+        return $this->render('admin/competitions.html.twig', [
+            "competitions" => $competitions
+        ]);
+    }
+
 
     /**
      * @Route("/team/edit/{id}", name="edit_team", requirements={"id": "\d+"})
