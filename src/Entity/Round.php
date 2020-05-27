@@ -41,27 +41,30 @@ class Round
     }
     public function __construct()
     {
-        $this->events = new ArrayCollection();
+        $this->meets = new ArrayCollection();
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="round")
+     * @ORM\OneToMany(targetEntity="App\Entity\Meet", mappedBy="round")
      */
-    private $events;
+    private $meets;
 
     /**
      * @return ArrayCollection
      */
-    public function getEvents(): ArrayCollection
+    public function getMeets(): ArrayCollection
     {
-        return $this->events;
+        return $this->meets;
     }
 
     /**
-     * @param ArrayCollection $events
+     * @param ArrayCollection $meets
      */
-    public function setEvents(ArrayCollection $events): void
+    public function setMeets(ArrayCollection $meets): void
     {
-        $this->events = $events;
+        $this->meets = $meets;
     }
+
+
+
 }

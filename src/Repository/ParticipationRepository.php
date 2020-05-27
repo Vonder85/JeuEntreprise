@@ -19,6 +19,41 @@ class ParticipationRepository extends ServiceEntityRepository
         parent::__construct($registry, Participation::class);
     }
 
+    /**
+     * get participation for an event
+     */
+    public function findParticipationInAnEvent($idEvent){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("p.event = :event")
+            ->setParameter("event", $idEvent)
+        ->groupBy("pa.id");
+        $qb->join('p.participant', 'pa');
+        $qb->leftJoin('pa.athlet', 'a');
+        $qb->leftJoin('pa.team', 't');
+        $qb->leftJoin('a.company', 'ac');
+        $qb->leftJoin('t.teamCreated', 'tcr');
+        $qb->leftJoin('tcr.athlet', 'atcr');
+        $qb->leftJoin('atcr.company', 'atcrc');
+        $qb->select('p.id, pa.id as participantId, pa.name as participantName, a.name as athletName, a.firstname as athletFirstname, ac.name as athletCompany, ac.country as athletCountry, t.name as teamName, atcrc.name as companyName');
+        return $qb->getQuery()->execute();
+    }
+
+
+    /**
+     * delete participation in an event
+     */
+    public function deleteParticipationEvent($idEvent, $idParticipant){
+        $qb = $this->createQueryBuilder('p');
+        $qb->delete('App:Participation', 'p')
+            ->andWhere("p.event = :event")
+            ->setParameter("event", $idEvent)
+            ->andWhere("p.participant = :participant")
+            ->setParameter("participant", $idParticipant);
+        return $qb->getQuery()->execute();
+
+    }
+
+
     // /**
     //  * @return Participation[] Returns an array of Participation objects
     //  */

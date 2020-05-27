@@ -44,7 +44,7 @@ class Field
     public function __construct()
     {
         $this->matchs = new ArrayCollection();
-        $this->events = new ArrayCollection();
+        $this->meets = new ArrayCollection();
     }
 
     /**
@@ -53,10 +53,10 @@ class Field
     private $matchs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="field", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Meet", mappedBy="field", cascade={"remove"})
      *
      */
-    private $events;
+    private $meets;
 
     /**
      * @return ArrayCollection
@@ -77,17 +77,17 @@ class Field
     /**
      * @return ArrayCollection
      */
-    public function getEvents(): ArrayCollection
+    public function getMeets(): ArrayCollection
     {
-        return $this->events;
+        return $this->meets;
     }
 
     /**
-     * @param ArrayCollection $events
+     * @param ArrayCollection $meets
      */
-    public function setEvents(ArrayCollection $events): void
+    public function setMeets(ArrayCollection $meets): void
     {
-        $this->events = $events;
+        $this->meets = $meets;
     }
 
 

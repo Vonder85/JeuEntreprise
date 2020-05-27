@@ -32,15 +32,16 @@ class TeamCreatedRepository extends ServiceEntityRepository
         return $qb->getQuery()->execute();
     }
 
+
     /**
      * delete athlet in team
      */
     public function deleteAthletinTeam($idAthlet, $idTeam){
         $qb = $this->createQueryBuilder('t');
         $qb->delete('App:TeamCreated', 't')
-        ->andWhere("t.athlet = :athlet")
+            ->andWhere("t.athlet = :athlet")
             ->setParameter("athlet", $idAthlet)
-        ->andWhere("t.team = :team")
+            ->andWhere("t.team = :team")
             ->setParameter("team", $idTeam);
         return $qb->getQuery()->execute();
 

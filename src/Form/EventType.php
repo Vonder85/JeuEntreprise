@@ -45,21 +45,9 @@ class EventType extends AbstractType
                 "label" => 'Type',
                 "required" => 'false'
             ])
-            ->add('round', EntityType::class,[
-                "class" => Round::class,
-                "choice_label" => "name",
-                "label" => 'Round',
-                "required" => 'false'
-            ])
             ->add('meridianBreak')
             ->add('duration')
             ->add('breakRest')
-            ->add('field', EntityType::class,[
-                "class" => Field::class,
-                "choice_label" => "name",
-                "label" => 'Field',
-                "required" => 'false'
-            ])
             ->add('published')
 
 

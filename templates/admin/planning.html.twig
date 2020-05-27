@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fields !{% endblock %}
+{% block body %}
+
+    <ul>
+        {% set i =0 %}
+        {% for meet in meets %}
+            <li>{{ meet.participation.participant.name }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

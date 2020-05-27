@@ -158,6 +158,11 @@
                         {{ form_end(companyForm) }}
                     </div>
                     <div id="athletForm" class="col-6 form">
+                        <h1>Add athlets with csv File</h1>
+                        {{ form_start(csvForm) }}
+                        {{ form_widget(csvForm) }}
+                        <button type="submit">Save</button>
+                        {{ form_end(csvForm) }}
                         <h1>Add an Athlet</h1>
                         {{ form_start(athletForm) }}
                         {{ form_widget(athletForm) }}

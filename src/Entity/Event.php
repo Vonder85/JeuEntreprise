@@ -135,10 +135,7 @@ class Event
      */
     private $type;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Round", inversedBy="events")
-     */
-    private $round;
+
 
     /**
      * @return mixed
@@ -172,24 +169,6 @@ class Event
         $this->type = $type;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRound()
-    {
-        return $this->round;
-    }
-
-    /**
-     * @param mixed $round
-     */
-    public function setRound($round): void
-    {
-        $this->round = $round;
-    }
-
-
-
     public function __construct()
     {
         $this->participation = new ArrayCollection();
@@ -222,26 +201,6 @@ class Event
         $this->participation = $participation;
     }
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Field", inversedBy="events")
-     */
-    private $field;
-
-    /**
-     * @return mixed
-     */
-    public function getField()
-    {
-        return $this->field;
-    }
-
-    /**
-     * @param mixed $field
-     */
-    public function setField($field): void
-    {
-        $this->field = $field;
-    }
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Competition", inversedBy="events")
