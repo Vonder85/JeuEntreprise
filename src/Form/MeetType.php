@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Field;
+use App\Entity\Match;
 use App\Entity\Meet;
 use App\Entity\Participation;
 use App\Entity\Round;
@@ -28,13 +29,6 @@ class MeetType extends AbstractType
                 "label" => 'Round',
                 "required" => 'false'
             ])
-            ->add('field', EntityType::class,[
-                "class" => Field::class,
-                "choice_label" => "name",
-                "label" => 'Field',
-                "required" => 'false'
-            ])
-            ->add('match')
         ;
     }
 

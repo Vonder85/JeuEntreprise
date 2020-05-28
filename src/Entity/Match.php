@@ -34,6 +34,11 @@ class Match
      */
     private $heure;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $field;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -81,12 +86,6 @@ class Match
         return $this;
     }
 
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Field", inversedBy="matchs")
-     */
-    private $field;
-
     /**
      * @return mixed
      */
@@ -103,30 +102,69 @@ class Match
         $this->field = $field;
     }
 
-    public function __construct()
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event")
+     */
+    private $event;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participation")
+     */
+    private $participation1;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participation")
+     */
+    private $participation2;
+
+    /**
+     * @return mixed
+     */
+    public function getParticipation2()
     {
-        $this->meets = new ArrayCollection();
+        return $this->participation2;
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Meet", mappedBy="match")
+     * @param mixed $participation2
      */
-    private $meets;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getMeets(): ArrayCollection
+    public function setParticipation2($participation2): void
     {
-        return $this->meets;
+        $this->participation2 = $participation2;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getParticipation1()
+    {
+        return $this->participation1;
     }
 
     /**
-     * @param ArrayCollection $meets
+     * @param mixed $participation1
      */
-    public function setMeets(ArrayCollection $meets): void
+    public function setParticipation1($participation1): void
     {
-        $this->meets = $meets;
+        $this->participation1 = $participation1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * @param mixed $event
+     */
+    public function setEvent($event): void
+    {
+        $this->event = $event;
     }
 
 }

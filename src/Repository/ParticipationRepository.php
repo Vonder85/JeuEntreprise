@@ -38,6 +38,17 @@ class ParticipationRepository extends ServiceEntityRepository
         return $qb->getQuery()->execute();
     }
 
+    /**
+     * get participations for an event simple
+     */
+    public function findParticipationInAnEventSimple($idEvent){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("p.event = :event")
+            ->setParameter("event", $idEvent)
+            ->groupBy("pa.id");
+        $qb->leftJoin('p.participant', 'pa');
+        return $qb->getQuery()->execute();
+    }
 
     /**
      * delete participation in an event

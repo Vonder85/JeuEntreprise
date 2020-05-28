@@ -19,6 +19,15 @@ class MatchRepository extends ServiceEntityRepository
         parent::__construct($registry, Match::class);
     }
 
+    /**
+     * find matches for an event
+     */
+    public function findMatchesWithAnEvent($event){
+        $qb = $this->createQueryBuilder('m');
+        $qb->andWhere('m.event = :event')
+            ->setParameter('event', $event);
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Match[] Returns an array of Match objects
     //  */

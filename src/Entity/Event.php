@@ -48,6 +48,11 @@ class Event
      */
     private $published;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nbrFields;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -126,6 +131,22 @@ class Event
     }
 
     /**
+     * @return mixed
+     */
+    public function getNbrFields()
+    {
+        return $this->nbrFields;
+    }
+
+    /**
+     * @param mixed $nbrFields
+     */
+    public function setNbrFields($nbrFields): void
+    {
+        $this->nbrFields = $nbrFields;
+    }
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="events")
      */
     private $category;
@@ -172,7 +193,6 @@ class Event
     public function __construct()
     {
         $this->participation = new ArrayCollection();
-        $this->eventWithParticipation = new ArrayCollection();
     }
 
     /**
@@ -189,18 +209,12 @@ class Event
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\EventWithParticipation", mappedBy="event")
-     */
-    private $eventWithParticipation;
-
-    /**
      * @param mixed $participation
      */
     public function setParticipation($participation): void
     {
         $this->participation = $participation;
     }
-
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Competition", inversedBy="events")
@@ -244,19 +258,4 @@ class Event
         $this->discipline = $discipline;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getEventWithParticipation(): ArrayCollection
-    {
-        return $this->eventWithParticipation;
-    }
-
-    /**
-     * @param ArrayCollection $eventWithParticipation
-     */
-    public function setEventWithParticipation(ArrayCollection $eventWithParticipation): void
-    {
-        $this->eventWithParticipation = $eventWithParticipation;
-    }
 }

@@ -8,9 +8,7 @@ use App\Entity\Company;
 use App\Entity\Competition;
 use App\Entity\Discipline;
 use App\Entity\Event;
-use App\Entity\Field;
 use App\Entity\Match;
-use App\Entity\Meet;
 use App\Entity\Participant;
 use App\Entity\Participation;
 use App\Entity\Round;
@@ -25,8 +23,6 @@ use App\Form\CompanyType;
 use App\Form\CompetitionType;
 use App\Form\DisciplineType;
 use App\Form\EventType;
-use App\Form\FieldType;
-use App\Form\MeetType;
 use App\Form\ParticipationType;
 use App\Form\RoundType;
 use App\Form\TeamCreatedType;
@@ -39,7 +35,6 @@ use App\Repository\CompanyRepository;
 use App\Repository\CompetitionRepository;
 use App\Repository\DisciplineRepository;
 use App\Repository\EventRepository;
-use App\Repository\FieldRepository;
 use App\Repository\ParticipationRepository;
 use App\Repository\RoundRepository;
 use App\Repository\TeamCreatedRepository;
@@ -224,21 +219,6 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_home');
         }
 
-        /**
-         * Add Field Form
-         */
-        $field = new Field();
-        $fieldForm = $this->createForm(FieldType::class, $field);
-
-
-        $fieldForm->handleRequest($request);
-        if ($fieldForm->isSubmitted() && $fieldForm->isValid()) {
-            $em->persist($field);
-            $em->flush();
-            $this->addFlash('success', 'Field added');
-
-            return $this->redirectToRoute('admin_home');
-        }
 
         /**
          * Add Round Form
@@ -297,7 +277,6 @@ class AdminController extends AbstractController
             'athletForm' => $athletForm->createView(),
             'teamForm' => $teamForm->createView(),
             'userForm' => $userForm->createView(),
-            'fieldForm' => $fieldForm->createView(),
             'competitionForm' => $competitionForm->createView(),
             'eventForm' => $eventForm->createView(),
             'roundForm' => $roundForm->createView(),
@@ -429,20 +408,6 @@ class AdminController extends AbstractController
 
         return $this->render('admin/disciplines.html.twig', [
             "disciplines" => $disciplines
-        ]);
-    }
-
-    /**
-     * @Route("/fields", name="fields")
-     * show all fields
-     */
-    public function getFields(EntityManagerInterface $em)
-    {
-
-        $fields = $em->getRepository(Field::class)->findAll();
-
-        return $this->render('admin/fields.html.twig', [
-            "fields" => $fields
         ]);
     }
 
@@ -649,41 +614,6 @@ class AdminController extends AbstractController
 
         $this->addFlash("success", "Athlet deleted");
         return $this->redirectToRoute('admin_athlets');
-    }
-
-    /**
-     * @Route("/field/{id}", name="edit_field", requirements={"id": "\d+"})
-     * Edit a field
-     */
-    public function editField($id, EntityManagerInterface $em, FieldRepository $fr, Request $request)
-    {
-        $field = $fr->find($id);
-
-        $fieldForm = $this->createForm(FieldType::class, $field);
-        $fieldForm->handleRequest($request);
-        if ($fieldForm->isSubmitted() && $fieldForm->isValid()) {
-            $em->flush();
-            $this->addFlash('success', 'Field modified');
-            return $this->redirectToRoute('admin_fields');
-        }
-        return $this->render('admin/edit/field.html.twig', [
-            'fieldForm' => $fieldForm->createView(),
-            'field' => $field
-        ]);
-    }
-
-    /**
-     * @Route("/field/delete/{id}", name="delete_field", requirements={"id": "\d+"})
-     * delete a field
-     */
-    public function deleteField($id, EntityManagerInterface $em, FieldRepository $fr)
-    {
-        $field = $fr->find($id);
-        $em->remove($field);
-        $em->flush();
-
-        $this->addFlash("success", "Field deleted");
-        return $this->redirectToRoute('admin_fields');
     }
 
     /**
@@ -898,87 +828,117 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/createMeet", name="create_meet")
+     * @Route("/createMeet/{idEvent}", name="create_meet", requirements={"id": "\d+"})
      */
-    public function createMeet(EntityManagerInterface $em, Request $request)
+    public function createMeet($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
     {
-        $meet = new Meet();
-        $meetForm = $this->createForm(MeetType::class, $meet);
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $participations = $pr->findParticipationInAnEvent($idEvent);
+        $matches = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
 
-        $meetForm->handleRequest($request);
-        if ($meetForm->isSubmitted() && $meetForm->isValid()) {
 
-            $em->persist($meetForm);
-            $em->flush();
-            return $this->redirectToRoute('admin_home');
-        }
-        $events = $em->getRepository(Event::class)->findAll();
         return $this->render('admin/create/meet.html.twig', [
-            "events" => $events,
-            "meetForm" => $meetForm->createView(),
-
-        ]);
+            "event" => $event,
+            "participations"=> $participations,
+            "matchs" => $matches
+            ]);
     }
 
     /**
      * @Route("/planning/{idEvent}", name="create_planning_meets", requirements={"idEvent": "\d+"})
      */
-    public function createPlanningMeets($idEvent, ParticipationRepository $pr, FieldRepository $fr, EntityManagerInterface $em)
+    public function createPlanningMeets($idEvent, ParticipationRepository $pr, EntityManagerInterface $em)
     {
-        $participations = $pr->findParticipationInAnEvent($idEvent);
-        $rencontre = [];
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $participations = $pr->findParticipationInAnEventSimple($idEvent);
+        $matchs = $this->createRencontres($participations, $event, $em);
+        $nbrFields = $event->getNbrFields();
+        $j =1;
+        for($i=0; $i<$nbrFields; $i++){
 
-        for ($i = 0; $i < sizeof($participations); $i++) {
-            $rencontre[$i] = $participations[$i]['id'];
-        };
+            $fields[$i] = $j;
+            $j++;
+        }
+        $this->placementTerrains($matchs, $fields, sizeof($participations), $em);
+        $byNbrFields = array_chunk($matchs, $nbrFields);
+        dump($nbrFields);
+        return $this->render('admin/planning.html.twig', [
+            "participants" => $participations,
+            "matchs" => $matchs,
+            "byNbrFields" => $byNbrFields,
+            "nbrFields" => $nbrFields
+        ]);
+    }
 
-        $nbMatchs = sizeof($participations)/2;
-        $field = $fr->find(1);
+
+    /**
+     * @param $tabIdsParticipations
+     * @param $event
+     * @param EntityManagerInterface $em
+     * @return array
+     * Function establish list of meets
+     */
+    public function createRencontres($tabIdsParticipations, $event, EntityManagerInterface $em){
+
+        $nbMatchs = sizeof($tabIdsParticipations)/2;
         $matchs =[];
-        $k =0;
-        for($e=0; $e<sizeof($rencontre);$e++){
-            $j = 0;
+        $j =0;
+
+        dump($tabIdsParticipations);
+        for($e=0; $e<sizeof($tabIdsParticipations);$e++){
+            $k = 0;
             for ($i = 0; $i < $nbMatchs; $i++) {
 
                 $match = new Match();
 
-                $meet = new Meet();
-                $meet->setParticipation($pr->find($rencontre[$j]));
-                $meet->setMatch($match);
-                $meet->setField($field);
-                $meet->setName($meet->getParticipation()->getParticipant()->getName());
-                $meets[$k] = $meet;
+                $match->setEvent($event);
+                $match->setParticipation1($tabIdsParticipations[$k]);
                 $k++;
-                $j++;
+                $match->setParticipation2($tabIdsParticipations[$k]);
 
-                $meet2 = new Meet();
-                $meet2->setParticipation($pr->find($rencontre[$j]));
-                $meet2->setMatch($match);
-                $meet2->setName($meet2->getParticipation()->getParticipant()->getName());
-                $meet2->setField($field);
-                $j++;
-
-                $em->persist($meet);
-                $em->persist($meet2);
                 $em->persist($match);
                 $em->flush();
-                $matchs[$k] = $match;
-                $meets[$k] = $meet2;
+                $matchs[$j] = $match;
                 $k++;
+                $j++;
             }
-            $milieuTableau = array_slice($rencontre, 1, sizeof($rencontre)-2);
-            array_splice($rencontre, 1, sizeof($rencontre)-2);
-            $rencontre = array_merge($rencontre, $milieuTableau);
+            $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations)-2);
+            array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations)-2);
+            $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
         }
-        dump($matchs);
-        dump($meets);
+        dump($tabIdsParticipations);
+        return $matchs;
 
+    }
 
-        return $this->render('admin/planning.html.twig', [
-            "participants" => $participations,
-            "matchs" => $matchs,
-            "meets" => $meets
-        ]);
+    /**
+     * @param $tabRencontres
+     * @param $tabTerrains
+     * @param EntityManagerInterface $em
+     * Funciton qui attribut un terrain par match
+     */
+    public function placementTerrains($tabRencontres, $tabTerrains, $nbrParticipations, EntityManagerInterface $em){
+
+        /**
+         * @var Match $match
+         */
+        dump(sizeof($tabRencontres));
+        $groupmatchs = array_chunk($tabRencontres, sizeof($tabRencontres)/$nbrParticipations);
+        dump($groupmatchs);
+        $j =0;
+            foreach ($groupmatchs as $match){
+
+                for($i=0; $i<3; $i++){
+
+                    $match[$i]->setField((string)$tabTerrains[$j]);
+                    if($j === 3 ){
+                        $j = 0;
+                    }else{
+                        $j++;
+                    }
+                }
+            }
+            $em->flush();
     }
 
 
@@ -1003,7 +963,5 @@ class AdminController extends AbstractController
         }
         return $array;
     }
-
-
 
 }

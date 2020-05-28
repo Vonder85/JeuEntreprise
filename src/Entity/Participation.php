@@ -109,48 +109,4 @@ class Participation
         $this->eventWithParticipation = new ArrayCollection();
     }
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Meet", mappedBy="participation")
-     */
-    private $meets;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\EventWithParticipation", mappedBy="participation")
-     */
-    private $eventWithParticipation;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getMeets(): ArrayCollection
-    {
-        return $this->meets;
-    }
-
-    /**
-     * @param ArrayCollection $meets
-     */
-    public function setMeets(ArrayCollection $meets): void
-    {
-        $this->meets = $meets;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getEventWithParticipation(): ArrayCollection
-    {
-        return $this->eventWithParticipation;
-    }
-
-    /**
-     * @param ArrayCollection $eventWithParticipation
-     */
-    public function setEventWithParticipation(ArrayCollection $eventWithParticipation): void
-    {
-        $this->eventWithParticipation = $eventWithParticipation;
-    }
-
-
-
 }

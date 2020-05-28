@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f36ba3dc8b8f86cd02aea7e02ceaa28",
+    "content-hash": "11e2f5fe37a6c6c26a143352efa8549c",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1304,6 +1304,93 @@
                 "validator"
             ],
             "time": "2020-02-13T22:36:52+00:00"
+        },
+        {
+            "name": "fresh/doctrine-enum-bundle",
+            "version": "v7.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fre5h/DoctrineEnumBundle.git",
+                "reference": "4515c3310539ec6bd89884f97ada41418bc58356"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fre5h/DoctrineEnumBundle/zipball/4515c3310539ec6bd89884f97ada41418bc58356",
+                "reference": "4515c3310539ec6bd89884f97ada41418bc58356",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "^2.11",
+                "doctrine/doctrine-bundle": "^2.0",
+                "doctrine/orm": "^2.7",
+                "php": ">=7.2.5",
+                "symfony/config": "^5.0",
+                "symfony/dependency-injection": "^5.0",
+                "symfony/doctrine-bridge": "^5.0",
+                "symfony/framework-bundle": "^5.0",
+                "symfony/http-kernel": "^5.0",
+                "symfony/validator": "^5.0",
+                "twig/twig": "~2.11 || ^3.0"
+            },
+            "require-dev": {
+                "escapestudios/symfony2-coding-standard": "^3.10",
+                "johnkary/phpunit-speedtrap": "^3.1",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-doctrine": "^0.12",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpstan/phpstan-symfony": "^0.12",
+                "phpunit/phpunit": "^8.5",
+                "slam/phpstan-extensions": "^4.0",
+                "symfony/form": "^5.0",
+                "symfony/phpunit-bridge": "^5.0",
+                "symfony/yaml": "^5.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "7.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fresh\\DoctrineEnumBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Artem Henvald",
+                    "email": "genvaldartem@gmail.com",
+                    "role": "Creator"
+                },
+                {
+                    "name": "Community",
+                    "homepage": "https://github.com/fre5h/DoctrineEnumBundle/graphs/contributors",
+                    "role": "Contributors"
+                }
+            ],
+            "description": "Provides support of ENUM type for Doctrine2 in Symfony applications.",
+            "homepage": "https://github.com/fre5h/DoctrineEnumBundle",
+            "keywords": [
+                "bundle",
+                "dbal",
+                "doctrine",
+                "entity",
+                "enum",
+                "mssql",
+                "mysql",
+                "postgresql",
+                "sqlite",
+                "symfony",
+                "type"
+            ],
+            "time": "2019-12-27T12:34:21+00:00"
         },
         {
             "name": "jdorn/sql-formatter",

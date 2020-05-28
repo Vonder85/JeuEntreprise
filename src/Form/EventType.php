@@ -48,6 +48,7 @@ class EventType extends AbstractType
             ->add('meridianBreak')
             ->add('duration')
             ->add('breakRest')
+            ->add('nbrFields')
             ->add('published')
 
 

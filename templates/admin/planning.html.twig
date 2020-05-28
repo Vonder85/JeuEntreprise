@@ -2,12 +2,28 @@
 
 {% block title %}Fields !{% endblock %}
 {% block body %}
+    <div class="container-fluid">
 
-    <ul>
-        {% set i =0 %}
-        {% for meet in meets %}
-            <li>{{ meet.participation.participant.name }}</li>
-        {% endfor %}
-    </ul>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Team1</th>
+                <th scope="col">Team2</th>
+                <th scope="col">Field</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set i = 0 %}
+            {% for match in matchs %}
 
+            <tr>
+                <td>{{ match.participation1.participant.name }}</td>
+                <td>{{ match.participation2.participant.name }}</td>
+                <td>{{ match.field }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
 {% endblock %}

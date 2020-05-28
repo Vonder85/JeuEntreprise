@@ -44,27 +44,6 @@ class Round
         $this->meets = new ArrayCollection();
     }
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Meet", mappedBy="round")
-     */
-    private $meets;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getMeets(): ArrayCollection
-    {
-        return $this->meets;
-    }
-
-    /**
-     * @param ArrayCollection $meets
-     */
-    public function setMeets(ArrayCollection $meets): void
-    {
-        $this->meets = $meets;
-    }
-
 
 
 }
