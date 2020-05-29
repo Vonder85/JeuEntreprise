@@ -655,11 +655,13 @@ class AdminController extends AbstractController
     /**
      * @Route("/event/edit/{idEvent}/{idParticipation}", name="delete_participation_event", requirements={"idEvent": "\d+", "idParticipation": "\d+"})
      */
-    public function deleteParticipationEvent($idEvent, $idParticipation, ParticipationRepository $pr)
+    public function deleteParticipationEvent($idEvent, $idParticipation, ParticipationRepository $pr, EntityManagerInterface $em)
     {
 
         $pr->deleteParticipationEvent($idEvent, $idParticipation);
-
+        $participation = $pr->find($idParticipation);
+        $em->remove($participation);
+        $em->flush();
         return $this->redirectToRoute('admin_events');
     }
 
@@ -876,29 +878,59 @@ class AdminController extends AbstractController
      */
     public function createRencontres($tabIdsParticipations, $event, EntityManagerInterface $em){
 
-        $nbMatchs = sizeof($tabIdsParticipations)/2;
+
         $matchs =[];
 
-        for($e=0; $e<sizeof($tabIdsParticipations)-1;$e++){
-            $k = 0;
+        if($tabIdsParticipations%2 == 1){
+            $nbMatchs = sizeof($tabIdsParticipations)/2;
 
-            for ($i = 0; $i < $nbMatchs; $i++) {
+            for($e=0; $e<sizeof($tabIdsParticipations);$e++){
+                $l = 0;
 
-                $match = new Match();
+                for ($i = 0; $i < $nbMatchs; $i++) {
 
-                $match->setEvent($event);
-                $match->setParticipation1($tabIdsParticipations[$k]);
-                $k++;
-                $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations)-$k]);
-                $em->persist($match);
-                $matchs[] = $match;
-                $k++;
+                    if($tabIdsParticipations[$l] === $tabIdsParticipations[sizeof($tabIdsParticipations)-$l-1]){
+
+                    }else{
+                        $match = new Match();
+
+                        $match->setEvent($event);
+                        $match->setParticipation1($tabIdsParticipations[$l]);
+                        $l++;
+                        $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations)-$l]);
+                        $em->persist($match);
+                        $matchs[] = $match;
+                    }
+                }
+                $milieuTableau = array_slice($tabIdsParticipations, 0, 1);
+                array_splice($tabIdsParticipations, 0, 1);
+
+                $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
             }
-            $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations)-2);
-            array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations)-2);
+        }else{
+            $nbMatchs = sizeof($tabIdsParticipations)/2;
+            for($e=0; $e<sizeof($tabIdsParticipations)-1;$e++){
+                $k = 0;
 
-            $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
+                for ($i = 0; $i < $nbMatchs; $i++) {
+
+                    $match = new Match();
+
+                    $match->setEvent($event);
+                    $match->setParticipation1($tabIdsParticipations[$k]);
+                    $k++;
+                    $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations)-$k]);
+                    $em->persist($match);
+                    $matchs[] = $match;
+                    $k++;
+                }
+                $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations)-2);
+                array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations)-2);
+
+                $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
+            }
         }
+
         dump($matchs);
         $em->flush();
         return $matchs;
