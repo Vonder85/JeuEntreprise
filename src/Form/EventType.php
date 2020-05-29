@@ -11,6 +11,7 @@ use App\Entity\Round;
 use App\Entity\Type;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -50,6 +51,7 @@ class EventType extends AbstractType
             ->add('breakRest')
             ->add('nbrFields')
             ->add('published')
+            ->add('startAt', DateTimeType::class)
 
 
         ;

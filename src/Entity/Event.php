@@ -53,6 +53,11 @@ class Event
      */
     private $nbrFields;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $startAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -145,6 +150,23 @@ class Event
     {
         $this->nbrFields = $nbrFields;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getStartAt()
+    {
+        return $this->startAt;
+    }
+
+    /**
+     * @param mixed $startAt
+     */
+    public function setStartAt($startAt): void
+    {
+        $this->startAt = $startAt;
+    }
+
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="events")

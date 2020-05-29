@@ -4,26 +4,28 @@
 {% block body %}
     <div class="container-fluid">
 
+        {% for phase in phases %}
         <table class="table table-striped">
             <thead>
             <tr>
                 <th scope="col">Team1</th>
                 <th scope="col">Team2</th>
                 <th scope="col">Field</th>
+                <th scope="col">Hour</th>
             </tr>
             </thead>
             <tbody>
-            {% set i = 0 %}
-            {% for match in matchs %}
+            {% for i in 0..phase|length-1 %}
 
             <tr>
-                <td>{{ match.participation1.participant.name }}</td>
-                <td>{{ match.participation2.participant.name }}</td>
-                <td>{{ match.field }}</td>
+                <td>{{ phase[i].participation1.participant.name }}</td>
+                <td>{{ phase[i].participation2.participant.name }}</td>
+                <td>{{ phase[i].field }}</td>
+                <td>{{ phase[i].heure|format_datetime("full", "short", locale='fr') }}</td>
             </tr>
-            {% endfor %}
+        {% endfor %}
             </tbody>
         </table>
-
+    {% endfor %}
     </div>
 {% endblock %}
