@@ -26,6 +26,7 @@ class MatchRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('m');
         $qb->andWhere('m.event = :event')
             ->setParameter('event', $event);
+
         return $qb->getQuery()->execute();
     }
     // /**

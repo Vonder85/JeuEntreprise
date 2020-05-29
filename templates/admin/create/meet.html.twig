@@ -7,12 +7,9 @@
         <h2>{{ event.name }}</h2>
         <div class="row">
             <div class="col-6">
-                <a href="{{ path('admin_create_planning_meets', {"idEvent": event.id})}}"><button>Create meets</button></a>
+                <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id})}}"><button>Create meets</button></a>
             </div>
-
             <div class="col-6">
-
-
                 {% if event.type.name is same as ("Team Tournament") %}
                     <table class="table mb-0 mt-4">
                         <thead>

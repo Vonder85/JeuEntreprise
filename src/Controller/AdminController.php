@@ -836,35 +836,27 @@ class AdminController extends AbstractController
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $pr->findParticipationInAnEvent($idEvent);
-        $matches = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
 
 
         return $this->render('admin/create/meet.html.twig', [
             "event" => $event,
-            "participations"=> $participations,
-            "matchs" => $matches
-            ]);
+            "participations" => $participations
+        ]);
     }
 
     /**
-     * @Route("/planning/{idEvent}", name="create_planning_meets", requirements={"idEvent": "\d+"})
+     * @Route("/planning/{idEvent}", name="see_planning_meets", requirements={"idEvent": "\d+"})
      */
-    public function createPlanningMeets($idEvent, ParticipationRepository $pr, Request $request, EntityManagerInterface $em)
+    public function seePlanningMeets($idEvent, ParticipationRepository $pr, Request $request, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
-        $nbrFields = $event->getNbrFields();
 
-        $matchs = $this->createRencontres($participations, $event, $em);
-
-
-        $phases = $this->affectationTerrains($matchs, $nbrFields, $em, $event);
-
+        $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        dump($matchs);
         return $this->render('admin/planning.html.twig', [
             "participants" => $participations,
-            "matchs" => $matchs,
-            "nbrFields" => $nbrFields,
-            "phases" => $phases
+            "matchs" => $matchs
         ]);
     }
 
@@ -873,31 +865,33 @@ class AdminController extends AbstractController
      * @param $tabIdsParticipations
      * @param $event
      * @param EntityManagerInterface $em
-     * @return array
      * Function establish list of meets
+     * @Route("CreerRencontres/{idEvent}", name="creer_rencontre", requirements={"idEvent": "\d+"})
      */
-    public function createRencontres($tabIdsParticipations, $event, EntityManagerInterface $em){
+    public function creerRencontres($idEvent, EntityManagerInterface $em)
+    {
+        $tabIdsParticipations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $nbTerrains = $event->getNbrFields();
+        $matchs = [];
 
+        if ($tabIdsParticipations % 2 == 1) {
+            $nbMatchs = sizeof($tabIdsParticipations) / 2;
 
-        $matchs =[];
-
-        if($tabIdsParticipations%2 == 1){
-            $nbMatchs = sizeof($tabIdsParticipations)/2;
-
-            for($e=0; $e<sizeof($tabIdsParticipations);$e++){
+            for ($e = 0; $e < sizeof($tabIdsParticipations); $e++) {
                 $l = 0;
 
                 for ($i = 0; $i < $nbMatchs; $i++) {
 
-                    if($tabIdsParticipations[$l] === $tabIdsParticipations[sizeof($tabIdsParticipations)-$l-1]){
+                    if ($tabIdsParticipations[$l] === $tabIdsParticipations[sizeof($tabIdsParticipations) - $l - 1]) {
 
-                    }else{
+                    } else {
                         $match = new Match();
 
                         $match->setEvent($event);
                         $match->setParticipation1($tabIdsParticipations[$l]);
                         $l++;
-                        $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations)-$l]);
+                        $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $l]);
                         $em->persist($match);
                         $matchs[] = $match;
                     }
@@ -907,9 +901,9 @@ class AdminController extends AbstractController
 
                 $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
             }
-        }else{
-            $nbMatchs = sizeof($tabIdsParticipations)/2;
-            for($e=0; $e<sizeof($tabIdsParticipations)-1;$e++){
+        } else {
+            $nbMatchs = sizeof($tabIdsParticipations) / 2;
+            for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
                 $k = 0;
 
                 for ($i = 0; $i < $nbMatchs; $i++) {
@@ -919,90 +913,94 @@ class AdminController extends AbstractController
                     $match->setEvent($event);
                     $match->setParticipation1($tabIdsParticipations[$k]);
                     $k++;
-                    $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations)-$k]);
+                    $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $k]);
                     $em->persist($match);
                     $matchs[] = $match;
                     $k++;
                 }
-                $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations)-2);
-                array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations)-2);
+                $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
+                array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
 
                 $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
             }
         }
-
-        dump($matchs);
+        $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
         $em->flush();
-        return $matchs;
-
+        return $this->redirectToRoute('admin_see_planning_meets', [
+            "idEvent" => $idEvent
+        ]);
     }
 
-    function affectationTerrains($rencontres, $nbrTerrains, $em, $event){
+    function affectationTerrains($rencontres, $nbrTerrains, $em, $event)
+    {
         //get array of fields
-        $j=1;
-        for($i=0; $i<$nbrTerrains; $i++){
+        $j = 1;
+        for ($i = 0; $i < $nbrTerrains; $i++) {
             $fields[$i] = $j;
             $j++;
         }
         $numeroPhase = 1;
         $phases = [];
         $date = $event->getStartAt();
-        do{
+        do {
             $phases[$numeroPhase] = [];
-            $k=0;
-            do{
+            $k = 0;
+            do {
                 //Création phase de rencontres
-                if(!$this->equipePresente($phases[$numeroPhase], $rencontres[$k])){
+                if (!$this->equipePresente($phases[$numeroPhase], $rencontres[$k])) {
                     $rencontres[$k]->setField($fields[0]);
                     $rencontres[$k]->setHeure(clone($date));
-                    array_splice($fields,0,1);
+                    array_splice($fields, 0, 1);
                     array_push($phases[$numeroPhase], $rencontres[$k]);
                     array_splice($rencontres, $k, 1);
-                }else{
+                } else {
                     $k++;
                 }
-            }while($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
-            $date->add(new \DateInterval('PT0H'.$event->getDuration().'M'));
+            } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
+            $date->add(new \DateInterval('PT0H' . $event->getDuration() . 'M'));
             $numeroPhase++;
             //get array of fields
-            $j=1;
-            for($i=0; $i<$nbrTerrains; $i++){
+            $j = 1;
+            for ($i = 0; $i < $nbrTerrains; $i++) {
                 $fields[$i] = $j;
                 $j++;
             }
-        }while(!empty($rencontres));
+        } while (!empty($rencontres));
         $em->flush();
-        dump($phases);
         return $phases;
     }
 
-    function equipePresente($phase, $rencontre){
+    function equipePresente($phase, $rencontre)
+    {
         $part1 = $rencontre->getParticipation1();
         $part2 = $rencontre->getParticipation2();
-        if(sizeof($phase) > 0){
-            if($part1 === $phase[0]->getParticipation1() || $part1 === $phase[0]->getParticipation2() || $part2 === $phase[0]->getParticipation1() || $part2 === $phase[0]->getParticipation2()){
+        if (sizeof($phase) > 0) {
+            if ($part1 === $phase[0]->getParticipation1() || $part1 === $phase[0]->getParticipation2() || $part2 === $phase[0]->getParticipation1() || $part2 === $phase[0]->getParticipation2()) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
 
     }
 
-    function array_move_elem($array, $from, $to) {
-        if ($from == $to) { return $array; }
+    function array_move_elem($array, $from, $to)
+    {
+        if ($from == $to) {
+            return $array;
+        }
         $c = count($array);
         if (($c > $from) and ($c > $to)) {
             if ($from < $to) {
                 $f = $array[$from];
                 for ($i = $from; $i < $to; $i++) {
-                    $array[$i] = $array[$i+1];
+                    $array[$i] = $array[$i + 1];
                 }
                 $array[$to] = $f;
             } else {
                 $f = $array[$from];
                 for ($i = $from; $i > $to; $i--) {
-                    $array[$i] = $array[$i-1];
+                    $array[$i] = $array[$i - 1];
                 }
                 $array[$to] = $f;
             }

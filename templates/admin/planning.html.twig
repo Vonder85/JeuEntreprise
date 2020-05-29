@@ -4,7 +4,7 @@
 {% block body %}
     <div class="container-fluid">
 
-        {% for phase in phases %}
+
         <table class="table table-striped">
             <thead>
             <tr>
@@ -15,17 +15,17 @@
             </tr>
             </thead>
             <tbody>
-            {% for i in 0..phase|length-1 %}
 
+            {% for match in matchs %}
             <tr>
-                <td>{{ phase[i].participation1.participant.name }}</td>
-                <td>{{ phase[i].participation2.participant.name }}</td>
-                <td>{{ phase[i].field }}</td>
-                <td>{{ phase[i].heure|format_datetime("full", "short", locale='fr') }}</td>
+                <td>{{ match.participation1.participant.name }}</td>
+                <td>{{ match.participation2.participant.name }}</td>
+                <td>{{ match.field }}</td>
+                <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
             </tr>
-        {% endfor %}
+            {% endfor %}
             </tbody>
         </table>
-    {% endfor %}
+
     </div>
 {% endblock %}
