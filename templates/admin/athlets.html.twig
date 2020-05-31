@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Athlets !{% endblock %}
+{% block title %}Athlètes | {{ parent() }}{% endblock %}
 {% block body %}
 <table class="table mb-0 mt-4">
     <thead>
     <tr>
         <th scope="col">#</th>
-        <th scope="col">Lastname Firstname</th>
-        <th scope="col">Date of birth</th>
-        <th scope="col">Reference</th>
-        <th scope="col">Company</th>
-        <th scope="col">Country</th>
+        <th scope="col">Nom & prénom</th>
+        <th scope="col">Date de naissance</th>
+        <th scope="col">Réference</th>
+        <th scope="col">Entreprise</th>
+        <th scope="col">France</th>
         <th scope="col">Actions</th>
     </tr>
     </thead>
@@ -28,10 +28,10 @@
 
             <td>
                 <button>
-                    <a href="{{ path('admin_edit_athlet', {"id": athlet.id}) }}">Edit</a>
+                    <a href="{{ path('admin_edit_athlet', {"id": athlet.id}) }}">Modifier</a>
                 </button>
                 <button>
-                    <a href="{{ path('admin_delete_athlet', {"id": athlet.id}) }}">Delete</a>
+                    <a href="{{ path('admin_delete_athlet', {"id": athlet.id}) }}">Supprimer</a>
                 </button>
             </td>
         </tr>
@@ -40,7 +40,7 @@
     </tbody>
 </table>
 <div class="text-center">
-    <a class="btn btn-primary" href="{{ path('admin_home') }}">Back</a>
+    <a class="btn btn-primary" href="{{ path('admin_home') }}">Retour</a>
 </div>
 
 {% endblock %}

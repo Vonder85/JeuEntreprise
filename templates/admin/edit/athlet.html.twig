@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit an athlet!{% endblock %}
+{% block title %}Modifier un athlète | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <h1>Edit an athlet</h1>
+                <h1>Modifier un athlète</h1>
                 <h3>{{ athlet.name }}</h3>
                 {{ form_start(athletForm) }}
                 {{ form_widget(athletForm) }}
-                <button type="submit" id="btnSave">Save</button>
+                <button type="submit" id="btnSave">Valider</button>
                 {{ form_end(athletForm) }}
             </div>
         </div>

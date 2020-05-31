@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Users !{% endblock %}
+{% block title %}Utilisateurs | {{ parent() }}{% endblock %}
 {% block body %}
 <table class="table mb-0 mt-4">
     <thead>
     <tr>
         <th scope="col">#</th>
-        <th scope="col">Username</th>
-        <th scope="col">Lastname Firstname</th>
+        <th scope="col">Pseudo</th>
+        <th scope="col">Nom & prénom</th>
         <th scope="col">Email</th>
         <th scope="col">Actions</th>
     </tr>
@@ -23,10 +23,10 @@
             <td>{{ user.email }}</td>
             <td>
                 <button>
-                    <a href="{{ path('admin_edit_user', {"id": user.id}) }}">Edit</a>
+                    <a href="{{ path('admin_edit_user', {"id": user.id}) }}">Modifier</a>
                 </button>
                 <button>
-                    <a href="{{ path('admin_delete_user', {"id": user.id}) }}">Delete</a>
+                    <a href="{{ path('admin_delete_user', {"id": user.id}) }}">Supprimer</a>
                 </button>
             </td>
         </tr>
@@ -35,7 +35,7 @@
     </tbody>
 </table>
 <div class="text-center">
-    <a class="btn btn-primary" href="{{ path('admin_home') }}">Back</a>
+    <a class="btn btn-primary" href="{{ path('admin_home') }}">Retour</a>
 </div>
 
 {% endblock %}

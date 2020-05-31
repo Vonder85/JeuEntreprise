@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Categories !{% endblock %}
+{% block title %}Catégories ! {{ parent() }}{% endblock %}
 {% block body %}
 <table class="table mb-0 mt-4">
     <thead>
     <tr>
         <th scope="col">#</th>
-        <th scope="col">Name</th>
+        <th scope="col">Nom</th>
         <th scope="col">Actions</th>
     </tr>
     </thead>
@@ -19,10 +19,10 @@
             <td>{{ category.name }}</td>
             <td>
                 <button>
-                    <a href="{{ path('admin_edit_category', {'id': category.id}) }}">Edit</a>
+                    <a href="{{ path('admin_edit_category', {'id': category.id}) }}">Modifier</a>
                 </button>
                 <button>
-                    <a href="{{path('admin_delete_category', {'id': category.id}) }}">Delete</a>
+                    <a href="{{path('admin_delete_category', {'id': category.id}) }}">Supprimer</a>
                 </button>
             </td>
         </tr>
@@ -31,7 +31,7 @@
     </tbody>
 </table>
 <div class="text-center">
-    <a class="btn btn-primary" href="{{ path('admin_home') }}">Back</a>
+    <a class="btn btn-primary" href="{{ path('admin_home') }}">Retour</a>
 </div>
 
 {% endblock %}

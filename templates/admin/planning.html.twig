@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Fields !{% endblock %}
+{% block title %}Liste des matchs | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container-fluid">
 
@@ -8,10 +8,10 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th scope="col">Team1</th>
-                <th scope="col">Team2</th>
-                <th scope="col">Field</th>
-                <th scope="col">Hour</th>
+                <th scope="col">Equipe 1</th>
+                <th scope="col">Equipe 2</th>
+                <th scope="col">Terrain</th>
+                <th scope="col">Heure</th>
             </tr>
             </thead>
             <tbody>

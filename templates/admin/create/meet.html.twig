@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create meet !{% endblock %}
+{% block title %}Création rencontres | {{ parent()}}{% endblock %}
 {% block body %}
     <div class="container">
-        <h1>Create Meets</h1>
+        <h1>Créer Rencontres</h1>
         <h2>{{ event.name }}</h2>
         <div class="row">
             <div class="col-6">
-                <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id})}}"><button>Create meets</button></a>
+                <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id})}}"><button>Créer rencontres</button></a>
             </div>
             <div class="col-6">
                 {% if event.type.name is same as ("Team Tournament") %}
@@ -15,9 +15,9 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Company</th>
-                            <th scope="col">Country</th>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Entreprise</th>
+                            <th scope="col">Pays</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -31,7 +31,7 @@
                                 <td>{{ participant.companyName}} </td>
                                 <td>
                                     <button>
-                                        <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">Delete</a>
+                                        <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">Désinscrire</a>
                                     </button>
                                 </td>
                             </tr>
@@ -44,9 +44,9 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Lastname & firstname</th>
-                            <th scope="col">Company</th>
-                            <th scope="col">Country</th>
+                            <th scope="col">Nom & prénom</th>
+                            <th scope="col">Entreprise</th>
+                            <th scope="col">Pays</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -60,7 +60,7 @@
                                 <td>{{ participant.athletCountry}} </td>
                                 <td>
                                     <button>
-                                        <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">Delete</a>
+                                        <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">Désinscrire</a>
                                     </button>
                                 </td>
                             </tr>

@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit a Competition !{% endblock %}
+{% block title %}Modifier un compétition | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <h1>Edit a competition</h1>
+                <h1>Modifier une compétition</h1>
                 <h3>{{ competition.name }}</h3>
                 {{ form_start(competitionForm) }}
                 {{ form_widget(competitionForm) }}
-                <button type="submit" id="btnSave">Save</button>
+                <button type="submit" id="btnSave">Valider</button>
                 {{ form_end(competitionForm) }}
             </div>
         </div>

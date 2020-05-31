@@ -1,19 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit an User !{% endblock %}
+{% block title %}Modifier un utilisateur | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <h1>Edit an user</h1>
+                <h1>Modifier un utilisateur</h1>
                 <h3>{{ user.username }}</h3>
                 {{ form_start(userForm) }}
                 {{ form_widget(userForm) }}
                 <input type="radio" name="role" value="user" checked>
-                <label for="user">Referent</label><br>
+                <label for="user">Référent</label><br>
                 <input type="radio" name="role" value="admin">
                 <label for="admin">Admin</label><br><br>
-                <button type="submit" id="btnSave">Save</button>
+                <button type="submit" id="btnSave">Valider</button>
                 {{ form_end(userForm) }}
             </div>
         </div>

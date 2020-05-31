@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit a Category !{% endblock %}
+{% block title %}Modifier une catgéorie ! {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <h1>Edit a Category</h1>
+                <h1>Modifier une catégorie</h1>
                 <h3>{{ category.name }}</h3>
                 {{ form_start(categoryForm) }}
                 {{ form_widget(categoryForm) }}
-                <button type="submit" id="btnSave">Save</button>
+                <button type="submit" id="btnSave">Valider</button>
                 {{ form_end(categoryForm) }}
             </div>
         </div>

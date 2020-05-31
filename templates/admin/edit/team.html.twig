@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit a Team !{% endblock %}
+{% block title %}Modifier une équipe | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col-6">
-        <h1>Edit a team</h1>
+        <h1>Modifier</h1>
         <h3>{{ team.name }}</h3>
         {{ form_start(teamCreatedForm)}}
         {{ form_widget(teamCreatedForm)}}
-        <button type="submit" id="btnSave">Save</button>
+        <button type="submit" id="btnSave">Sauvegarder</button>
         {{ form_end(teamCreatedForm)}}
             </div>
             <div class="col-6">
@@ -17,9 +17,9 @@
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Lastname Firstname</th>
-                        <th scope="col">Date of birth</th>
-                        <th scope="col">Reference</th>
+                        <th scope="col">Nom & prénom</th>
+                        <th scope="col">Date de naissance</th>
+                        <th scope="col">Référence</th>
                         <th scope="col">Actions</th>
                     </tr>
                     </thead>
@@ -34,7 +34,7 @@
                             <td>{{ athlet.reference }}</td>
                             <td>
                                 <button>
-                                    <a href="{{ path('admin_delete_athlet_team', {'idTeam': team.id, 'idAthlet': athlet.id}) }}">Delete</a>
+                                    <a href="{{ path('admin_delete_athlet_team', {'idTeam': team.id, 'idAthlet': athlet.id}) }}">Supprimer</a>
                                 </button>
                             </td>
                         </tr>

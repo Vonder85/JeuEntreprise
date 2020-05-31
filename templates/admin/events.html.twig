@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Events !{% endblock %}
+{% block title %}Evènements | {{ parent() }}{% endblock %}
 {% block body %}
 <table class="table mb-0 mt-4">
     <thead>
     <tr>
         <th scope="col">#</th>
         <th scope="col">Discipline</th>
-        <th scope="col">Name</th>
-        <th scope="col">Gender</th>
-        <th scope="col">Category</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Genre</th>
+        <th scope="col">Catégorie</th>
         <th scope="col">Type</th>
         <th scope="col">Actions</th>
     </tr>
@@ -27,10 +27,10 @@
             <td>{{ event.type.name }}</td>
             <td>
                 <button>
-                    <a href="{{ path('admin_edit_event', {"id": event.id}) }}">Edit</a>
+                    <a href="{{ path('admin_edit_event', {"id": event.id}) }}">Modifier</a>
                 </button>
                 <button>
-                    <a href="{{ path('admin_delete_event', {"id": event.id}) }}">Delete</a>
+                    <a href="{{ path('admin_delete_event', {"id": event.id}) }}">Supprimer</a>
                 </button>
             </td>
         </tr>
@@ -39,7 +39,7 @@
     </tbody>
 </table>
 <div class="text-center">
-    <a class="btn btn-primary" href="{{ path('admin_home') }}">Back</a>
+    <a class="btn btn-primary" href="{{ path('admin_home') }}">Retour</a>
 </div>
 
 {% endblock %}

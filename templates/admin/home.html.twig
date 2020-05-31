@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Accueil Admin | {{ parent() }}{% endblock %}
 
 {% block body %}
     <div class="row">
         <div class="col-3">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
-                   aria-controls="v-pills-home" aria-selected="true">Home</a>
+                   aria-controls="v-pills-home" aria-selected="true">Accueil</a>
                 <a class="nav-link" id="v-pills-add-tab" data-toggle="pill" href="#v-pills-add" role="tab"
-                   aria-controls="v-pills-add" aria-selected="false">Add</a>
+                   aria-controls="v-pills-add" aria-selected="false">Ajouter</a>
                 <a class="nav-link" id="v-pills-update-tab" data-toggle="pill" href="#v-pills-update" role="tab"
-                   aria-controls="v-pills-update" aria-selected="false">See / Update</a>
+                   aria-controls="v-pills-update" aria-selected="false">Consulter/Modifier</a>
                 <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"
                    aria-controls="v-pills-settings" aria-selected="false">Settings</a>
             </div>
@@ -25,47 +25,47 @@
 
                         <div class="col-6">
 
-                            <button class="btn btn-light text-light bg-dark bouton " id="discipline">Add a discipline
+                            <button class="btn btn-light text-light bg-dark bouton " id="discipline">Ajouter une discipline
                             </button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="event">Add an event</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="event">Ajouter un évènement</button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton " id="category">Add a category
+                            <button class="btn btn-light text-light bg-dark bouton " id="category">Ajouter une catégorie
                             </button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="type">Add a type</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="type">Ajouter un type</button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="athlet">add athlet</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="athlet">Ajouter un athlète</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton " id="company">Add a company</button>
+                            <button class="btn btn-light text-light bg-dark bouton " id="company">Ajouter une entreprise</button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton " id="team">Add a team</button>
+                            <button class="btn btn-light text-light bg-dark bouton " id="team">Ajouter une équipe</button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="user">Add an user</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="user">Ajouter un utilisateur</button>
                         </div>
                     </div>
                     <div class="row">
 
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="competition">Add a competition</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="competition">Ajouter une compétition</button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton " id="round">Add a round</button>
+                            <button class="btn btn-light text-light bg-dark bouton " id="round">Ajouter un tour</button>
                         </div>
                         <div class="col-6">
                         </div>
@@ -80,12 +80,12 @@
                             </button></a>
                         </div>
                         <div class="col-6">
-                            <a href="{{ path('admin_events') }}"><button class="btn btn-light text-light bg-dark bouton" id="events">Events</button></a>
+                            <a href="{{ path('admin_events') }}"><button class="btn btn-light text-light bg-dark bouton" id="events">Evènements</button></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ path('admin_categories') }}"><button class="btn btn-light text-light bg-dark bouton " id="categories">Categories</button></a>
+                            <a href="{{ path('admin_categories') }}"><button class="btn btn-light text-light bg-dark bouton " id="categories">Catégories</button></a>
                         </div>
                         <div class="col-6">
                             <a href="{{ path('admin_types') }}"><button class="btn btn-light text-light bg-dark bouton" id="types">Types</button></a>
@@ -93,15 +93,15 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ path('admin_athlets') }}"><button class="btn btn-light text-light bg-dark bouton" id="athlets">Athlets</button></a>
+                            <a href="{{ path('admin_athlets') }}"><button class="btn btn-light text-light bg-dark bouton" id="athlets">Athlètes</button></a>
                         </div>
                         <div class="col-6">
-                            <a href="{{ path('admin_companies') }}"><button class="btn btn-light text-light bg-dark bouton " id="companies">Companies</button></a>
+                            <a href="{{ path('admin_companies') }}"><button class="btn btn-light text-light bg-dark bouton " id="companies">Entreprises</button></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ path('admin_teams') }}"><button class="btn btn-light text-light bg-dark bouton " id="teams">Teams</button></a>
+                            <a href="{{ path('admin_teams') }}"><button class="btn btn-light text-light bg-dark bouton " id="teams">Equipes</button></a>
                         </div>
                         <div class="col-6">
                             <a href="{{ path('admin_users') }}"><button class="btn btn-light text-light bg-dark bouton" id="users">Users</button></a>
@@ -110,12 +110,12 @@
                     <div class="row">
 
                         <div class="col-6">
-                            <a href="{{ path('admin_competitions') }}"><button class="btn btn-light text-light bg-dark bouton" id="competitions">Competitions</button></a>
+                            <a href="{{ path('admin_competitions') }}"><button class="btn btn-light text-light bg-dark bouton" id="competitions">Compétitions</button></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ path('admin_rounds') }}"><button class="btn btn-light text-light bg-dark bouton " id="rounds">Rounds</button></a>
+                            <a href="{{ path('admin_rounds') }}"><button class="btn btn-light text-light bg-dark bouton " id="rounds">Tours</button></a>
                         </div>
                         <div class="col-6">
                         </div>
@@ -123,83 +123,83 @@
                 </div>
                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
                     <div id="disciplineForm" class="col-6 form">
-                        <h1>Add a Discipline</h1>
+                        <h1>Ajouter une discipline</h1>
                         {{ form_start(disciplineForm) }}
                         {{ form_widget(disciplineForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(disciplineForm) }}
                     </div>
                     <div id="categoryForm" class="col-6 form">
-                        <h1>Add a Category</h1>
+                        <h1>Ajouter une catégorie</h1>
                         {{ form_start(categoryForm) }}
                         {{ form_widget(categoryForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(categoryForm) }}
                     </div>
                     <div id="typeForm" class="col-6 form">
-                        <h1>Add a Type</h1>
+                        <h1>Ajouter un type</h1>
                         {{ form_start(typeForm) }}
                         {{ form_widget(typeForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(typeForm) }}
                     </div>
                     <div id="companyForm" class="col-6 form">
-                        <h1>Add a Company</h1>
+                        <h1>Ajouter une entreprise</h1>
                         {{ form_start(companyForm) }}
                         {{ form_widget(companyForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(companyForm) }}
                     </div>
                     <div id="athletForm" class="col-6 form">
-                        <h1>Add athlets with csv File</h1>
+                        <h1>Ajouter des athlètes avec un fichier csv</h1>
                         {{ form_start(csvForm) }}
                         {{ form_widget(csvForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(csvForm) }}
-                        <h1>Add an Athlet</h1>
+                        <h1>Ajouter un athlète</h1>
                         {{ form_start(athletForm) }}
                         {{ form_widget(athletForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(athletForm) }}
                     </div>
                     <div id="teamForm" class="col-6 form">
-                        <h1>Add a Team</h1>
+                        <h1>Ajouter une équipe</h1>
                         {{ form_start(teamForm) }}
                         {{ form_widget(teamForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(teamForm) }}
                     </div>
                     <div id="userForm" class="col-6 form">
-                        <h1>Add an User</h1>
+                        <h1>Ajouter un utilisateur</h1>
                         {{ form_start(userForm) }}
                         {{ form_widget(userForm) }}
                         <input type="radio" name="role" value="user" checked>
-                        <label for="user">Referent</label><br>
+                        <label for="user">Réferent</label><br>
                         <input type="radio" name="role" value="admin">
                         <label for="admin">Admin</label><br><br>
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(userForm) }}
                     </div>
 
                     <div id="competitionForm" class="col-6 form">
-                        <h1>Add a Competition</h1>
+                        <h1>Ajouter une Compétition</h1>
                         {{ form_start(competitionForm) }}
                         {{ form_widget(competitionForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(competitionForm) }}
                     </div>
                     <div id="eventForm" class="col-6 form">
-                        <h1>Add an Event</h1>
+                        <h1>Ajouter un évènement</h1>
                         {{ form_start(eventForm) }}
                         {{ form_widget(eventForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(eventForm) }}
                     </div>
                     <div id="roundForm" class="col-6 form">
-                        <h1>Add a Round</h1>
+                        <h1>Ajouter un tour</h1>
                         {{ form_start(roundForm) }}
                         {{ form_widget(roundForm) }}
-                        <button type="submit">Save</button>
+                        <button type="submit">Ajouter</button>
                         {{ form_end(roundForm) }}
                     </div>
                 </div>
