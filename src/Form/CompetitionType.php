@@ -12,11 +12,11 @@ class CompetitionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('startDate')
+            ->add('name', null, ['label' => 'Nom'])
+            ->add('startDate', null, ['label' => 'Date de début'])
             ->add('international')
-            ->add('endDate')
-            ->add('place')
+            ->add('endDate', null, ['label' => 'Date de fin'])
+            ->add('place', null, ['label' => 'Localisation'])
         ;
     }
 

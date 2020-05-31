@@ -23,7 +23,7 @@ class EventType extends AbstractType
             ->add('competition', EntityType::class,[
                 "class" => Competition::class,
                 "choice_label" => "name",
-                "label" => 'Competition',
+                "label" => 'Compétition',
                 "required" => 'true'
             ])
             ->add('discipline', EntityType::class,[
@@ -32,12 +32,12 @@ class EventType extends AbstractType
                 "label" => 'Discipline',
                 "required" => 'true'
             ])
-            ->add('name')
-            ->add('gender')
+            ->add('name', null, ['label' => 'Nom'])
+            ->add('gender', null, ['label' => 'Genre'])
             ->add('category', EntityType::class,[
                 "class" => Category::class,
                 "choice_label" => "name",
-                "label" => 'Category',
+                "label" => 'Catégorie',
                 "required" => 'false'
             ])
             ->add('type', EntityType::class,[
@@ -46,12 +46,12 @@ class EventType extends AbstractType
                 "label" => 'Type',
                 "required" => 'false'
             ])
-            ->add('meridianBreak')
-            ->add('duration')
-            ->add('breakRest')
-            ->add('nbrFields')
-            ->add('published')
-            ->add('startAt', DateTimeType::class)
+            ->add('meridianBreak', null, ['label' => 'Pause méridienne'])
+            ->add('duration', null, ['label' => 'Durée'])
+            ->add('breakRest', null, ['label' => 'Durée pause'])
+            ->add('nbrFields', null, ['label' => 'Nombre de terrains'])
+            ->add('published',null, ['label' => 'Publier'])
+            ->add('startAt', DateTimeType::class, ['label' => 'Heure de début'])
 
 
         ;

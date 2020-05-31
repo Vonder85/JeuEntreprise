@@ -17,7 +17,7 @@ class TeamCreatedType extends AbstractType
         $builder
             ->add('athlet',EntityType::class,[
                 'class'=>Athlet::class,
-                'label'=> 'Choose an athlet',
+                'label'=> 'Sélectionner un athlète',
                 'choice_label'=> 'name',
             ])
         ;

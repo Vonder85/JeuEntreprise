@@ -16,17 +16,17 @@ class AthletType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, ['label' => 'Name',
+            ->add('name', null, ['label' => 'Nom',
                 "required" => 'true'])
-            ->add('firstname', null, ['label' => 'Firstname',
+            ->add('firstname', null, ['label' => 'Prénom',
                 "required" => 'true'])
-            ->add('dateBirth', BirthdayType::class, ['label' => 'Date of birth',
+            ->add('dateBirth', BirthdayType::class, ['label' => 'Date de naissance',
                 "required" => 'true'])
-            ->add('reference', null, ['label' => 'Reference'])
+            ->add('reference', null, ['label' => 'Référence'])
             ->add('company', EntityType::class,[
                 "class" => Company::class,
                 "choice_label" => "name",
-                "label" => 'Company',
+                "label" => 'Entreprise',
                 "required" => 'true'
             ])
         ;

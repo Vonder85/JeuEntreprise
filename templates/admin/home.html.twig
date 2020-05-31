@@ -62,14 +62,11 @@
                         <div class="col-6">
                             <button class="btn btn-light text-light bg-dark bouton" id="competition">Ajouter une compétition</button>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-6">
                             <button class="btn btn-light text-light bg-dark bouton " id="round">Ajouter un tour</button>
                         </div>
-                        <div class="col-6">
-                        </div>
                     </div>
+
                 </div>
                 <div class="tab-pane fade" id="v-pills-update" role="tabpanel" aria-labelledby="v-pills-update-tab">
                     <div class="row">
@@ -126,47 +123,47 @@
                         <h1>Ajouter une discipline</h1>
                         {{ form_start(disciplineForm) }}
                         {{ form_widget(disciplineForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(disciplineForm) }}
                     </div>
                     <div id="categoryForm" class="col-6 form">
                         <h1>Ajouter une catégorie</h1>
                         {{ form_start(categoryForm) }}
                         {{ form_widget(categoryForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(categoryForm) }}
                     </div>
                     <div id="typeForm" class="col-6 form">
                         <h1>Ajouter un type</h1>
                         {{ form_start(typeForm) }}
                         {{ form_widget(typeForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(typeForm) }}
                     </div>
                     <div id="companyForm" class="col-6 form">
                         <h1>Ajouter une entreprise</h1>
                         {{ form_start(companyForm) }}
                         {{ form_widget(companyForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(companyForm) }}
                     </div>
                     <div id="athletForm" class="col-6 form">
                         <h1>Ajouter des athlètes avec un fichier csv</h1>
                         {{ form_start(csvForm) }}
                         {{ form_widget(csvForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(csvForm) }}
                         <h1>Ajouter un athlète</h1>
                         {{ form_start(athletForm) }}
                         {{ form_widget(athletForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(athletForm) }}
                     </div>
                     <div id="teamForm" class="col-6 form">
                         <h1>Ajouter une équipe</h1>
                         {{ form_start(teamForm) }}
                         {{ form_widget(teamForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(teamForm) }}
                     </div>
                     <div id="userForm" class="col-6 form">
@@ -177,7 +174,7 @@
                         <label for="user">Réferent</label><br>
                         <input type="radio" name="role" value="admin">
                         <label for="admin">Admin</label><br><br>
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(userForm) }}
                     </div>
 
@@ -185,21 +182,21 @@
                         <h1>Ajouter une Compétition</h1>
                         {{ form_start(competitionForm) }}
                         {{ form_widget(competitionForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(competitionForm) }}
                     </div>
                     <div id="eventForm" class="col-6 form">
                         <h1>Ajouter un évènement</h1>
                         {{ form_start(eventForm) }}
                         {{ form_widget(eventForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(eventForm) }}
                     </div>
                     <div id="roundForm" class="col-6 form">
                         <h1>Ajouter un tour</h1>
                         {{ form_start(roundForm) }}
                         {{ form_widget(roundForm) }}
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(roundForm) }}
                     </div>
                 </div>

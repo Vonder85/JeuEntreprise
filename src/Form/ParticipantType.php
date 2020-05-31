@@ -18,7 +18,7 @@ class ParticipantType extends AbstractType
             ->add('athlet', EntityType::class,[
                 "class" => Athlet::class,
                 "choice_label" => "name",
-                "label" => 'Athlet'
+                "label" => 'Athlète'
             ])
             ->add('team', HiddenType::class,[
                 "required" => false
