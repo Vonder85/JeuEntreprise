@@ -12,24 +12,26 @@
                    aria-controls="v-pills-add" aria-selected="false">Ajouter</a>
                 <a class="nav-link" id="v-pills-update-tab" data-toggle="pill" href="#v-pills-update" role="tab"
                    aria-controls="v-pills-update" aria-selected="false">Consulter/Modifier</a>
-                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"
-                   aria-controls="v-pills-settings" aria-selected="false">Settings</a>
             </div>
         </div>
         <div class="col-9" id="doForm">
-
             <div class="tab-content" id="v-pills-tabContent">
-                              <div class="tab-pane fade" id="v-pills-add" role="tabpanel" aria-labelledby="v-pills-add-tab">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                    <h3>Bienvenue dans le Back-Office pour gérer une compétition</h3>
+                </div>
+                <div class="tab-pane fade" id="v-pills-add" role="tabpanel" aria-labelledby="v-pills-add-tab">
 
                     <div class="row">
 
                         <div class="col-6">
 
-                            <button class="btn btn-light text-light bg-dark bouton " id="discipline">Ajouter une discipline
+                            <button class="btn btn-light text-light bg-dark bouton " id="discipline">Ajouter une
+                                discipline
                             </button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="event">Ajouter un évènement</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="event">Ajouter un évènement
+                            </button>
                         </div>
                     </div>
                     <div class="row">
@@ -43,24 +45,31 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="athlet">Ajouter un athlète</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="athlet">Ajouter un athlète
+                            </button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton " id="company">Ajouter une entreprise</button>
+                            <button class="btn btn-light text-light bg-dark bouton " id="company">Ajouter une
+                                entreprise
+                            </button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton " id="team">Ajouter une équipe</button>
+                            <button class="btn btn-light text-light bg-dark bouton " id="team">Ajouter une équipe
+                            </button>
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="user">Ajouter un utilisateur</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="user">Ajouter un utilisateur
+                            </button>
                         </div>
                     </div>
                     <div class="row">
 
                         <div class="col-6">
-                            <button class="btn btn-light text-light bg-dark bouton" id="competition">Ajouter une compétition</button>
+                            <button class="btn btn-light text-light bg-dark bouton" id="competition">Ajouter une
+                                compétition
+                            </button>
                         </div>
                         <div class="col-6">
                             <button class="btn btn-light text-light bg-dark bouton " id="round">Ajouter un tour</button>
@@ -73,52 +82,71 @@
 
                         <div class="col-6">
 
-                            <a href="{{ path('admin_discipline') }}"><button class="btn btn-light text-light bg-dark bouton " id="disciplines">Disciplines
-                            </button></a>
+                            <a href="{{ path('admin_discipline') }}">
+                                <button class="btn btn-light text-light bg-dark bouton " id="disciplines">Disciplines
+                                </button>
+                            </a>
                         </div>
                         <div class="col-6">
-                            <a href="{{ path('admin_events') }}"><button class="btn btn-light text-light bg-dark bouton" id="events">Evènements</button></a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <a href="{{ path('admin_categories') }}"><button class="btn btn-light text-light bg-dark bouton " id="categories">Catégories</button></a>
-                        </div>
-                        <div class="col-6">
-                            <a href="{{ path('admin_types') }}"><button class="btn btn-light text-light bg-dark bouton" id="types">Types</button></a>
+                            <a href="{{ path('admin_events') }}">
+                                <button class="btn btn-light text-light bg-dark bouton" id="events">Evènements</button>
+                            </a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ path('admin_athlets') }}"><button class="btn btn-light text-light bg-dark bouton" id="athlets">Athlètes</button></a>
+                            <a href="{{ path('admin_categories') }}">
+                                <button class="btn btn-light text-light bg-dark bouton " id="categories">Catégories
+                                </button>
+                            </a>
                         </div>
                         <div class="col-6">
-                            <a href="{{ path('admin_companies') }}"><button class="btn btn-light text-light bg-dark bouton " id="companies">Entreprises</button></a>
+                            <a href="{{ path('admin_types') }}">
+                                <button class="btn btn-light text-light bg-dark bouton" id="types">Types</button>
+                            </a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ path('admin_teams') }}"><button class="btn btn-light text-light bg-dark bouton " id="teams">Equipes</button></a>
+                            <a href="{{ path('admin_athlets') }}">
+                                <button class="btn btn-light text-light bg-dark bouton" id="athlets">Athlètes</button>
+                            </a>
                         </div>
                         <div class="col-6">
-                            <a href="{{ path('admin_users') }}"><button class="btn btn-light text-light bg-dark bouton" id="users">Users</button></a>
+                            <a href="{{ path('admin_companies') }}">
+                                <button class="btn btn-light text-light bg-dark bouton " id="companies">Entreprises
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="{{ path('admin_teams') }}">
+                                <button class="btn btn-light text-light bg-dark bouton " id="teams">Equipes</button>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ path('admin_users') }}">
+                                <button class="btn btn-light text-light bg-dark bouton" id="users">Users</button>
+                            </a>
                         </div>
                     </div>
                     <div class="row">
 
                         <div class="col-6">
-                            <a href="{{ path('admin_competitions') }}"><button class="btn btn-light text-light bg-dark bouton" id="competitions">Compétitions</button></a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <a href="{{ path('admin_rounds') }}"><button class="btn btn-light text-light bg-dark bouton " id="rounds">Tours</button></a>
+                            <a href="{{ path('admin_competitions') }}">
+                                <button class="btn btn-light text-light bg-dark bouton" id="competitions">Compétitions
+                                </button>
+                            </a>
                         </div>
                         <div class="col-6">
+                            <a href="{{ path('admin_rounds') }}">
+                                <button class="btn btn-light text-light bg-dark bouton " id="rounds">Tours</button>
+                            </a>
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+
+
                     <div id="disciplineForm" class="col-6 form">
                         <h1>Ajouter une discipline</h1>
                         {{ form_start(disciplineForm) }}
@@ -202,7 +230,7 @@
                 </div>
             </div>
         </div>
-    </div>
+
 
 {% endblock %}
 {% block javascripts %}
@@ -289,18 +317,22 @@
             $('.bouton').hide();
             $('#doForm').append(teamForm.show());
         }
+
         function showUserForm() {
             $('.bouton').hide();
             $('#doForm').append(userForm.show());
         }
+
         function showCompetitionForm() {
             $('.bouton').hide();
             $('#doForm').append(competitionForm.show());
         }
+
         function showEventForm() {
             $('.bouton').hide();
             $('#doForm').append(eventForm.show());
         }
+
         function showRoundForm() {
             $('.bouton').hide();
             $('#doForm').append(roundForm.show());

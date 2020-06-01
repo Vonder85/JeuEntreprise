@@ -19,6 +19,7 @@
                 {{ form_end(participationForm) }}
 
                 <a href="{{ path('admin_create_meet', {"idEvent": event.id}) }}"><button>Créer rencontres</button></a>
+                <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}"><button>Voir rencontres</button></a>
                 {% if event.type.name is same as ("Team Tournament") %}
                 <table class="table mb-0 mt-4">
                     <thead>

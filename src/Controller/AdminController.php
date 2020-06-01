@@ -72,7 +72,7 @@ class AdminController extends AbstractController
         if ($disciplineForm->isSubmitted() && $disciplineForm->isValid()) {
             $em->persist($discipline);
             $em->flush();
-            $this->addFlash('success', 'Discipline added');
+            $this->addFlash('success', 'Discipline ajoutée');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -86,7 +86,7 @@ class AdminController extends AbstractController
         if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
             $em->persist($category);
             $em->flush();
-            $this->addFlash('success', 'Category added');
+            $this->addFlash('success', 'Catégorie ajoutée');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -101,7 +101,7 @@ class AdminController extends AbstractController
         if ($typeForm->isSubmitted() && $typeForm->isValid()) {
             $em->persist($type);
             $em->flush();
-            $this->addFlash('success', 'Type added');
+            $this->addFlash('success', 'Type ajouté');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -115,7 +115,7 @@ class AdminController extends AbstractController
         if ($companyForm->isSubmitted() && $companyForm->isValid()) {
             $em->persist($company);
             $em->flush();
-            $this->addFlash('success', 'Company added');
+            $this->addFlash('success', 'Entreprise ajoutée');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -154,7 +154,7 @@ class AdminController extends AbstractController
                 $em->flush();
 
             }
-            $this->addFlash('success', sizeof($data) . ' athlets added');
+            $this->addFlash('success', sizeof($data) . ' athlètes ajoutés');
             return $this->redirectToRoute('admin_athlets');
         }
 
@@ -167,7 +167,7 @@ class AdminController extends AbstractController
             $participant->setName($athlet->getName());
             $em->persist($participant);
             $em->flush();
-            $this->addFlash('success', 'Athlet added');
+            $this->addFlash('success', 'Athlète ajouté');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -194,7 +194,7 @@ class AdminController extends AbstractController
 
             $em->persist($user);
             $em->flush();
-            $this->addFlash('success', 'User added');
+            $this->addFlash('success', 'Utilisateur ajouté');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -215,7 +215,7 @@ class AdminController extends AbstractController
             $participant->setName($team->getName());
             $em->persist($participant);
             $em->flush();
-            $this->addFlash('success', 'Team added');
+            $this->addFlash('success', 'Equipe ajoutée');
             return $this->redirectToRoute('admin_home');
         }
 
@@ -231,7 +231,7 @@ class AdminController extends AbstractController
         if ($roundForm->isSubmitted() && $roundForm->isValid()) {
             $em->persist($round);
             $em->flush();
-            $this->addFlash('success', 'Round added');
+            $this->addFlash('success', 'Tour ajouté');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -246,7 +246,7 @@ class AdminController extends AbstractController
         if ($competitionForm->isSubmitted() && $competitionForm->isValid()) {
             $em->persist($competition);
             $em->flush();
-            $this->addFlash('success', 'Competition added');
+            $this->addFlash('success', 'Compétition ajoutée');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -263,7 +263,7 @@ class AdminController extends AbstractController
             $event->setName($name);
             $em->persist($event);
             $em->flush();
-            $this->addFlash('success', 'Event added');
+            $this->addFlash('success', 'Evènement ajouté');
 
             return $this->redirectToRoute('admin_home');
         }
@@ -464,7 +464,7 @@ class AdminController extends AbstractController
         $em->remove($team);
         $em->flush();
 
-        $this->addFlash("success", "Team deleted");
+        $this->addFlash("success", "Equipe supprimée");
         return $this->redirectToRoute('admin_teams');
     }
 
@@ -491,7 +491,7 @@ class AdminController extends AbstractController
         $disciplineForm->handleRequest($request);
         if ($disciplineForm->isSubmitted() && $disciplineForm->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Discipline modified');
+            $this->addFlash('success', 'Discipline modifiée');
             return $this->redirectToRoute('admin_discipline');
         }
         return $this->render('admin/edit/discipline.html.twig', [
@@ -509,7 +509,7 @@ class AdminController extends AbstractController
         $em->remove($discipline);
         $em->flush();
 
-        $this->addFlash("success", "Discipline deleted");
+        $this->addFlash("success", "Discipline supprimée");
         return $this->redirectToRoute('admin_discipline');
     }
 
@@ -525,7 +525,7 @@ class AdminController extends AbstractController
         $categoryForm->handleRequest($request);
         if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Category modified');
+            $this->addFlash('success', 'Catégorie modifiée');
             return $this->redirectToRoute('admin_categories');
         }
         return $this->render('admin/edit/category.html.twig', [
@@ -543,7 +543,7 @@ class AdminController extends AbstractController
         $em->remove($category);
         $em->flush();
 
-        $this->addFlash("success", "Category deleted");
+        $this->addFlash("success", "Catégorie supprimée");
         return $this->redirectToRoute('admin_categories');
     }
 
@@ -559,7 +559,7 @@ class AdminController extends AbstractController
         $roundForm->handleRequest($request);
         if ($roundForm->isSubmitted() && $roundForm->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Round modified');
+            $this->addFlash('success', 'Tour modifié');
             return $this->redirectToRoute('admin_rounds');
         }
         return $this->render('admin/edit/round.html.twig', [
@@ -577,7 +577,7 @@ class AdminController extends AbstractController
         $em->remove($round);
         $em->flush();
 
-        $this->addFlash("success", "Round deleted");
+        $this->addFlash("success", "Tour supprimé");
         return $this->redirectToRoute('admin_rounds');
     }
 
@@ -593,7 +593,7 @@ class AdminController extends AbstractController
         $athletForm->handleRequest($request);
         if ($athletForm->isSubmitted() && $athletForm->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Athlet modified');
+            $this->addFlash('success', 'Athlète modifié');
             return $this->redirectToRoute('admin_athlets');
         }
         return $this->render('admin/edit/athlet.html.twig', [
@@ -612,7 +612,7 @@ class AdminController extends AbstractController
         $em->remove($athlet);
         $em->flush();
 
-        $this->addFlash("success", "Athlet deleted");
+        $this->addFlash("success", "Athlète supprimé");
         return $this->redirectToRoute('admin_athlets');
     }
 
@@ -634,12 +634,12 @@ class AdminController extends AbstractController
             $participation->setEvent($event);
             $em->persist($participation);
             $em->flush();
-            $this->addFlash('success', 'Participant added');
+            $this->addFlash('success', 'Participant ajouté');
         }
 
         if ($eventForm->isSubmitted() && $eventForm->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Event modified');
+            $this->addFlash('success', 'Evènement modifié');
             return $this->redirectToRoute('admin_events');
         }
         $participants = $em->getRepository(Participation::class)->findParticipationInAnEvent($id);
@@ -662,6 +662,7 @@ class AdminController extends AbstractController
         $participation = $pr->find($idParticipation);
         $em->remove($participation);
         $em->flush();
+        $this->addFlash('success', 'Participation supprimée');
         return $this->redirectToRoute('admin_events');
     }
 
@@ -675,7 +676,7 @@ class AdminController extends AbstractController
         $em->remove($event);
         $em->flush();
 
-        $this->addFlash("success", "Event deleted");
+        $this->addFlash("success", "Evènement supprimé");
         return $this->redirectToRoute('admin_events');
     }
 
@@ -691,7 +692,7 @@ class AdminController extends AbstractController
         $typeForm->handleRequest($request);
         if ($typeForm->isSubmitted() && $typeForm->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Type modified');
+            $this->addFlash('success', 'Type modifié');
             return $this->redirectToRoute('admin_types');
         }
         return $this->render('admin/edit/type.html.twig', [
@@ -710,7 +711,7 @@ class AdminController extends AbstractController
         $em->remove($type);
         $em->flush();
 
-        $this->addFlash("success", "Type deleted");
+        $this->addFlash("success", "Type supprimé");
         return $this->redirectToRoute('admin_types');
     }
 
@@ -726,7 +727,7 @@ class AdminController extends AbstractController
         $companyForm->handleRequest($request);
         if ($companyForm->isSubmitted() && $companyForm->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Company modified');
+            $this->addFlash('success', 'Entreprise modifiée');
             return $this->redirectToRoute('admin_companies');
         }
         return $this->render('admin/edit/company.html.twig', [
@@ -745,7 +746,7 @@ class AdminController extends AbstractController
         $em->remove($company);
         $em->flush();
 
-        $this->addFlash("success", "Company deleted");
+        $this->addFlash("success", "Entreprise supprimée");
         return $this->redirectToRoute('admin_companies');
     }
 
@@ -771,7 +772,7 @@ class AdminController extends AbstractController
             }
             $user->setRoles($roles);
             $em->flush();
-            $this->addFlash('success', 'User modified');
+            $this->addFlash('success', 'Utilisateur modifié');
             return $this->redirectToRoute('admin_users');
         }
         return $this->render('admin/edit/user.html.twig', [
@@ -790,7 +791,7 @@ class AdminController extends AbstractController
         $em->remove($user);
         $em->flush();
 
-        $this->addFlash("success", "User deleted");
+        $this->addFlash("success", "Utilisateur supprimé");
         return $this->redirectToRoute('admin_users');
     }
 
@@ -806,7 +807,7 @@ class AdminController extends AbstractController
         $competitionForm->handleRequest($request);
         if ($competitionForm->isSubmitted() && $competitionForm->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Competition modified');
+            $this->addFlash('success', 'Compétition modifiée');
             return $this->redirectToRoute('admin_competitions');
         }
         return $this->render('admin/edit/competition.html.twig', [
@@ -825,7 +826,7 @@ class AdminController extends AbstractController
         $em->remove($competition);
         $em->flush();
 
-        $this->addFlash("success", "Competition deleted");
+        $this->addFlash("success", "Compétition supprimée");
         return $this->redirectToRoute('admin_competitions');
     }
 

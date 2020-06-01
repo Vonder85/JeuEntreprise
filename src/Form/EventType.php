@@ -47,7 +47,7 @@ class EventType extends AbstractType
                 "required" => 'false'
             ])
             ->add('meridianBreak', null, ['label' => 'Pause méridienne'])
-            ->add('duration', null, ['label' => 'Durée'])
+            ->add('duration', null, ['label' => 'Durée d\'une rencontre'])
             ->add('breakRest', null, ['label' => 'Durée pause'])
             ->add('nbrFields', null, ['label' => 'Nombre de terrains'])
             ->add('published',null, ['label' => 'Publier'])

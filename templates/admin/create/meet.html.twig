@@ -8,6 +8,7 @@
         <div class="row">
             <div class="col-6">
                 <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id})}}"><button>Créer rencontres</button></a>
+                <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}"><button>Voir rencontres</button></a>
             </div>
             <div class="col-6">
                 {% if event.type.name is same as ("Team Tournament") %}
