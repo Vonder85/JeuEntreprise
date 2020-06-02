@@ -28,6 +28,11 @@ class Participation
      */
     private $points;
 
+    /**
+     * @ORM\Column(type="string", length=1, nullable=true)
+     */
+    private $poule;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -58,7 +63,24 @@ class Participation
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Participant")
+     * @return mixed
+     */
+    public function getPoule()
+    {
+        return $this->poule;
+    }
+
+    /**
+     * @param mixed $poule
+     */
+    public function setPoule($poule): void
+    {
+        $this->poule = $poule;
+    }
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participant", inversedBy="participation", cascade={"remove"})
      */
     protected $participant;
 
@@ -78,14 +100,10 @@ class Participation
         $this->participant = $participant;
     }
 
-
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="participation")
      */
     protected $event;
-
-
 
     /**
      * @return mixed
@@ -101,12 +119,6 @@ class Participation
     public function setEvent($event): void
     {
         $this->event = $event;
-    }
-
-    public function __construct()
-    {
-        $this->meets = new ArrayCollection();
-        $this->eventWithParticipation = new ArrayCollection();
     }
 
 }

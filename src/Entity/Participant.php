@@ -41,7 +41,7 @@ class Participant
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Participation", mappedBy="participant")
+     * @ORM\OneToMany(targetEntity="App\Entity\Participation", mappedBy="participant", orphanRemoval=true)
      */
     private $participation;
 

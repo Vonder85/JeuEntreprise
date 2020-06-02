@@ -11,7 +11,9 @@ use App\Entity\Round;
 use App\Entity\Type;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -32,7 +34,7 @@ class EventType extends AbstractType
                 "label" => 'Discipline',
                 "required" => 'true'
             ])
-            ->add('name', null, ['label' => 'Nom'])
+            ->add('name', HiddenType::class)
             ->add('gender', null, ['label' => 'Genre'])
             ->add('category', EntityType::class,[
                 "class" => Category::class,
@@ -50,7 +52,6 @@ class EventType extends AbstractType
             ->add('duration', null, ['label' => 'Durée d\'une rencontre'])
             ->add('breakRest', null, ['label' => 'Durée pause'])
             ->add('nbrFields', null, ['label' => 'Nombre de terrains'])
-            ->add('published',null, ['label' => 'Publier'])
             ->add('startAt', DateTimeType::class, ['label' => 'Heure de début'])
 
 

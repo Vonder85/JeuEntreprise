@@ -19,7 +19,7 @@ class Event
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=150)
+     * @ORM\Column(type="string", length=150, nullable=true)
      */
     private $name;
 
@@ -218,7 +218,7 @@ class Event
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Participation", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="App\Entity\Participation", mappedBy="event", orphanRemoval=true)
      */
     private $participation;
 

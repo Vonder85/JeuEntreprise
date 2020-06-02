@@ -34,7 +34,19 @@ class ParticipationRepository extends ServiceEntityRepository
         $qb->leftJoin('t.teamCreated', 'tcr');
         $qb->leftJoin('tcr.athlet', 'atcr');
         $qb->leftJoin('atcr.company', 'atcrc');
-        $qb->select('p.id, pa.id as participantId, pa.name as participantName, a.name as athletName, a.firstname as athletFirstname, ac.name as athletCompany, ac.country as athletCountry, t.name as teamName, atcrc.name as companyName');
+        $qb->select('p.id, pa.id as participantId, p.poule as participationPoule, pa.name as participantName, a.name as athletName, a.firstname as athletFirstname, ac.name as athletCompany, ac.country as athletCountry, t.name as teamName, atcrc.name as companyName, atcrc.country as countryName');
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * get PArticipation avec un participant
+     */
+    public function getParticipationAvecUnParticipant($idEvent, $idParticipant){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("p.event = :event")
+            ->setParameter("event", $idEvent)
+            ->andWhere("p.participant = :participant")
+            ->setParameter("participant", $idParticipant);
         return $qb->getQuery()->execute();
     }
 
@@ -62,6 +74,29 @@ class ParticipationRepository extends ServiceEntityRepository
             ->setParameter("participant", $idParticipant);
         return $qb->getQuery()->execute();
 
+    }
+
+    /**
+     * Récupération nombre de poules
+     */
+    public function nbrPoules($idEvent){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("p.event = :event")
+            ->setParameter("event", $idEvent)
+            ->groupBy("p.poule");
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * Récupération par poules
+     */
+    public function getParPoules($idEvent, $poule){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("p.event = :event")
+            ->setParameter("event", $idEvent)
+            ->andWhere("p.poule = :poule")
+            ->setParameter("poule", $poule);
+        return $qb->getQuery()->execute();
     }
 
 

@@ -39,6 +39,7 @@
                             <th scope="row">{{ i }}</th>
                             <td>{{ participant.teamName}} </td>
                             <td>{{ participant.companyName}} </td>
+                            <td>{{ participant.countryName}} </td>
                             <td>
                                 <button>
                                     <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">Désinscrire</a>

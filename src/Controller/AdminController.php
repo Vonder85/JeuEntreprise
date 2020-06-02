@@ -657,10 +657,10 @@ class AdminController extends AbstractController
      */
     public function deleteParticipationEvent($idEvent, $idParticipation, ParticipationRepository $pr, EntityManagerInterface $em)
     {
-
-        $pr->deleteParticipationEvent($idEvent, $idParticipation);
-        $participation = $pr->find($idParticipation);
-        $em->remove($participation);
+        dump((integer) $idParticipation);
+        $pr->deleteParticipationEvent($idEvent,(integer)$idParticipation);
+        dump($pr->getParticipationAvecUnParticipant($idEvent, $idParticipation));
+        //$em->remove();
         $em->flush();
         $this->addFlash('success', 'Participation supprimée');
         return $this->redirectToRoute('admin_events');
@@ -837,11 +837,11 @@ class AdminController extends AbstractController
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $pr->findParticipationInAnEvent($idEvent);
-
-
+        $nbrPoules= $pr->nbrPoules($idEvent);
         return $this->render('admin/create/meet.html.twig', [
             "event" => $event,
-            "participations" => $participations
+            "participations" => $participations,
+            "nbrPoules" => $nbrPoules
         ]);
     }
 
@@ -932,6 +932,87 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * fonction qui crée les rencontres des poules
+     * @Route("/creerRencontresPoules/{idEvent}", name="creer_rencontres_poules", requirements={"idEvent": "\d+"})
+     */
+    function creerRencontresPoules($idEvent, ParticipationRepository $pr, EntityManagerInterface $em){
+        $poules = $pr->nbrPoules($idEvent);
+
+        for($i=0; $i<sizeof($poules);$i++){
+            $participations[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
+        }
+
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $nbTerrains = $event->getNbrFields();
+        $matchs = [];
+        for($m=0; $m<sizeof($participations); $m++){
+            if ($participations[$m] % 2 == 1) {
+                $nbMatchs = sizeof($participations[$m]) / 2;
+
+                for ($e = 0; $e < sizeof($participations[$m]); $e++) {
+                    $l = 0;
+
+                    for ($i = 0; $i < $nbMatchs; $i++) {
+
+                        if ($participations[$m][$l] === $participations[$m][sizeof($participations[$m]) - $l - 1]) {
+
+                        } else {
+                            $match = new Match();
+
+                            $match->setEvent($event);
+                            $match->setParticipation1($participations[$m][$l]);
+                            $l++;
+                            $match->setParticipation2($participations[$m][sizeof($participations[$m]) - $l]);
+                            $em->persist($match);
+                            $matchs[] = $match;
+                        }
+                    }
+                    $milieuTableau = array_slice($participations[$m], 0, 1);
+                    array_splice($participations[$m], 0, 1);
+
+                    $participations[$m] = array_merge($participations[$m], $milieuTableau);
+                }
+            } else {
+                $nbMatchs = sizeof($participations[$m]) / 2;
+                for ($e = 0; $e < sizeof($participations[$m]) - 1; $e++) {
+                    $k = 0;
+
+                    for ($i = 0; $i < $nbMatchs; $i++) {
+
+                        $match = new Match();
+
+                        $match->setEvent($event);
+                        $match->setParticipation1($participations[$m][$k]);
+                        $k++;
+                        $match->setParticipation2($participations[$m][sizeof($participations[$m]) - $k]);
+                        $em->persist($match);
+                        $matchs[] = $match;
+                        $k++;
+                    }
+                    $milieuTableau = array_slice($participations[$m], 1, sizeof($participations[$m]) - 2);
+                    array_splice($participations[$m], 1, sizeof($participations[$m]) - 2);
+
+                    $participations[$m] = array_merge($participations[$m], $milieuTableau);
+                }
+            }
+        }
+        $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
+        $em->flush();
+        return $this->redirectToRoute('admin_see_planning_meets', [
+            "idEvent" => $idEvent
+        ]);
+    }
+
+    /**
+     * @param $rencontres
+     * @param $nbrTerrains
+     * @param $em
+     * @param $event
+     * @return array
+     * @throws \Exception
+     * fonction qui affecte les terrains dispo par rencontre
+     */
     function affectationTerrains($rencontres, $nbrTerrains, $em, $event)
     {
         //get array of fields
@@ -969,6 +1050,35 @@ class AdminController extends AbstractController
         } while (!empty($rencontres));
         $em->flush();
         return $phases;
+    }
+
+    /**
+     * @Route("/poules/{idEvent}", name="affectation_poules", requirements={"idEvent": "\d+"})
+     */
+    function affectationPoule($idEvent, Request $request, EntityManagerInterface $em){
+        $nbPoule = $request->request->get('nbPoules');
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        dump($participations);
+        $count = sizeof($participations)/$nbPoule;
+        for($i=0; $i<$nbPoule;$i++){
+            $poules[] = array_slice($participations, 0, $count);
+
+            array_splice($participations, 0, $count);
+
+            dump($participations);
+        }
+
+        dump($poules);
+        $k = 'A';
+        foreach ($poules as $poule){
+            for($j=0; $j< sizeof($poule); $j++){
+                $poule[$j]->setPoule($k);
+                $em->persist($poule[$j]);
+            }
+            $k++;
+        }
+        $em->flush();
+        return $this->redirectToRoute('admin_create_meet', ['idEvent' => $idEvent]);
     }
 
     function equipePresente($phase, $rencontre)
