@@ -936,8 +936,8 @@ class AdminController extends AbstractController
                 $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
             }
         }
-        if($nbTerrains > sizeof($tabIdsParticipations) / 2){
-            $nbTerrains = sizeof($tabIdsParticipations) / 2;
+        if($nbTerrains > floor(sizeof($tabIdsParticipations)/2)){
+            $nbTerrains = floor(sizeof($tabIdsParticipations)/2);
         }
         $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
         $em->flush();
@@ -1010,7 +1010,11 @@ class AdminController extends AbstractController
 
                     $participations[$m] = array_merge($participations[$m], $milieuTableau);
                 }
+
             }
+        }
+        if($nbTerrains > floor(sizeof($participations[0])/2)){
+            $nbTerrains = floor(sizeof($participations[0])/2);
         }
         shuffle($matchs);
         $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
@@ -1031,7 +1035,6 @@ class AdminController extends AbstractController
      */
     function affectationTerrains($rencontres, $nbrTerrains, $em, $event)
     {
-
         $timeToAdd = $event->getDuration() + $event->getBreakRest();
         //get array of fields
         $j = 1;

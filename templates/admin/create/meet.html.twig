@@ -7,7 +7,7 @@
     <h2>{{ event.name }}</h2>
     <div class="row">
         <div class="col-6">
-            {% if event.poule%}
+            {% if event.poule %}
             <a href="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
                 <button class="btn btn-secondary mt-4">Créer rencontres des poules</button>
             </a>
