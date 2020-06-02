@@ -2,40 +2,44 @@
 
 {% block title %}Utilisateurs | {{ parent() }}{% endblock %}
 {% block body %}
-<table class="table mb-0 mt-4">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Pseudo</th>
-        <th scope="col">Nom & prénom</th>
-        <th scope="col">Email</th>
-        <th scope="col">Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% set i = 1 %}
-    {% for user  in users %}
+    <div class="container">
+        <table class="table table-striped table-dark mb-4 mt-4">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Nom & prénom</th>
+                <th scope="col">Email</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set i = 1 %}
+            {% for user  in users %}
 
-        <tr>
-            <th scope="row">{{ i }}</th>
-            <td>{{ user.username }}</td>
-            <td>{{ user.lastname }} {{ user.firstname }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-                <button>
-                    <a href="{{ path('admin_edit_user', {"id": user.id}) }}">Modifier</a>
-                </button>
-                <button>
-                    <a href="{{ path('admin_delete_user', {"id": user.id}) }}">Supprimer</a>
-                </button>
-            </td>
-        </tr>
-        {% set i = i+1 %}
-    {% endfor %}
-    </tbody>
-</table>
-<div class="text-center">
-    <a class="btn btn-primary" href="{{ path('admin_home') }}">Retour</a>
-</div>
+                <tr>
+                    <th scope="row">{{ i }}</th>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.lastname }} {{ user.firstname }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+
+                        <a href="{{ path('admin_edit_user', {"id": user.id}) }}">
+                            <button class="btn btn-light">Modifier</button>
+                        </a>
+                        <a href="{{ path('admin_delete_user', {"id": user.id}) }}">
+                            <button class="btn btn-light">Supprimer</button>
+                        </a>
+
+                    </td>
+                </tr>
+                {% set i = i+1 %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <a class="btn btn-primary" href="{{ path('admin_home') }}">Retour</a>
+    </div>
 
 {% endblock %}

@@ -9,79 +9,85 @@
                 <h3>{{ event.name }}</h3>
                 {{ form_start(eventForm) }}
                 {{ form_widget(eventForm) }}
-                <button type="submit" id="btnSave">Valider</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Valider</button>
                 {{ form_end(eventForm) }}
             </div>
             <div class="col-6">
                 {{ form_start(participationForm) }}
                 {{ form_widget(participationForm) }}
-                <button type="submit" id="btnSave">Ajouter</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Ajouter participant</button>
                 {{ form_end(participationForm) }}
 
-                <a href="{{ path('admin_create_meet', {"idEvent": event.id}) }}"><button>Créer rencontres</button></a>
-                <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}"><button>Voir rencontres</button></a>
+                <a href="{{ path('admin_create_meet', {"idEvent": event.id}) }}">
+                    <button class="btn btn-secondary">Créer rencontres</button>
+                </a>
+                <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
+                    <button class="btn btn-secondary">Voir rencontres</button>
+                </a>
                 {% if event.type.name is same as ("Team Tournament") %}
-                <table class="table mb-0 mt-4">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Entreprise</th>
-                        <th scope="col">Pays</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% set i = 1 %}
-                    {% for participant  in participants %}
-
+                    <table class="table mb-0 mt-4">
+                        <thead>
                         <tr>
-                            <th scope="row">{{ i }}</th>
-                            <td>{{ participant.teamName}} </td>
-                            <td>{{ participant.companyName}} </td>
-                            <td>{{ participant.countryName}} </td>
-                            <td>
-                                <button>
-                                    <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">Désinscrire</a>
-                                </button>
-                            </td>
+                            <th scope="col">#</th>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Entreprise</th>
+                            <th scope="col">Pays</th>
+                            <th scope="col">Actions</th>
                         </tr>
-                        {% set i = i+1 %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-                    {% else %}
-                        <table class="table mb-0 mt-4">
-                            <thead>
+                        </thead>
+                        <tbody>
+                        {% set i = 1 %}
+                        {% for participant  in participants %}
+
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Nom et prénom</th>
-                                <th scope="col">Entreprise</th>
-                                <th scope="col">Pays</th>
-                                <th scope="col">Actions</th>
+                                <th scope="row">{{ i }}</th>
+                                <td>{{ participant.teamName }} </td>
+                                <td>{{ participant.companyName }} </td>
+                                <td>{{ participant.countryName }} </td>
+                                <td>
+
+                                    <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">
+                                        <button class="btn btn-secondary">Désinscrire</button>
+                                    </a>
+
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {% set i = 1 %}
-                            {% for participant  in participants %}
+                            {% set i = i+1 %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <table class="table mb-0 mt-4">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nom et prénom</th>
+                            <th scope="col">Entreprise</th>
+                            <th scope="col">Pays</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set i = 1 %}
+                        {% for participant  in participants %}
 
-                                <tr>
-                                    <th scope="row">{{ i }}</th>
-                                    <td>{{ participant.athletName}} {{ participant.athletFirstname }}</td>
-                                    <td>{{ participant.athletCompany}} </td>
-                                    <td>{{ participant.athletCountry}} </td>
-                                    <td>
-                                        <button>
-                                            <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">Désinscrire</a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                {% set i = i+1 %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                            <tr>
+                                <th scope="row">{{ i }}</th>
+                                <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
+                                <td>{{ participant.athletCompany }} </td>
+                                <td>{{ participant.athletCountry }} </td>
+                                <td>
+                                    <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">
+                                        <button class="btn btn-secondary">Désinscrire</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% set i = i+1 %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 {% endif %}
-
+                <button class="btn btn-secondary" onclick="history.back()">Retour</button>
             </div>
         </div>
     </div>

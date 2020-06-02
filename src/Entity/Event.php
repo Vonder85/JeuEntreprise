@@ -34,6 +34,11 @@ class Event
     private $meridianBreak;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $meridianBreakHour;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $duration;
@@ -57,6 +62,11 @@ class Event
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $startAt;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $poule;
 
     public function getId(): ?int
     {
@@ -123,6 +133,22 @@ class Event
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getMeridianBreakHour()
+    {
+        return $this->meridianBreakHour;
+    }
+
+    /**
+     * @param mixed $meridianBreakHour
+     */
+    public function setMeridianBreakHour($meridianBreakHour): void
+    {
+        $this->meridianBreakHour = $meridianBreakHour;
+    }
+
     public function getPublished(): ?bool
     {
         return $this->published;
@@ -133,6 +159,22 @@ class Event
         $this->published = $published;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPoule()
+    {
+        return $this->poule;
+    }
+
+    /**
+     * @param mixed $poule
+     */
+    public function setPoule($poule): void
+    {
+        $this->poule = $poule;
     }
 
     /**
@@ -167,7 +209,6 @@ class Event
         $this->startAt = $startAt;
     }
 
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="events")
      */
@@ -177,8 +218,6 @@ class Event
      * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="events")
      */
     private $type;
-
-
 
     /**
      * @return mixed

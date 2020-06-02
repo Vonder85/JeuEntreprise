@@ -14,6 +14,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -48,13 +49,13 @@ class EventType extends AbstractType
                 "label" => 'Type',
                 "required" => 'false'
             ])
-            ->add('meridianBreak', null, ['label' => 'Pause méridienne'])
+            ->add('meridianBreakHour', DateTimeType::class, ['label' => 'Heure de début de la pause méridienne'])
+            ->add('meridianBreak', null, ['label' => 'Durée pause méridienne'])
             ->add('duration', null, ['label' => 'Durée d\'une rencontre'])
             ->add('breakRest', null, ['label' => 'Durée pause'])
             ->add('nbrFields', null, ['label' => 'Nombre de terrains'])
+            ->add('poule', null, ['label' => 'Poules ?'])
             ->add('startAt', DateTimeType::class, ['label' => 'Heure de début'])
-
-
         ;
     }
 

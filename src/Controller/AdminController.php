@@ -657,8 +657,8 @@ class AdminController extends AbstractController
      */
     public function deleteParticipationEvent($idEvent, $idParticipation, ParticipationRepository $pr, EntityManagerInterface $em)
     {
-        dump((integer) $idParticipation);
-        $pr->deleteParticipationEvent($idEvent,(integer)$idParticipation);
+        dump((integer)$idParticipation);
+        $pr->deleteParticipationEvent($idEvent, (integer)$idParticipation);
         dump($pr->getParticipationAvecUnParticipant($idEvent, $idParticipation));
         //$em->remove();
         $em->flush();
@@ -837,7 +837,7 @@ class AdminController extends AbstractController
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $pr->findParticipationInAnEvent($idEvent);
-        $nbrPoules= $pr->nbrPoules($idEvent);
+        $nbrPoules = $pr->nbrPoules($idEvent);
         return $this->render('admin/create/meet.html.twig', [
             "event" => $event,
             "participations" => $participations,
@@ -852,12 +852,24 @@ class AdminController extends AbstractController
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
-
+        $nbrPoules = $pr->nbrPoules($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
-        dump($matchs);
+
+        //Tri les matchs par ordre chronologique
+        $matchsTries = usort($matchs, function ($a, $b){
+            $ad = $a->getHeure();
+            $bd = $b->getHeure();
+            if($ad == $bd){
+                return 0;
+            }else{
+                return $ad < $bd ? -1 : 1;
+            }
+        });
         return $this->render('admin/planning.html.twig', [
             "participants" => $participations,
-            "matchs" => $matchs
+            "matchs" => $matchs,
+            "nbrPoules" => $nbrPoules,
+            "event" => $event
         ]);
     }
 
@@ -876,10 +888,10 @@ class AdminController extends AbstractController
         $nbTerrains = $event->getNbrFields();
         $matchs = [];
 
-        if ($tabIdsParticipations % 2 == 1) {
+        if (sizeof($tabIdsParticipations) % 2 == 1) {
             $nbMatchs = sizeof($tabIdsParticipations) / 2;
 
-            for ($e = 0; $e < sizeof($tabIdsParticipations); $e++) {
+            for ($e = 0; $e < sizeof($tabIdsParticipations)-1; $e++) {
                 $l = 0;
 
                 for ($i = 0; $i < $nbMatchs; $i++) {
@@ -917,13 +929,15 @@ class AdminController extends AbstractController
                     $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $k]);
                     $em->persist($match);
                     $matchs[] = $match;
-                    $k++;
                 }
                 $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
                 array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
 
                 $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
             }
+        }
+        if($nbTerrains > sizeof($tabIdsParticipations) / 2){
+            $nbTerrains = sizeof($tabIdsParticipations) / 2;
         }
         $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
         $em->flush();
@@ -934,23 +948,26 @@ class AdminController extends AbstractController
 
     /**
      * fonction qui crée les rencontres des poules
-     * @Route("/creerRencontresPoules/{idEvent}", name="creer_rencontres_poules", requirements={"idEvent": "\d+"})
+     * @Route("/creerMatchsPoules/{idEvent}", name="creer_matchs_poules", requirements={"idEvent": "\d+"})
      */
-    function creerRencontresPoules($idEvent, ParticipationRepository $pr, EntityManagerInterface $em){
+    function creerRencontresPoules($idEvent, ParticipationRepository $pr, EntityManagerInterface $em)
+    {
         $poules = $pr->nbrPoules($idEvent);
 
-        for($i=0; $i<sizeof($poules);$i++){
+        for ($i = 0; $i < sizeof($poules); $i++) {
             $participations[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
         }
 
         $event = $em->getRepository(Event::class)->find($idEvent);
         $nbTerrains = $event->getNbrFields();
         $matchs = [];
-        for($m=0; $m<sizeof($participations); $m++){
-            if ($participations[$m] % 2 == 1) {
+
+        for($m=0; $m<sizeof($participations); $m++) {
+
+            if (sizeof($participations[$m]) % 2 == 1) {
                 $nbMatchs = sizeof($participations[$m]) / 2;
 
-                for ($e = 0; $e < sizeof($participations[$m]); $e++) {
+                for ($e = 0; $e < sizeof($participations[$m]) - 1; $e++) {
                     $l = 0;
 
                     for ($i = 0; $i < $nbMatchs; $i++) {
@@ -977,7 +994,6 @@ class AdminController extends AbstractController
                 $nbMatchs = sizeof($participations[$m]) / 2;
                 for ($e = 0; $e < sizeof($participations[$m]) - 1; $e++) {
                     $k = 0;
-
                     for ($i = 0; $i < $nbMatchs; $i++) {
 
                         $match = new Match();
@@ -988,7 +1004,6 @@ class AdminController extends AbstractController
                         $match->setParticipation2($participations[$m][sizeof($participations[$m]) - $k]);
                         $em->persist($match);
                         $matchs[] = $match;
-                        $k++;
                     }
                     $milieuTableau = array_slice($participations[$m], 1, sizeof($participations[$m]) - 2);
                     array_splice($participations[$m], 1, sizeof($participations[$m]) - 2);
@@ -997,6 +1012,7 @@ class AdminController extends AbstractController
                 }
             }
         }
+        shuffle($matchs);
         $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
         $em->flush();
         return $this->redirectToRoute('admin_see_planning_meets', [
@@ -1015,6 +1031,8 @@ class AdminController extends AbstractController
      */
     function affectationTerrains($rencontres, $nbrTerrains, $em, $event)
     {
+
+        $timeToAdd = $event->getDuration() + $event->getBreakRest();
         //get array of fields
         $j = 1;
         for ($i = 0; $i < $nbrTerrains; $i++) {
@@ -1039,7 +1057,15 @@ class AdminController extends AbstractController
                     $k++;
                 }
             } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
-            $date->add(new \DateInterval('PT0H' . $event->getDuration() . 'M'));
+            if($event->getMeridianBreakHour()){
+                if($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()){
+                    $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
+                }else{
+                    $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
+                }
+            }else{
+                $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
+            }
             $numeroPhase++;
             //get array of fields
             $j = 1;
@@ -1048,6 +1074,7 @@ class AdminController extends AbstractController
                 $j++;
             }
         } while (!empty($rencontres));
+
         $em->flush();
         return $phases;
     }
@@ -1055,12 +1082,13 @@ class AdminController extends AbstractController
     /**
      * @Route("/poules/{idEvent}", name="affectation_poules", requirements={"idEvent": "\d+"})
      */
-    function affectationPoule($idEvent, Request $request, EntityManagerInterface $em){
+    function affectationPoule($idEvent, Request $request, EntityManagerInterface $em)
+    {
         $nbPoule = $request->request->get('nbPoules');
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         dump($participations);
-        $count = sizeof($participations)/$nbPoule;
-        for($i=0; $i<$nbPoule;$i++){
+        $count = sizeof($participations) / $nbPoule;
+        for ($i = 0; $i < $nbPoule; $i++) {
             $poules[] = array_slice($participations, 0, $count);
 
             array_splice($participations, 0, $count);
@@ -1070,8 +1098,8 @@ class AdminController extends AbstractController
 
         dump($poules);
         $k = 'A';
-        foreach ($poules as $poule){
-            for($j=0; $j< sizeof($poule); $j++){
+        foreach ($poules as $poule) {
+            for ($j = 0; $j < sizeof($poule); $j++) {
                 $poule[$j]->setPoule($k);
                 $em->persist($poule[$j]);
             }
