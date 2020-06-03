@@ -38,6 +38,11 @@ class Athlet
      */
     private $reference;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $country;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,6 +102,19 @@ class Athlet
         return $this;
     }
 
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+        return $this;
+    }
+
     public function __construct()
     {
         $this->participant = new ArrayCollection();
@@ -114,7 +132,7 @@ class Athlet
     private $company;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="athlet")
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamCreated", mappedBy="athlet", cascade={"remove"})
      */
     private $teamCreated;
 

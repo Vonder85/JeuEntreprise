@@ -133,7 +133,7 @@ class AdminController extends AbstractController
 
             $filecsv = $csvForm->get('csv')->getData();
             $data = $serializer->decode(file_get_contents($filecsv), 'csv');
-
+            dump($data);
             for ($i = 0; $i < sizeof($data); $i++) {
                 $athlet = new Athlet();
                 $company = $em->getRepository(Company::class)->find($data[$i]['company_id']);
@@ -144,6 +144,7 @@ class AdminController extends AbstractController
                 $athlet->setDateBirth($date);
                 $athlet->setCompany($company);
                 $athlet->setReference($data[$i]['reference']);
+                $athlet->setCountry($data[$i]["country"]);
 
                 $participant = new Participant();
                 $participant->setAthlet($athlet);
@@ -190,6 +191,8 @@ class AdminController extends AbstractController
             } else {
                 $roles[] = 'ROLE_USER';
             }
+            $discipline = $request->request->get('discipline');
+            $user->setDiscipline($em->getRepository(Discipline::class)->find($discipline));
             $user->setRoles($roles);
 
             $em->persist($user);
@@ -268,6 +271,7 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_home');
         }
 
+        $disciplinesSelect = $em->getRepository(Discipline::class)->findAll();
 
         return $this->render('admin/home.html.twig', [
             'disciplineForm' => $disciplineForm->createView(),
@@ -280,7 +284,8 @@ class AdminController extends AbstractController
             'competitionForm' => $competitionForm->createView(),
             'eventForm' => $eventForm->createView(),
             'roundForm' => $roundForm->createView(),
-            'csvForm' => $csvForm->createView()
+            'csvForm' => $csvForm->createView(),
+            "disciplines" => $disciplinesSelect
         ]);
     }
 
@@ -447,6 +452,23 @@ class AdminController extends AbstractController
         $athletsTeam = $em->getRepository(TeamCreated::class)->athletinTeam($id);
 
 
+        return $this->redirectToRoute('admin_see_team', [
+            "id"=>$id
+        ]);
+    }
+
+    /**
+     * @Route("/team/{id}", name="see_team", requirements={"id": "\d+"})
+     * Edit Team
+     */
+    public function seeTeam($id, TeamRepository $tr, Request $req, EntityManagerInterface $em){
+        $team = $tr->find($id);
+
+        $teamCreatedForm = $this->createForm(TeamCreatedType::class);
+
+        $athletsTeam = $em->getRepository(TeamCreated::class)->athletinTeam($id);
+
+
         return $this->render('admin/edit/team.html.twig', [
             "teamCreatedForm" => $teamCreatedForm->createView(),
             "team" => $team,
@@ -476,7 +498,8 @@ class AdminController extends AbstractController
 
         $tcr->deleteAthletinTeam($idAthlet, $idTeam);
 
-        return $this->redirectToRoute('admin_delete_team', ["idTeam" => $idTeam]);
+        $this->addFlash('success', 'athlète retiré de l\'équipe');
+        return $this->redirectToRoute('admin_edit_team', ["id" => $idTeam]);
     }
 
     /**
@@ -883,8 +906,15 @@ class AdminController extends AbstractController
      */
     public function creerRencontres($idEvent, EntityManagerInterface $em)
     {
+
         $tabIdsParticipations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
+        $anciennesRencontres = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        if(sizeof($anciennesRencontres )>0){
+            foreach ($anciennesRencontres as $match){
+                $em->remove($match);
+            }
+        }
         $nbTerrains = $event->getNbrFields();
         $matchs = [];
 
@@ -1060,15 +1090,14 @@ class AdminController extends AbstractController
                     $k++;
                 }
             } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
-            if($event->getMeridianBreakHour()){
+
                 if($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()){
                     $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
                 }else{
+                    $date->sub(new \DateInterval('PT0H'. $timeToAdd.'M'));
                     $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
                 }
-            }else{
-                $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
-            }
+
             $numeroPhase++;
             //get array of fields
             $j = 1;

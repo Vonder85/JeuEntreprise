@@ -9,7 +9,8 @@
                 <h3>{{ company.name }}</h3>
                 {{ form_start(companyForm) }}
                 {{ form_widget(companyForm) }}
-                <button type="submit" id="btnSave">Valider</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary">Valider</button>
+                <button onclick="history.back()" class="btn btn-secondary">Retour</button>
                 {{ form_end(companyForm) }}
             </div>
         </div>

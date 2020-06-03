@@ -110,12 +110,12 @@ class Match
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Participation")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participation", cascade={"remove"})
      */
     private $participation1;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Participation")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participation", cascade={"remove"})
      */
     private $participation2;
 

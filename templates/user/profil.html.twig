@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2>Mon profil</h2>
+        {{ form_start(userForm) }}
+        {{ form_widget(userForm) }}
+        <label for="discipline">Discipline</label><br>
+        <input class="form-control mb-4" type="text" value="{{ user.discipline.name }}" readonly>
+        <button type="submit" class="btn btn-secondary mb-8">Enregistrer</button>
+        {{ form_end(userForm) }}
+    </div>
+{% endblock %}

@@ -34,7 +34,7 @@
             <br>
             {% if nbrPoules > 0 %}
                 {% for k in 1..nbrPoules|length %}
-                    {% if event.type.name is same as ("Team Tournament") %}
+                    {% if event.type.name is same as ("Tournoi par équipes") %}
                         {% if k == 1 %}
                             <table class="table table-striped table-dark mb-4 mt-4">
                                 <h2>Poule A</h2>
@@ -203,7 +203,7 @@
             {% endif %}
         </div>
         <div class="col-6">
-            {% if event.type.name is same as ("Team Tournament") %}
+            {% if event.type.name is same as ("Tournoi par équipes") %}
                 <table class="table table-striped mb-4 mt-4">
                     <thead>
                     <tr>

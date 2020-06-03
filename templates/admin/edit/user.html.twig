@@ -13,7 +13,8 @@
                 <label for="user">Référent</label><br>
                 <input type="radio" name="role" value="admin">
                 <label for="admin">Admin</label><br><br>
-                <button type="submit" id="btnSave">Valider</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary">Valider</button>
+                <button onclick="history.back()" class="btn btn-secondary">Retour</button>
                 {{ form_end(userForm) }}
             </div>
         </div>

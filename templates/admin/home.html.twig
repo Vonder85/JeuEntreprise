@@ -201,7 +201,14 @@
                         <input type="radio" name="role" value="user" checked>
                         <label for="user">Réferent</label><br>
                         <input type="radio" name="role" value="admin">
-                        <label for="admin">Admin</label><br><br>
+                        <label for="admin">Admin</label><br>
+                        <label for="discipline">Discipline</label><br>
+                         <select class="form-control mt-0 mb-4" name="discipline">
+                            <option value="toutes">Toutes</option>
+                            {% for discipline in disciplines %}
+                            <option value="{{ discipline.id }}">{{ discipline.name }}</option>
+                            {% endfor %}
+                         </select>
                         <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(userForm) }}
                     </div>

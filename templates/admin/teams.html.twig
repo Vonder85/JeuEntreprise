@@ -15,15 +15,12 @@
             {% set i = 1 %}
             {% for team  in teams %}
 
-                <tr>
+                <tr onclick="window.location='{{ path('admin_see_team', {'id': team.id}) }}'">
                     <th scope="row">{{ i }}</th>
                     <td>{{ team.name }}</td>
                     <td>
-                        <a href="{{ path('admin_edit_team', {'id': team.id}) }}"
-                        <button class="btn btn-light">>Modifie</button>
-                        r</a>
-                        <a href="{{ path('admin_delete_team', {'idTeam': team.id}) }}"
-                        <button class="btn btn-light">>Supprimer</button>
+                        <a href="{{ path('admin_delete_team', {'idTeam': team.id}) }}">
+                        <button class="btn btn-light">Supprimer</button>
                         </a>
                     </td>
                 </tr>

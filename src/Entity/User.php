@@ -145,6 +145,29 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Discipline", inversedBy="users")
+     */
+    private $discipline;
+
+    /**
+     * @return mixed
+     */
+    public function getDiscipline()
+    {
+        return $this->discipline;
+    }
+
+    /**
+     * @param mixed $discipline
+     */
+    public function setDiscipline($discipline): void
+    {
+        $this->discipline = $discipline;
+    }
+
+
+
     public function getSalt()
     {
         // TODO: Implement getSalt() method.

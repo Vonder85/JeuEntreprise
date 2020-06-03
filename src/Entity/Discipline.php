@@ -66,5 +66,4 @@ class Discipline
         $this->events = $events;
     }
 
-
 }

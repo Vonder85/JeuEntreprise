@@ -9,7 +9,8 @@
                 <h3>{{ athlet.name }}</h3>
                 {{ form_start(athletForm) }}
                 {{ form_widget(athletForm) }}
-                <button type="submit" id="btnSave">Valider</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary">Valider</button>
+                <button onclick="history.back()" class="btn btn-secondary">Retour</button>
                 {{ form_end(athletForm) }}
             </div>
         </div>

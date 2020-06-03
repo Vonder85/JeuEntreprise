@@ -78,9 +78,13 @@ class Participation
         $this->poule = $poule;
     }
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Match", mappedBy="participation1", cascade={"remove"})
+     */
+    private $match;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Participant", inversedBy="participation", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participant", inversedBy="participation")
      */
     protected $participant;
 

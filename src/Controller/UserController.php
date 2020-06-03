@@ -39,26 +39,25 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/addUser", name="user_add")
+     * @Route("/profil/{id}", name="modifier_profil", requirements={"id": "\d+"})
      */
-    public function addUser(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em, UserRepository $ur){
-        $user = new User();
-        $registerForm = $this->createForm(UserType::class, $user);
-        $user->setRoles(['ROLE_ADMIN']);
+    public function modifierProfil($id, UserRepository $ur, EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder){
+        $user = $ur->find($id);
+        $userForm = $this->createForm(UserType::class, $user);
 
-        $registerForm->handleRequest($request);
-        if($registerForm->isSubmitted() && $registerForm->isValid() ){
-            //Hasher le password
+        $userForm->handleRequest($request);
+        if($userForm->isSubmitted() && $userForm->isValid()){
+            //Hasher le mot de passe
             $hashed = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hashed);
 
-            $em->persist($user);
             $em->flush();
-
-            return $this->redirectToRoute('main');
+            $this->addFlash('success', "Profil modifié");
+            return $this->redirectToRoute('modifier_profil', ["id"=> $id]);
         }
-        return $this->render('user/register.html.twig', [
-            "registerForm" => $registerForm->createView(),
+        return $this->render('user/profil.html.twig', [
+            "userForm" => $userForm->createView(),
+            "user" => $user
         ]);
     }
 }

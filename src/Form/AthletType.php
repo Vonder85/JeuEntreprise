@@ -29,6 +29,7 @@ class AthletType extends AbstractType
                 "label" => 'Entreprise',
                 "required" => 'true'
             ])
+            ->add('country', null, ['label' => 'Pays'])
         ;
     }
 

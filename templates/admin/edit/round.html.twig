@@ -9,7 +9,8 @@
                 <h3>{{ round.name }}</h3>
                 {{ form_start(roundForm) }}
                 {{ form_widget(roundForm) }}
-                <button type="submit" id="btnSave">Valider</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary">Valider</button>
+                <button onclick="history.back()" class="btn btn-secondary">Retour</button>
                 {{ form_end(roundForm) }}
             </div>
         </div>

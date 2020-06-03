@@ -9,7 +9,8 @@
                 <h3>{{ competition.name }}</h3>
                 {{ form_start(competitionForm) }}
                 {{ form_widget(competitionForm) }}
-                <button type="submit" id="btnSave">Valider</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary">Valider</button>
+                <button onclick="history.back()" class="btn btn-secondary">Retour</button>
                 {{ form_end(competitionForm) }}
             </div>
         </div>

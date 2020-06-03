@@ -9,7 +9,8 @@
                 <h3>{{ discipline.name }}</h3>
                 {{ form_start(disciplineForm) }}
                 {{ form_widget(disciplineForm) }}
-                <button type="submit" id="btnSave" class="btn btn-light">Valider</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary">Valider</button>
+                <button onclick="history.back()" class="btn btn-secondary">Retour</button>
                 {{ form_end(disciplineForm) }}
             </div>
         </div>
