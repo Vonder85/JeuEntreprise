@@ -49,6 +49,12 @@ class EventType extends AbstractType
                 "label" => 'Type',
                 "required" => 'false'
             ])
+            ->add('round', EntityType::class,[
+                "class" => Round::class,
+                "choice_label" => "name",
+                "label" => 'Tour',
+                "required" => 'false'
+            ])
             ->add('meridianBreakHour', DateTimeType::class, ['label' => 'Heure de début de la pause méridienne'])
             ->add('meridianBreak', null, ['label' => 'Durée pause méridienne'])
             ->add('duration', null, ['label' => 'Durée d\'une rencontre'])

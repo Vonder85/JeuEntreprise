@@ -39,11 +39,4 @@ class Round
 
         return $this;
     }
-    public function __construct()
-    {
-        $this->meets = new ArrayCollection();
-    }
-
-
-
 }

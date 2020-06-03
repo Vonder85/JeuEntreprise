@@ -13,10 +13,17 @@
                 {{ form_end(eventForm) }}
             </div>
             <div class="col-6">
+                {% if event.type.name is same as ("Tournoi par équipes") %}
                 {{ form_start(participationForm) }}
                 {{ form_widget(participationForm) }}
                 <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Ajouter participant</button>
                 {{ form_end(participationForm) }}
+                {% else %}
+                {{ form_start(participationAthletForm) }}
+                {{ form_widget(participationAthletForm) }}
+                <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Ajouter participant</button>
+                {{ form_end(participationAthletForm) }}
+                {% endif %}
 
                 <a href="{{ path('admin_create_meet', {"idEvent": event.id}) }}">
                     <button class="btn btn-secondary">Créer rencontres</button>
@@ -24,7 +31,7 @@
                 <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
                     <button class="btn btn-secondary">Voir rencontres</button>
                 </a>
-                {% if event.type.name is same as ("Team Tournament") %}
+                {% if event.type.name is same as ("Tournoi par équipes") %}
                     <table class="table mb-0 mt-4">
                         <thead>
                         <tr>

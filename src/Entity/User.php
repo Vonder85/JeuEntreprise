@@ -146,9 +146,14 @@ class User implements UserInterface
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Discipline", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Discipline")
      */
     private $discipline;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Competition")
+     */
+    private $competition;
 
     /**
      * @return mixed
@@ -166,7 +171,21 @@ class User implements UserInterface
         $this->discipline = $discipline;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCompetition()
+    {
+        return $this->competition;
+    }
 
+    /**
+     * @param mixed $competition
+     */
+    public function setCompetition($competition): void
+    {
+        $this->competition = $competition;
+    }
 
     public function getSalt()
     {

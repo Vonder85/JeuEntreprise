@@ -319,4 +319,25 @@ class Event
         $this->discipline = $discipline;
     }
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Round")
+     */
+    private $round;
+
+    /**
+     * @return mixed
+     */
+    public function getRound()
+    {
+        return $this->round;
+    }
+
+    /**
+     * @param mixed $round
+     */
+    public function setRound($round): void
+    {
+        $this->round = $round;
+    }
+
 }

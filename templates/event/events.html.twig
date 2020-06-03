@@ -12,25 +12,18 @@
                 <th scope="col">Tour</th>
                 <th scope="col">Catégorie</th>
                 <th scope="col">Type</th>
-                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
             {% set i = 1 %}
             {% for event  in events %}
-                <tr onclick="window.location='{{ path('admin_edit_event', {"id": event.id}) }}'">
+                <tr onclick="window.location='{{ path('event_voir_rencontres', {"idEvent": event.id}) }}'">
                     <th scope="row">{{ i }}</th>
                     <td>{{ event.discipline.name }}</td>
                     <td>{{ event.name }}</td>
                     <td>{{ event.round.name }}</td>
                     <td>{{ event.category.name }}</td>
                     <td>{{ event.type.name }}</td>
-                    <td>
-                        <a href="{{ path('admin_delete_event', {"id": event.id}) }}">
-                            <button class="btn btn-light">Supprimer</button>
-                        </a>
-                    </td>
-
                 </tr>
 
                 {% set i = i+1 %}
@@ -38,8 +31,6 @@
             </tbody>
         </table>
     </div>
-    <div class="text-center">
-        <a class="btn btn-primary" href="{{ path('admin_home') }}">Retour</a>
-    </div>
+
 
 {% endblock %}

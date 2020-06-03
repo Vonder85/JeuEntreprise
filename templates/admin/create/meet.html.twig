@@ -15,6 +15,9 @@
                     <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
                         <button class="btn btn-secondary mt-4">Créer rencontres</button>
                     </a>
+                    <a href="{{ path('admin_creer_rencontre_aller_retour', {"idEvent": event.id}) }}">
+                        <button class="btn btn-secondary mt-4">Créer championnat Aller Retour</button>
+                    </a>
             {% endif %}
 
             <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
@@ -32,7 +35,7 @@
 
             <br>
             <br>
-            {% if nbrPoules > 0 %}
+            {% if event.poule %}
                 {% for k in 1..nbrPoules|length %}
                     {% if event.type.name is same as ("Tournoi par équipes") %}
                         {% if k == 1 %}

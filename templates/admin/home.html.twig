@@ -208,6 +208,13 @@
                             {% for discipline in disciplines %}
                             <option value="{{ discipline.id }}">{{ discipline.name }}</option>
                             {% endfor %}
+                         </select><br>
+                         <label for="competition">Competition</label><br>
+                         <select class="form-control mt-0 mb-4" name="competition">
+                            <option value="toutes">Toutes</option>
+                            {% for competition in competitions %}
+                            <option value="{{ competition.id }}">{{ competition.name }}</option>
+                            {% endfor %}
                          </select>
                         <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(userForm) }}

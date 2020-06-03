@@ -3,7 +3,7 @@
 {% block title %}Liste des matchs | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
-
+        <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}
                 {% if event.type.name is same as ("Tournoi par équipes") %}
@@ -215,6 +215,6 @@
                 </tbody>
             </table>
         {% endif %}
-        <button class="btn btn-secondary mt-4 mb-4 align-items-center" onclick="window.location='{{ path('admin_events') }}'">Retour</button>
+        <button class="btn btn-secondary mt-4 mb-4 align-items-center" onclick="window.location='{{ path('event_events', {"idDiscipline": app.user.discipline.id, "idCompetition": app.user.competition.id}) }}'">Retour</button>
     </div>
 {% endblock %}

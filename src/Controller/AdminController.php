@@ -23,6 +23,7 @@ use App\Form\CompanyType;
 use App\Form\CompetitionType;
 use App\Form\DisciplineType;
 use App\Form\EventType;
+use App\Form\ParticipationAthletType;
 use App\Form\ParticipationType;
 use App\Form\RoundType;
 use App\Form\TeamCreatedType;
@@ -35,6 +36,7 @@ use App\Repository\CompanyRepository;
 use App\Repository\CompetitionRepository;
 use App\Repository\DisciplineRepository;
 use App\Repository\EventRepository;
+use App\Repository\MatchRepository;
 use App\Repository\ParticipationRepository;
 use App\Repository\RoundRepository;
 use App\Repository\TeamCreatedRepository;
@@ -192,8 +194,11 @@ class AdminController extends AbstractController
                 $roles[] = 'ROLE_USER';
             }
             $discipline = $request->request->get('discipline');
-            $user->setDiscipline($em->getRepository(Discipline::class)->find($discipline));
+            $competition = $request->request->get('competition');
             $user->setRoles($roles);
+            $user->setDiscipline($em->getRepository(Discipline::class)->find($discipline));
+            $user->setCompetition($em->getRepository(Competition::class)->find($competition));
+
 
             $em->persist($user);
             $em->flush();
@@ -272,6 +277,8 @@ class AdminController extends AbstractController
         }
 
         $disciplinesSelect = $em->getRepository(Discipline::class)->findAll();
+        $competitionsSelect = $em->getRepository(Competition::class)->findAll();
+
 
         return $this->render('admin/home.html.twig', [
             'disciplineForm' => $disciplineForm->createView(),
@@ -285,7 +292,8 @@ class AdminController extends AbstractController
             'eventForm' => $eventForm->createView(),
             'roundForm' => $roundForm->createView(),
             'csvForm' => $csvForm->createView(),
-            "disciplines" => $disciplinesSelect
+            "disciplines" => $disciplinesSelect,
+            "competitions" => $competitionsSelect
         ]);
     }
 
@@ -453,7 +461,7 @@ class AdminController extends AbstractController
 
 
         return $this->redirectToRoute('admin_see_team', [
-            "id"=>$id
+            "id" => $id
         ]);
     }
 
@@ -461,7 +469,8 @@ class AdminController extends AbstractController
      * @Route("/team/{id}", name="see_team", requirements={"id": "\d+"})
      * Edit Team
      */
-    public function seeTeam($id, TeamRepository $tr, Request $req, EntityManagerInterface $em){
+    public function seeTeam($id, TeamRepository $tr, Request $req, EntityManagerInterface $em)
+    {
         $team = $tr->find($id);
 
         $teamCreatedForm = $this->createForm(TeamCreatedType::class);
@@ -660,6 +669,15 @@ class AdminController extends AbstractController
             $this->addFlash('success', 'Participant ajouté');
         }
 
+        $participationAthletForm = $this->createForm(ParticipationAthletType::class, $participation);
+        $participationAthletForm->handleRequest($request);
+        if ($participationAthletForm->isSubmitted() && $participationAthletForm->isValid()) {
+            $participation->setEvent($event);
+            $em->persist($participation);
+            $em->flush();
+            $this->addFlash('success', 'Participant ajouté');
+        }
+
         if ($eventForm->isSubmitted() && $eventForm->isValid()) {
             $em->flush();
             $this->addFlash('success', 'Evènement modifié');
@@ -671,7 +689,8 @@ class AdminController extends AbstractController
             'eventForm' => $eventForm->createView(),
             'event' => $event,
             "participants" => $participants,
-            "participationForm" => $participationForm->createView()
+            "participationForm" => $participationForm->createView(),
+            "participationAthletForm" => $participationAthletForm->createView()
         ]);
     }
 
@@ -793,14 +812,23 @@ class AdminController extends AbstractController
             } else {
                 $roles[] = 'ROLE_USER';
             }
+            $discipline = $request->request->get('discipline');
+            $competition = $request->request->get('competition');
+
             $user->setRoles($roles);
+            $user->setDiscipline($em->getRepository(Discipline::class)->find($discipline));
+            $user->setCompetition($em->getRepository(Competition::class)->find($competition));
             $em->flush();
             $this->addFlash('success', 'Utilisateur modifié');
             return $this->redirectToRoute('admin_users');
         }
+        $disciplinesSelect = $em->getRepository(Discipline::class)->findAll();
+        $competitionsSelect = $em->getRepository(Competition::class)->findAll();
         return $this->render('admin/edit/user.html.twig', [
             'userForm' => $userForm->createView(),
-            'user' => $user
+            'user' => $user,
+            "disciplines" => $disciplinesSelect,
+            "competitions" => $competitionsSelect
         ]);
     }
 
@@ -879,12 +907,12 @@ class AdminController extends AbstractController
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
 
         //Tri les matchs par ordre chronologique
-        $matchsTries = usort($matchs, function ($a, $b){
+        $matchsTries = usort($matchs, function ($a, $b) {
             $ad = $a->getHeure();
             $bd = $b->getHeure();
-            if($ad == $bd){
+            if ($ad == $bd) {
                 return 0;
-            }else{
+            } else {
                 return $ad < $bd ? -1 : 1;
             }
         });
@@ -910,8 +938,8 @@ class AdminController extends AbstractController
         $tabIdsParticipations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
         $anciennesRencontres = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
-        if(sizeof($anciennesRencontres )>0){
-            foreach ($anciennesRencontres as $match){
+        if (sizeof($anciennesRencontres) > 0) {
+            foreach ($anciennesRencontres as $match) {
                 $em->remove($match);
             }
         }
@@ -921,7 +949,7 @@ class AdminController extends AbstractController
         if (sizeof($tabIdsParticipations) % 2 == 1) {
             $nbMatchs = sizeof($tabIdsParticipations) / 2;
 
-            for ($e = 0; $e < sizeof($tabIdsParticipations)-1; $e++) {
+            for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
                 $l = 0;
 
                 for ($i = 0; $i < $nbMatchs; $i++) {
@@ -966,8 +994,8 @@ class AdminController extends AbstractController
                 $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
             }
         }
-        if($nbTerrains > floor(sizeof($tabIdsParticipations)/2)){
-            $nbTerrains = floor(sizeof($tabIdsParticipations)/2);
+        if ($nbTerrains > floor(sizeof($tabIdsParticipations) / 2)) {
+            $nbTerrains = floor(sizeof($tabIdsParticipations) / 2);
         }
         $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
         $em->flush();
@@ -992,7 +1020,7 @@ class AdminController extends AbstractController
         $nbTerrains = $event->getNbrFields();
         $matchs = [];
 
-        for($m=0; $m<sizeof($participations); $m++) {
+        for ($m = 0; $m < sizeof($participations); $m++) {
 
             if (sizeof($participations[$m]) % 2 == 1) {
                 $nbMatchs = sizeof($participations[$m]) / 2;
@@ -1043,10 +1071,92 @@ class AdminController extends AbstractController
 
             }
         }
-        if($nbTerrains > floor(sizeof($participations[0])/2)){
-            $nbTerrains = floor(sizeof($participations[0])/2);
+        if ($nbTerrains > floor(sizeof($participations[0]) / 2)) {
+            $nbTerrains = floor(sizeof($participations[0]) / 2);
         }
         shuffle($matchs);
+        $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
+        $em->flush();
+        return $this->redirectToRoute('admin_see_planning_meets', [
+            "idEvent" => $idEvent
+        ]);
+    }
+
+    /**
+     * @param $tabIdsParticipations
+     * @param $event
+     * @param EntityManagerInterface $em
+     * Function establish list of meets
+     * @Route("CreerRencontresAllerRetour/{idEvent}", name="creer_rencontre_aller_retour", requirements={"idEvent": "\d+"})
+     */
+    public function creerRencontresAllerRetour($idEvent, EntityManagerInterface $em)
+    {
+
+        $tabIdsParticipations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $anciennesRencontres = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        if (sizeof($anciennesRencontres) > 0) {
+            foreach ($anciennesRencontres as $match) {
+                $em->remove($match);
+            }
+        }
+        $nbTerrains = $event->getNbrFields();
+        $matchs = [];
+
+        for ($m = 0; $m < 2; $m++) {
+
+            if (sizeof($tabIdsParticipations) % 2 == 1) {
+                $nbMatchs = sizeof($tabIdsParticipations) / 2;
+
+                for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
+                    $l = 0;
+
+                    for ($i = 0; $i < $nbMatchs; $i++) {
+
+                        if ($tabIdsParticipations[$l] === $tabIdsParticipations[sizeof($tabIdsParticipations) - $l - 1]) {
+
+                        } else {
+                            $match = new Match();
+
+                            $match->setEvent($event);
+                            $match->setParticipation1($tabIdsParticipations[$l]);
+                            $l++;
+                            $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $l]);
+                            $em->persist($match);
+                            $matchs[] = $match;
+                        }
+                    }
+                    $milieuTableau = array_slice($tabIdsParticipations, 0, 1);
+                    array_splice($tabIdsParticipations, 0, 1);
+
+                    $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
+                }
+            } else {
+                $nbMatchs = sizeof($tabIdsParticipations) / 2;
+                for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
+                    $k = 0;
+
+                    for ($i = 0; $i < $nbMatchs; $i++) {
+
+                        $match = new Match();
+
+                        $match->setEvent($event);
+                        $match->setParticipation1($tabIdsParticipations[$k]);
+                        $k++;
+                        $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $k]);
+                        $em->persist($match);
+                        $matchs[] = $match;
+                    }
+                    $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
+                    array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
+
+                    $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
+                }
+            }
+        }
+        if ($nbTerrains > floor(sizeof($tabIdsParticipations) / 2)) {
+            $nbTerrains = floor(sizeof($tabIdsParticipations) / 2);
+        }
         $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
         $em->flush();
         return $this->redirectToRoute('admin_see_planning_meets', [
@@ -1091,12 +1201,12 @@ class AdminController extends AbstractController
                 }
             } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
 
-                if($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()){
-                    $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
-                }else{
-                    $date->sub(new \DateInterval('PT0H'. $timeToAdd.'M'));
-                    $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
-                }
+            if ($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()) {
+                $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
+            } else {
+                $date->sub(new \DateInterval('PT0H' . $timeToAdd . 'M'));
+                $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
+            }
 
             $numeroPhase++;
             //get array of fields

@@ -39,6 +39,11 @@ class Match
      */
     private $field;
 
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $detail;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -100,6 +105,22 @@ class Match
     public function setField($field): void
     {
         $this->field = $field;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDetail()
+    {
+        return $this->detail;
+    }
+
+    /**
+     * @param mixed $detail
+     */
+    public function setDetail($detail): void
+    {
+        $this->detail = $detail;
     }
 
 

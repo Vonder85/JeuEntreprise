@@ -16,7 +16,9 @@
                     {{ app.user.username }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Résultats</a>
+                    {% if app.user.discipline %}
+                    <a class="dropdown-item" href="{{ path('event_events', {"idDiscipline": app.user.discipline.id, "idCompetition": app.user.competition.id}) }}">Résultats</a>
+                    {% endif %}
                     <a class="dropdown-item" href="{{ path('modifier_profil', {"id": app.user.id}) }}">Mon profil</a>
                     <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
                 </div>

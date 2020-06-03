@@ -33,6 +33,26 @@ class Participation
      */
     private $poule;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $victory;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nul;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $defeat;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $pointsClassement;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +97,88 @@ class Participation
     {
         $this->poule = $poule;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVictory()
+    {
+        return $this->victory;
+    }
+
+    /**
+     * @param mixed $victory
+     */
+    public function setVictory($victory): void
+    {
+        $this->victory = $victory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNul()
+    {
+        return $this->nul;
+    }
+
+    /**
+     * @param mixed $nul
+     */
+    public function setNul($nul): void
+    {
+        $this->nul = $nul;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefeat()
+    {
+        return $this->defeat;
+    }
+
+    /**
+     * @param mixed $defeat
+     */
+    public function setDefeat($defeat): void
+    {
+        $this->defeat = $defeat;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPointsClassement()
+    {
+        return $this->pointsClassement;
+    }
+
+    /**
+     * @param mixed $pointsClassement
+     */
+    public function setPointsClassement($pointsClassement): void
+    {
+        $this->pointsClassement = $pointsClassement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMatch()
+    {
+        return $this->match;
+    }
+
+    /**
+     * @param mixed $match
+     */
+    public function setMatch($match): void
+    {
+        $this->match = $match;
+    }
+
+
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Match", mappedBy="participation1", cascade={"remove"})
