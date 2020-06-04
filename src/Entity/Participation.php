@@ -53,6 +53,11 @@ class Participation
      */
     private $pointsClassement;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $positionClassement;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -178,7 +183,21 @@ class Participation
         $this->match = $match;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPositionClassement()
+    {
+        return $this->positionClassement;
+    }
 
+    /**
+     * @param mixed $positionClassement
+     */
+    public function setPositionClassement($positionClassement): void
+    {
+        $this->positionClassement = $positionClassement;
+    }
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Match", mappedBy="participation1", cascade={"remove"})

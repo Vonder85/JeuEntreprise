@@ -55,6 +55,7 @@ class EventType extends AbstractType
                 "label" => 'Tour',
                 "required" => 'false'
             ])
+            ->add('phase', null, ['label' => 'Nombre de phases'])
             ->add('meridianBreakHour', DateTimeType::class, ['label' => 'Heure de début de la pause méridienne'])
             ->add('meridianBreak', null, ['label' => 'Durée pause méridienne'])
             ->add('duration', null, ['label' => 'Durée d\'une rencontre'])

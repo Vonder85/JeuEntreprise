@@ -8,9 +8,23 @@
     <div class="row">
         <div class="col-6">
             {% if event.poule %}
-            <a href="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
-                <button class="btn btn-secondary mt-4">Créer rencontres des poules</button>
-            </a>
+                <a href="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
+                    <button class="btn btn-secondary mt-4">Créer rencontres des poules</button>
+                </a>
+            {% else %}
+                {% if event.phaseIn is same as (2) %}
+                    {% if event.round.name is same as ("1/2 finale") %}
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}'">
+                            Créer 1/2 finales
+                        </button>
+                    {% endif %}
+                    {% if event.round.name is same as ("Finale") %}
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_rencontre_finale4_6', {"idEvent": event.id}) }}'">
+                            Créer Finale
+                        </button>
+                    {% endif %}
                 {% else %}
                     <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
                         <button class="btn btn-secondary mt-4">Créer rencontres</button>
@@ -18,19 +32,20 @@
                     <a href="{{ path('admin_creer_rencontre_aller_retour', {"idEvent": event.id}) }}">
                         <button class="btn btn-secondary mt-4">Créer championnat Aller Retour</button>
                     </a>
+                {% endif %}
             {% endif %}
 
             <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
                 <button class="btn btn-secondary mt-4">Voir rencontres</button>
             </a>
             <br>
-            {% if event.poule%}
-            <form method="post" action="{{ path('admin_affectation_poules', {"idEvent" : event.id}) }}"
-                  class="float-right">
-                <label for="nbPoules">Nombre de poules : </label>
-                <input type="number" name="nbPoules"><br>
-                <button type="submit" class="float-right btn btn-secondary mt-1">Valider</button>
-            </form>
+            {% if event.poule %}
+                <form method="post" action="{{ path('admin_affectation_poules', {"idEvent" : event.id}) }}"
+                      class="float-right">
+                    <label for="nbPoules">Nombre de poules : </label>
+                    <input type="number" name="nbPoules"><br>
+                    <button type="submit" class="float-right btn btn-secondary mt-1">Valider</button>
+                </form>
             {% endif %}
 
             <br>

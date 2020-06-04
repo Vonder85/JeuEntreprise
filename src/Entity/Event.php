@@ -68,6 +68,16 @@ class Event
      */
     private $poule;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $phase;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $phaseIn;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -207,6 +217,38 @@ class Event
     public function setStartAt($startAt): void
     {
         $this->startAt = $startAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhase()
+    {
+        return $this->phase;
+    }
+
+    /**
+     * @param mixed $phase
+     */
+    public function setPhase($phase): void
+    {
+        $this->phase = $phase;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhaseIn()
+    {
+        return $this->phaseIn;
+    }
+
+    /**
+     * @param mixed $phaseIn
+     */
+    public function setPhaseIn($phaseIn): void
+    {
+        $this->phaseIn = $phaseIn;
     }
 
     /**

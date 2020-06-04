@@ -3,7 +3,11 @@
 {% block title %}Liste des matchs | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
+        {% if event.round.name is same as ("1/2 finale") %}
+            <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_finale_4_6', {"idEvent": event.id}) }}'">Créer Finale</button>
+            <button class="btn btn-secondary mt-4" onclick="">Créer match 3ème place</button>
 
+        {% endif %}
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}
                 {% if event.type.name is same as ("Tournoi par équipes") %}

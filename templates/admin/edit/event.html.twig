@@ -31,6 +31,11 @@
                 <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
                     <button class="btn btn-secondary">Voir rencontres</button>
                 </a>
+                {% if event.round.name is not same as ("1/2 finale")  %}
+                    {% elseif event.round.name is not same as ("Finale") %}
+                <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
+
+                {% endif %}
                 {% if event.type.name is same as ("Tournoi par équipes") %}
                     <table class="table mb-0 mt-4">
                         <thead>

@@ -129,6 +129,10 @@ class Match
      */
     private $event;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participation", cascade={"remove"})
+     */
+    private $winner;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Participation", cascade={"remove"})
@@ -170,6 +174,22 @@ class Match
     public function setParticipation1($participation1): void
     {
         $this->participation1 = $participation1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWinner()
+    {
+        return $this->winner;
+    }
+
+    /**
+     * @param mixed $winner
+     */
+    public function setWinner($winner): void
+    {
+        $this->winner = $winner;
     }
 
     /**

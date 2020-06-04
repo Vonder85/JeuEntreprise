@@ -9,6 +9,7 @@ use App\Entity\Event;
 use App\Entity\Match;
 use App\Entity\Participation;
 use App\models\Category;
+use App\Repository\EventRepository;
 use App\Repository\MatchRepository;
 use App\Repository\ParticipationRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -87,8 +88,25 @@ class EventController extends AbstractController
 
         $match->setScoreTeam1($score1);
         $match->setScoreTeam2($score2);
+        if($score1>$score2){
+            $match->setWinner($match->getParticipation1());
+        }elseif($score1 < $score2){
+            $match->setWinner($match->getParticipation2());
+        }
+        switch ($match->getEvent()->getRound()->getName()){
+            case "Finale": $match->getWinner()->setPositionClassement(1);
+            if($match->getWinner() == $match->getParticipation1()){
+                $match->getParticipation2()->setPositionClassement(2);
+            }else{
+                $match->getParticipation1()->setPositionClassement(2);
+            }
+            break;
+        }
         $em->flush();
         $this->addFlash('success', 'Résultat modifié');
+        if($this->isGranted("ROLE_ADMIN")){
+            return $this->redirectToRoute('admin_see_planning_meets', ["idEvent" => $match->getEvent()->getId()]);
+        }
         return $this->redirectToRoute('event_voir_rencontres', ['idEvent' => $match->getEvent()->getId()]);
     }
 
@@ -141,11 +159,11 @@ class EventController extends AbstractController
      * @Route("afficherClassement/{idEvent}", name="afficher_classement", requirements={"idEvent": "\d+"})
      * fonction qui permet l'affichage du tableau
      */
-    public function afficherClassement($idEvent, ParticipationRepository $pr){
+    public function afficherClassement($idEvent, ParticipationRepository $pr, EventRepository $er){
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
-
+        $event = $er->find($idEvent);
         //Etabli le classement par nbr de points
-        $participationsTries = usort($participations, function ($a, $b) {
+        usort($participations, function ($a, $b) {
             $ad = $a->getPointsClassement();
             $bd = $b->getPointsClassement();
             if ($ad == $bd) {
@@ -154,10 +172,23 @@ class EventController extends AbstractController
                 return $ad > $bd ? -1 : 1;
             }
         });
+        //$this->classerParPoints($participations);
         return $this->render('event/classement.html.twig', [
             "participations" => $participations,
-            "idEvent" => $idEvent
+            "event"=>$event
         ]);
+    }
+
+    public function classerParPoints($tabParticipations){
+        usort($tabParticipations, function ($a, $b) {
+            $ad = $a->getPointsClassement();
+            $bd = $b->getPointsClassement();
+            if ($ad == $bd) {
+                return 0;
+            } else {
+                return $ad > $bd ? -1 : 1;
+            }
+        });
     }
 
 }
