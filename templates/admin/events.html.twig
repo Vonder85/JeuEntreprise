@@ -26,8 +26,11 @@
                     <td>{{ event.category.name }}</td>
                     <td>{{ event.type.name }}</td>
                     <td>
+                        {% if event.published %}
+                    <a href=" {{ path('event_classement_general',{"idEvent": event.id})}}"><button class="btn btn-light btn-sm">Classement Final</button></a>
+                    {% endif %}
                         <a href="{{ path('admin_delete_event', {"id": event.id}) }}">
-                            <button class="btn btn-light">Supprimer</button>
+                            <button class="btn btn-light btn-sm">Supprimer</button>
                         </a>
                     </td>
 

@@ -99,7 +99,55 @@ class ParticipationRepository extends ServiceEntityRepository
         return $qb->getQuery()->execute();
     }
 
+    /**
+     * Recupère les participation avec un nom d'event
+     */
+    public function getWithEventName($eventName){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("e.name = :eventName")
+            ->setParameter("eventName", $eventName)
+            ->orderBy("p.positionClassement", 'ASC');
+        $qb->leftJoin('p.event', 'e');
+        $qb->leftJoin('p.participant', 'pa');
+        $qb->leftJoin();
+        return $qb->getQuery()->execute();
+    }
 
+    /**
+     * get participation for an event
+     */
+    public function getParticipationWithAnEventName($eventName, $competition){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("e.name = :event")
+            ->setParameter("event", $eventName)
+            ->andWhere("e.competition = :competition")
+            ->setParameter("competition", $competition)
+            ->groupBy('p.positionClassement')
+            ->orderBy("p.positionClassement", 'ASC');;
+        $qb->leftJoin('p.participant', 'pa');
+        $qb->leftJoin('p.event', 'e');
+        $qb->leftJoin('pa.athlet', 'a');
+        $qb->leftJoin('pa.team', 't');
+        $qb->leftJoin('a.company', 'ac');
+        $qb->leftJoin('t.teamCreated', 'tcr');
+        $qb->leftJoin('tcr.athlet', 'atcr');
+        $qb->leftJoin('atcr.company', 'atcrc');
+        $qb->select('p.id, p.positionClassement, pa.id as participantId, p.poule as participationPoule, pa.name as participantName, a.name as athletName, a.firstname as athletFirstname, ac.name as athletCompany, ac.country as athletCountry, t.name as teamName, atcrc.name as companyName, atcrc.country as countryName');
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * Recupère nbr participants avec un nom d'event
+     */
+    public function getNbrParticipantsWithEventName($eventName){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("e.name = :eventName")
+            ->setParameter("eventName", $eventName)
+            ->groupBy('pa.id');
+        $qb->leftJoin('p.event', 'e');
+        $qb->leftJoin('p.participant', 'pa');
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Participation[] Returns an array of Participation objects
     //  */

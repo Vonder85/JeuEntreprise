@@ -31,8 +31,8 @@
                 <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
                     <button class="btn btn-secondary">Voir rencontres</button>
                 </a>
-                {% if event.round.name is not same as ("1/2 finale")  %}
-                    {% elseif event.round.name is not same as ("Finale") %}
+                {% if event.phaseIn is same as (1)  %}
+
                 <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
 
                 {% endif %}
@@ -68,7 +68,7 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                {% else %}
+                {% elseif event.type.name is same as ('Tournoi individuel') %}
                     <table class="table mb-0 mt-4">
                         <thead>
                         <tr>
@@ -99,7 +99,7 @@
                         </tbody>
                     </table>
                 {% endif %}
-                <button class="btn btn-secondary" onclick="history.back()">Retour</button>
+                <button class="btn btn-secondary" onclick="window.location='{{ path('admin_events') }}'">Retour</button>
             </div>
         </div>
     </div>

@@ -19,10 +19,10 @@
                             Créer 1/2 finales
                         </button>
                     {% endif %}
-                    {% if event.round.name is same as ("Finale") %}
+                    {% if event.round.name is same as ("Finale") or event.round.name is same as ("3ème place")%}
                         <button class="btn btn-secondary mt-4"
-                                onclick="window.location='{{ path('admin_creation_rencontre_finale4_6', {"idEvent": event.id}) }}'">
-                            Créer Finale
+                                onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                            Créer Match
                         </button>
                     {% endif %}
                 {% else %}

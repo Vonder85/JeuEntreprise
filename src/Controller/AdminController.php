@@ -267,8 +267,9 @@ class AdminController extends AbstractController
 
         $eventForm->handleRequest($request);
         if ($eventForm->isSubmitted() && $eventForm->isValid()) {
-            $name = $event->getDiscipline()->getName() . ' ' . $event->getName() . ' ' . $event->getGender() . ' ' . $event->getCategory()->getName();
+            $name = $event->getDiscipline()->getName() . ' ' . $event->getName() . ' ' . $event->getGender() . ' ' . $event->getCategory()->getName().' '.$event->getType()->getName();
             $event->setName($name);
+            $event->setPhaseIn(1);
             $em->persist($event);
             $em->flush();
             $this->addFlash('success', 'Evènement ajouté');
@@ -1427,9 +1428,9 @@ class AdminController extends AbstractController
 
     /**
      * fonction qui crée la finale pour 4 à 6 poules
-     * @Route("/rencontreFinale/{idEvent}", name="creation_rencontre_finale4_6", requirements={"idEvent": "\d+"})
+     * @Route("/rencontre1vs1/{idEvent}", name="creation_rencontre_1vs1", requirements={"idEvent": "\d+"})
      */
-    public function creerRencontreFinale($idEvent, EntityManagerInterface $em){
+    public function creerRencontre1vs1($idEvent, EntityManagerInterface $em){
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
         $nbTerrains = $event->getNbrFields();
@@ -1452,5 +1453,95 @@ class AdminController extends AbstractController
             "idEvent" => $idEvent
         ]);
 
+    }
+
+    /**
+     * fonction qui permet de créer event de 3emeplace poule 4 à 6
+     * @Route("/creation3emePlace/{idEvent}", name="creation_3eme_place_4_6", requirements={"idEvent": "\d+"})
+     */
+    public function creer3emePlace4_6($idEvent, EntityManagerInterface $em){
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+
+        $event1 = new Event();
+        $event1->setDiscipline($event->getDiscipline());
+        $event1->setGender($event->getGender());
+        $event1->setMeridianBreak($event->getMeridianBreak());
+        $event1->setDuration($event->getDuration());
+        $event1->setBreakRest($event->getBreakRest());
+        $event1->setCategory($event->getCategory());
+        $event1->setType($event->getType());
+        $event1->setCompetition($event->getCompetition());
+        $event1->setName($event->getName());
+        $event1->setNbrFields($event->getNbrFields());
+        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
+        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
+        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "3ème place"]));
+        $event1->setPhase($event->getPhase());
+        $event1->setPhaseIn($event->getPhaseIn());
+        $em->persist($event1);
+
+        for($i=0; $i<2;$i++){
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+            $em->persist($participation);
+        }
+        $em->flush();
+
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui permet de créer event de 5emeplace
+     * @Route("/creation5emePlace/{idEvent}", name="creation_5eme_place_6_7", requirements={"idEvent": "\d+"})
+     */
+    public function creer5emePlace6_7($idEvent, EntityManagerInterface $em){
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+
+        $event1 = new Event();
+        $event1->setDiscipline($event->getDiscipline());
+        $event1->setGender($event->getGender());
+        $event1->setMeridianBreak($event->getMeridianBreak());
+        $event1->setDuration($event->getDuration());
+        $event1->setBreakRest($event->getBreakRest());
+        $event1->setCategory($event->getCategory());
+        $event1->setType($event->getType());
+        $event1->setCompetition($event->getCompetition());
+        $event1->setName($event->getName());
+        $event1->setNbrFields($event->getNbrFields());
+        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
+        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
+        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "5ème place"]));
+        $event1->setPhase($event->getPhase());
+        $event1->setPhaseIn($event->getPhaseIn());
+        $em->persist($event1);
+
+        usort($participations, function ($a, $b) {
+            $ad = $a->getPointsClassement();
+            $bd = $b->getPointsClassement();
+            if ($ad == $bd) {
+                return 0;
+            } else {
+                return $ad > $bd ? -1 : 1;
+            }
+        });
+        $k=4;
+        for($i=0; $i<2;$i++){
+
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($participations[$k]->getParticipant());
+            $em->persist($participation);
+            $k++;
+        }
+        if(sizeof($participations) === 7){
+            $participations[sizeof($participations)-1]->setPositionClassement(7);
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
     }
 }

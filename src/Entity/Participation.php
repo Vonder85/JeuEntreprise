@@ -19,9 +19,19 @@ class Participation
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $medal;
+    private $goldMedal;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $silverMedal;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $bronzeMedal;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -63,16 +73,52 @@ class Participation
         return $this->id;
     }
 
-    public function getMedal(): ?string
+    /**
+     * @return mixed
+     */
+    public function getGoldMedal()
     {
-        return $this->medal;
+        return $this->goldMedal;
     }
 
-    public function setMedal(?string $medal): self
+    /**
+     * @param mixed $goldMedal
+     */
+    public function setGoldMedal($goldMedal): void
     {
-        $this->medal = $medal;
+        $this->goldMedal = $goldMedal;
+    }
 
-        return $this;
+    /**
+     * @return mixed
+     */
+    public function getSilverMedal()
+    {
+        return $this->silverMedal;
+    }
+
+    /**
+     * @param mixed $silverMedal
+     */
+    public function setSilverMedal($silverMedal): void
+    {
+        $this->silverMedal = $silverMedal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBronzeMedal()
+    {
+        return $this->bronzeMedal;
+    }
+
+    /**
+     * @param mixed $bronzeMedal
+     */
+    public function setBronzeMedal($bronzeMedal): void
+    {
+        $this->bronzeMedal = $bronzeMedal;
     }
 
     public function getPoints(): ?int

@@ -137,6 +137,11 @@ class Match
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Participation", cascade={"remove"})
      */
+    private $looser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participation", cascade={"remove"})
+     */
     private $participation1;
 
     /**
@@ -191,6 +196,24 @@ class Match
     {
         $this->winner = $winner;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLooser()
+    {
+        return $this->looser;
+    }
+
+    /**
+     * @param mixed $looser
+     */
+    public function setLooser($looser): void
+    {
+        $this->looser = $looser;
+    }
+
+
 
     /**
      * @return mixed

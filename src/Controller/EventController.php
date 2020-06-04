@@ -90,17 +90,33 @@ class EventController extends AbstractController
         $match->setScoreTeam2($score2);
         if($score1>$score2){
             $match->setWinner($match->getParticipation1());
+            $match->setLooser($match->getParticipation2());
         }elseif($score1 < $score2){
             $match->setWinner($match->getParticipation2());
+            $match->setLooser($match->getParticipation1());
         }
         switch ($match->getEvent()->getRound()->getName()){
             case "Finale": $match->getWinner()->setPositionClassement(1);
-            if($match->getWinner() == $match->getParticipation1()){
-                $match->getParticipation2()->setPositionClassement(2);
-            }else{
-                $match->getParticipation1()->setPositionClassement(2);
-            }
-            break;
+                            if($match->getWinner() == $match->getParticipation1()){
+                                $match->getParticipation2()->setPositionClassement(2);
+                            }else{
+                                $match->getParticipation1()->setPositionClassement(2);
+                            }
+                            break;
+            case "3ème place": $match->getWinner()->setPositionClassement(3);
+                                if($match->getWinner() == $match->getParticipation1()){
+                                    $match->getParticipation2()->setPositionClassement(4);
+                                }else{
+                                    $match->getParticipation1()->setPositionClassement(4);
+                                }
+                                break;
+            case "5ème place": $match->getWinner()->setPositionClassement(5);
+                                if($match->getWinner() == $match->getParticipation1()){
+                                    $match->getParticipation2()->setPositionClassement(6);
+                                }else{
+                                    $match->getParticipation1()->setPositionClassement(6);
+                                }
+                                break;
         }
         $em->flush();
         $this->addFlash('success', 'Résultat modifié');
@@ -191,4 +207,29 @@ class EventController extends AbstractController
         });
     }
 
+    /**
+     * fonction qui étbalit le classement génral
+     * @Route("/classementGeneral/{idEvent}", name="classement_general", requirements={"idEvent": "\d+"})
+     */
+    public function classementGeneral($idEvent, EntityManagerInterface $em){
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $events = $em->getRepository(Event::class)->findBy(['name' => $event->getName()]);
+        $participations = $em->getRepository(Participation::class)->getParticipationWithAnEventName($event->getName(), $event->getCompetition());
+        $classement = [];
+        dump($events);
+        foreach ($events as $item){
+            $item->setPublished(true);
+            $em->persist($item);
+        }
+        foreach ($participations as $participation){
+            if($participation['positionClassement'] !== null){
+                $classement[] = $participation;
+            }
+        }
+        $em->flush();
+            return $this->render('event/classementGeneral.html.twig',[
+            "event" => $event,
+            "classement" => $classement
+        ]);
+    }
 }

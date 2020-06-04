@@ -12,6 +12,8 @@
                 <th scope="col">Tour</th>
                 <th scope="col">Catégorie</th>
                 <th scope="col">Type</th>
+                <th scope="col">Autre</th>
+
             </tr>
             </thead>
             <tbody>
@@ -24,6 +26,9 @@
                     <td>{{ event.round.name }}</td>
                     <td>{{ event.category.name }}</td>
                     <td>{{ event.type.name }}</td>
+                    {% if event.published %}
+                    <td><button class="btn btn-light" onclick="window.location='{{ path('event_classement_general') }}'">Classement Final</button></td>
+                    {% endif %}
                 </tr>
 
                 {% set i = i+1 %}

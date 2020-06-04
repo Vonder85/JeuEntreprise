@@ -5,9 +5,12 @@
     <div class="container">
         {% if event.round.name is same as ("1/2 finale") %}
             <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_finale_4_6', {"idEvent": event.id}) }}'">Créer Finale</button>
-            <button class="btn btn-secondary mt-4" onclick="">Créer match 3ème place</button>
-
+            <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_3eme_place_4_6', {"idEvent":event.id}) }}'">Créer match 3ème place</button>
         {% endif %}
+        {% if participants|length is same as (6, 7) %}
+            <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_5eme_place_6_7', {"idEvent": event.id}) }}'">Créer 5ème place</button>
+        {% endif %}
+        <h1>{{ event.round.name }}</h1>
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}
                 {% if event.type.name is same as ("Tournoi par équipes") %}
@@ -219,6 +222,6 @@
                 </tbody>
             </table>
         {% endif %}
-        <button class="btn btn-secondary mt-4 mb-4 align-items-center" onclick="window.location='{{ path('admin_events') }}'">Retour</button>
+        <button class="btn btn-secondary mt-4 mb-4 align-items-center" onclick="window.location='{{ path('admin_edit_event', {"id":event.id}) }}'">Retour</button>
     </div>
 {% endblock %}
