@@ -178,20 +178,46 @@ class EventController extends AbstractController
     public function afficherClassement($idEvent, ParticipationRepository $pr, EventRepository $er){
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
         $event = $er->find($idEvent);
-        //Etabli le classement par nbr de points
-        usort($participations, function ($a, $b) {
-            $ad = $a->getPointsClassement();
-            $bd = $b->getPointsClassement();
-            if ($ad == $bd) {
-                return 0;
-            } else {
-                return $ad > $bd ? -1 : 1;
+
+        if($event->getPoule()){
+            $poules = $pr->nbrPoules($idEvent);
+            $totalParticipants = $pr->findParticipationInAnEventSimple($idEvent);
+            for ($i = 0; $i < sizeof($poules); $i++) {
+                $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
             }
-        });
+            for($j=0;$j<sizeof($poules); $j++){
+                //Etabli le classement par nbr de points
+                usort($participationsPoule[$j], function ($a, $b) {
+                    $ad = $a->getPointsClassement();
+                    $bd = $b->getPointsClassement();
+                    if ($ad == $bd) {
+                        return 0;
+                    } else {
+                        return $ad > $bd ? -1 : 1;
+                    }
+                });
+            }
+            dump($participationsPoule);
+        }else{
+            //Etabli le classement par nbr de points
+            usort($participations, function ($a, $b) {
+                $ad = $a->getPointsClassement();
+                $bd = $b->getPointsClassement();
+                if ($ad == $bd) {
+                    return 0;
+                } else {
+                    return $ad > $bd ? -1 : 1;
+                }
+            });
+        }
+
+
         //$this->classerParPoints($participations);
         return $this->render('event/classement.html.twig', [
             "participations" => $participations,
-            "event"=>$event
+            "event"=>$event,
+            "participationsPoule" => $participationsPoule,
+            "poules" => $poules
         ]);
     }
 

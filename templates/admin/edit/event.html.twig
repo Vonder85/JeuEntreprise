@@ -31,10 +31,13 @@
                 <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
                     <button class="btn btn-secondary">Voir rencontres</button>
                 </a>
+                {% if event.poule %}
+                <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement des poules</button>
+                {% else %}
                 {% if event.phaseIn is same as (1)  %}
 
                 <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
-
+                {% endif %}
                 {% endif %}
                 {% if event.type.name is same as ("Tournoi par équipes") %}
                     <table class="table mb-0 mt-4">
