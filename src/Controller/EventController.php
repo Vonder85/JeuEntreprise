@@ -216,7 +216,6 @@ class EventController extends AbstractController
         $events = $em->getRepository(Event::class)->findBy(['name' => $event->getName()]);
         $participations = $em->getRepository(Participation::class)->getParticipationWithAnEventName($event->getName(), $event->getCompetition());
         $classement = [];
-        dump($events);
         foreach ($events as $item){
             $item->setPublished(true);
             $em->persist($item);

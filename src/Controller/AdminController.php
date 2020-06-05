@@ -685,7 +685,7 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_events');
         }
         $participants = $em->getRepository(Participation::class)->findParticipationInAnEvent($id);
-        dump($participants);
+
         return $this->render('admin/edit/event.html.twig', [
             'eventForm' => $eventForm->createView(),
             'event' => $event,
@@ -1012,7 +1012,7 @@ class AdminController extends AbstractController
     function creerRencontresPoules($idEvent, ParticipationRepository $pr, EntityManagerInterface $em)
     {
         $poules = $pr->nbrPoules($idEvent);
-
+        $totalParticipants = $pr->findParticipationInAnEventSimple($idEvent);
         for ($i = 0; $i < sizeof($poules); $i++) {
             $participations[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
         }
@@ -1072,8 +1072,8 @@ class AdminController extends AbstractController
 
             }
         }
-        if ($nbTerrains > floor(sizeof($participations[0]) / 2)) {
-            $nbTerrains = floor(sizeof($participations[0]) / 2);
+        if ($nbTerrains > floor(sizeof($totalParticipants) / 2)) {
+            $nbTerrains = floor(sizeof($totalParticipants) / 2);
         }
         shuffle($matchs);
         $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
@@ -1480,7 +1480,6 @@ class AdminController extends AbstractController
         $event1->setPhase($event->getPhase());
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
-
         for($i=0; $i<2;$i++){
             $participation = new Participation();
             $participation->setEvent($event1);
@@ -1539,7 +1538,100 @@ class AdminController extends AbstractController
         if(sizeof($participations) === 7){
             $participations[sizeof($participations)-1]->setPositionClassement(7);
         }
+        $em->flush();
 
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui permet de créer event de 3emeplace
+     * @Route("/creation3emePlace7/{idEvent}", name="creation_3eme_place_6_7", requirements={"idEvent": "\d+"})
+     */
+    public function creer3emePlace6_7($idEvent, EntityManagerInterface $em){
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+
+        $event1 = new Event();
+        $event1->setDiscipline($event->getDiscipline());
+        $event1->setGender($event->getGender());
+        $event1->setMeridianBreak($event->getMeridianBreak());
+        $event1->setDuration($event->getDuration());
+        $event1->setBreakRest($event->getBreakRest());
+        $event1->setCategory($event->getCategory());
+        $event1->setType($event->getType());
+        $event1->setCompetition($event->getCompetition());
+        $event1->setName($event->getName());
+        $event1->setNbrFields($event->getNbrFields());
+        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
+        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
+        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "3ème place"]));
+        $event1->setPhase($event->getPhase());
+        $event1->setPhaseIn($event->getPhaseIn());
+        $em->persist($event1);
+
+        usort($participations, function ($a, $b) {
+            $ad = $a->getPointsClassement();
+            $bd = $b->getPointsClassement();
+            if ($ad == $bd) {
+                return 0;
+            } else {
+                return $ad > $bd ? -1 : 1;
+            }
+        });
+        $k=2;
+        for($i=0; $i<2;$i++){
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($participations[$k]->getParticipant());
+            $em->persist($participation);
+            $k++;
+        }
+
+        $em->flush();
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui permet de créer une finale poule 7
+     * @Route("/creationFinale7/{idEvent}", name="creation_finale_7", requirements={"idEvent": "\d+"})
+     */
+    public function creerFinale7($idEvent, EntityManagerInterface $em){
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+
+        $event1 = new Event();
+        $event1->setDiscipline($event->getDiscipline());
+        $event1->setGender($event->getGender());
+        $event1->setMeridianBreak($event->getMeridianBreak());
+        $event1->setDuration($event->getDuration());
+        $event1->setBreakRest($event->getBreakRest());
+        $event1->setCategory($event->getCategory());
+        $event1->setType($event->getType());
+        $event1->setCompetition($event->getCompetition());
+        $event1->setName($event->getName());
+        $event1->setNbrFields($event->getNbrFields());
+        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
+        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
+        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "Finale"]));
+        $event1->setPhase($event->getPhase());
+        $event1->setPhaseIn($event->getPhaseIn());
+        $em->persist($event1);
+
+        usort($participations, function ($a, $b) {
+            $ad = $a->getPointsClassement();
+            $bd = $b->getPointsClassement();
+            if ($ad == $bd) {
+                return 0;
+            } else {
+                return $ad > $bd ? -1 : 1;
+            }
+        });
+        for($i=0; $i<2;$i++){
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($participations[$i]->getParticipant());
+            $em->persist($participation);
+        }
         $em->flush();
 
         return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
