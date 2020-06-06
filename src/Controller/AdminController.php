@@ -43,6 +43,8 @@ use App\Repository\TeamCreatedRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TypeRepository;
 use App\Repository\UserRepository;
+use App\Utils\EventUtils;
+use App\Utils\RencontreUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -267,7 +269,7 @@ class AdminController extends AbstractController
 
         $eventForm->handleRequest($request);
         if ($eventForm->isSubmitted() && $eventForm->isValid()) {
-            $name = $event->getDiscipline()->getName() . ' ' . $event->getName() . ' ' . $event->getGender() . ' ' . $event->getCategory()->getName().' '.$event->getType()->getName();
+            $name = $event->getDiscipline()->getName() . ' ' . $event->getName() . ' ' . $event->getGender() . ' ' . $event->getCategory()->getName() . ' ' . $event->getType()->getName();
             $event->setName($name);
             $event->setPhaseIn(1);
             $em->persist($event);
@@ -945,59 +947,16 @@ class AdminController extends AbstractController
             }
         }
         $nbTerrains = $event->getNbrFields();
-        $matchs = [];
 
-        if (sizeof($tabIdsParticipations) % 2 == 1) {
-            $nbMatchs = sizeof($tabIdsParticipations) / 2;
-
-            for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
-                $l = 0;
-
-                for ($i = 0; $i < $nbMatchs; $i++) {
-
-                    if ($tabIdsParticipations[$l] === $tabIdsParticipations[sizeof($tabIdsParticipations) - $l - 1]) {
-
-                    } else {
-                        $match = new Match();
-
-                        $match->setEvent($event);
-                        $match->setParticipation1($tabIdsParticipations[$l]);
-                        $l++;
-                        $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $l]);
-                        $em->persist($match);
-                        $matchs[] = $match;
-                    }
-                }
-                $milieuTableau = array_slice($tabIdsParticipations, 0, 1);
-                array_splice($tabIdsParticipations, 0, 1);
-
-                $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
-            }
-        } else {
-            $nbMatchs = sizeof($tabIdsParticipations) / 2;
-            for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
-                $k = 0;
-
-                for ($i = 0; $i < $nbMatchs; $i++) {
-
-                    $match = new Match();
-
-                    $match->setEvent($event);
-                    $match->setParticipation1($tabIdsParticipations[$k]);
-                    $k++;
-                    $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $k]);
-                    $em->persist($match);
-                    $matchs[] = $match;
-                }
-                $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
-                array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
-
-                $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
-            }
+        $matchs = RencontreUtils::generateRencontres($tabIdsParticipations, $event);
+        foreach ($matchs as $match) {
+            $em->persist($match);
         }
+
         if ($nbTerrains > floor(sizeof($tabIdsParticipations) / 2)) {
             $nbTerrains = floor(sizeof($tabIdsParticipations) / 2);
         }
+
         $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
         $em->flush();
         return $this->redirectToRoute('admin_see_planning_meets', [
@@ -1019,59 +978,13 @@ class AdminController extends AbstractController
 
         $event = $em->getRepository(Event::class)->find($idEvent);
         $nbTerrains = $event->getNbrFields();
-        $matchs = [];
 
-        for ($m = 0; $m < sizeof($participations); $m++) {
+        $matchs = RencontreUtils::generateRencontresPoules($participations, $event);
 
-            if (sizeof($participations[$m]) % 2 == 1) {
-                $nbMatchs = sizeof($participations[$m]) / 2;
-
-                for ($e = 0; $e < sizeof($participations[$m]) - 1; $e++) {
-                    $l = 0;
-
-                    for ($i = 0; $i < $nbMatchs; $i++) {
-
-                        if ($participations[$m][$l] === $participations[$m][sizeof($participations[$m]) - $l - 1]) {
-
-                        } else {
-                            $match = new Match();
-
-                            $match->setEvent($event);
-                            $match->setParticipation1($participations[$m][$l]);
-                            $l++;
-                            $match->setParticipation2($participations[$m][sizeof($participations[$m]) - $l]);
-                            $em->persist($match);
-                            $matchs[] = $match;
-                        }
-                    }
-                    $milieuTableau = array_slice($participations[$m], 0, 1);
-                    array_splice($participations[$m], 0, 1);
-
-                    $participations[$m] = array_merge($participations[$m], $milieuTableau);
-                }
-            } else {
-                $nbMatchs = sizeof($participations[$m]) / 2;
-                for ($e = 0; $e < sizeof($participations[$m]) - 1; $e++) {
-                    $k = 0;
-                    for ($i = 0; $i < $nbMatchs; $i++) {
-
-                        $match = new Match();
-
-                        $match->setEvent($event);
-                        $match->setParticipation1($participations[$m][$k]);
-                        $k++;
-                        $match->setParticipation2($participations[$m][sizeof($participations[$m]) - $k]);
-                        $em->persist($match);
-                        $matchs[] = $match;
-                    }
-                    $milieuTableau = array_slice($participations[$m], 1, sizeof($participations[$m]) - 2);
-                    array_splice($participations[$m], 1, sizeof($participations[$m]) - 2);
-
-                    $participations[$m] = array_merge($participations[$m], $milieuTableau);
-                }
-
-            }
+        foreach ($matchs as $match) {
+            $em->persist($match);
         }
+
         if ($nbTerrains > floor(sizeof($totalParticipants) / 2)) {
             $nbTerrains = floor(sizeof($totalParticipants) / 2);
         }
@@ -1102,59 +1015,12 @@ class AdminController extends AbstractController
             }
         }
         $nbTerrains = $event->getNbrFields();
-        $matchs = [];
 
-        for ($m = 0; $m < 2; $m++) {
-
-            if (sizeof($tabIdsParticipations) % 2 == 1) {
-                $nbMatchs = sizeof($tabIdsParticipations) / 2;
-
-                for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
-                    $l = 0;
-
-                    for ($i = 0; $i < $nbMatchs; $i++) {
-
-                        if ($tabIdsParticipations[$l] === $tabIdsParticipations[sizeof($tabIdsParticipations) - $l - 1]) {
-
-                        } else {
-                            $match = new Match();
-
-                            $match->setEvent($event);
-                            $match->setParticipation1($tabIdsParticipations[$l]);
-                            $l++;
-                            $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $l]);
-                            $em->persist($match);
-                            $matchs[] = $match;
-                        }
-                    }
-                    $milieuTableau = array_slice($tabIdsParticipations, 0, 1);
-                    array_splice($tabIdsParticipations, 0, 1);
-
-                    $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
-                }
-            } else {
-                $nbMatchs = sizeof($tabIdsParticipations) / 2;
-                for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
-                    $k = 0;
-
-                    for ($i = 0; $i < $nbMatchs; $i++) {
-
-                        $match = new Match();
-
-                        $match->setEvent($event);
-                        $match->setParticipation1($tabIdsParticipations[$k]);
-                        $k++;
-                        $match->setParticipation2($tabIdsParticipations[sizeof($tabIdsParticipations) - $k]);
-                        $em->persist($match);
-                        $matchs[] = $match;
-                    }
-                    $milieuTableau = array_slice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
-                    array_splice($tabIdsParticipations, 1, sizeof($tabIdsParticipations) - 2);
-
-                    $tabIdsParticipations = array_merge($tabIdsParticipations, $milieuTableau);
-                }
-            }
+        $matchs = RencontreUtils::generateRencontresAllerRetour($tabIdsParticipations, $event);
+        foreach ($matchs as $match) {
+            $em->persist($match);
         }
+
         if ($nbTerrains > floor(sizeof($tabIdsParticipations) / 2)) {
             $nbTerrains = floor(sizeof($tabIdsParticipations) / 2);
         }
@@ -1191,7 +1057,7 @@ class AdminController extends AbstractController
             $k = 0;
             do {
                 //Création phase de rencontres
-                if (!$this->equipePresente($phases[$numeroPhase], $rencontres[$k])) {
+                if (!EventUtils::equipePresente($phases[$numeroPhase], $rencontres[$k])) {
                     $rencontres[$k]->setField($fields[0]);
                     $rencontres[$k]->setHeure(clone($date));
                     array_splice($fields, 0, 1);
@@ -1252,20 +1118,6 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_create_meet', ['idEvent' => $idEvent]);
     }
 
-    function equipePresente($phase, $rencontre)
-    {
-        $part1 = $rencontre->getParticipation1();
-        $part2 = $rencontre->getParticipation2();
-        if (sizeof($phase) > 0) {
-            if ($part1 === $phase[0]->getParticipation1() || $part1 === $phase[0]->getParticipation2() || $part2 === $phase[0]->getParticipation1() || $part2 === $phase[0]->getParticipation2()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-    }
-
     function array_move_elem($array, $from, $to)
     {
         if ($from == $to) {
@@ -1291,18 +1143,6 @@ class AdminController extends AbstractController
         return $array;
     }
 
-    public function classerParPoints($participations){
-        $participationsTries = usort($participations, function ($a, $b) {
-            $ad = $a->getPointsClassement();
-            $bd = $b->getPointsClassement();
-            if ($ad == $bd) {
-                return 0;
-            } else {
-                return $ad > $bd ? -1 : 1;
-            }
-        });
-    }
-
     /**
      * Création phase 2
      */
@@ -1315,25 +1155,12 @@ class AdminController extends AbstractController
     {
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
+        $round = $em->getRepository(Round::class)->findOneBy(['name' => '1/2 finale']);
 
-        $event1 = new Event();
-        $event1->setDiscipline($event->getDiscipline());
-        $event1->setGender($event->getGender());
-        $event1->setMeridianBreak($event->getMeridianBreak());
-        $event1->setDuration($event->getDuration());
-        $event1->setBreakRest($event->getBreakRest());
-        $event1->setCategory($event->getCategory());
-        $event1->setType($event->getType());
-        $event1->setCompetition($event->getCompetition());
-        $event1->setName($event->getName());
-        $event1->setNbrFields($event->getNbrFields());
-        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
-        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
-        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "1/2 finale"]));
-        $event1->setPhase($event->getPhase());
+        $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn() + 1);
+
         $em->persist($event1);
-        $participants = [];
 
         usort($participations, function ($a, $b) {
             $ad = $a->getPointsClassement();
@@ -1359,32 +1186,25 @@ class AdminController extends AbstractController
      * fonction qui crée les rencontres de la 1/2 finale pour 4 à 6 poules
      * @Route("/rencontreDemiFinale/{idEvent}", name="creation_rencontres_demi_finale4_6", requirements={"idEvent": "\d+"})
      */
-   public function creerRencontresDemiFinale($idEvent, EntityManagerInterface $em){
+    public function creerRencontresDemiFinale($idEvent, EntityManagerInterface $em)
+    {
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
         $nbTerrains = $event->getNbrFields();
-        dump($participations);
-        $matchs = [];
-        $j = 0;
-        $k = 3;
-        for($i=0;$i<2;$i++){
-            $match = new Match();
-            $match->setEvent($event);
-            $match->setParticipation1($participations[$j]);
-            $match->setParticipation2($participations[$k]);
-            $j++;
-            $k--;
+
+        $matchs = RencontreUtils::creerDemiFinalePoule4($participations, $event);
+
+        foreach ($matchs as $match) {
             $em->persist($match);
-            $matchs[] = $match;
         }
-       if ($nbTerrains > floor(sizeof($participations) / 2)) {
-           $nbTerrains = floor(sizeof($participations) / 2);
-       }
-       $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
-       $em->flush();
-       return $this->redirectToRoute('admin_see_planning_meets', [
-           "idEvent" => $idEvent
-       ]);
+        if ($nbTerrains > floor(sizeof($participations) / 2)) {
+            $nbTerrains = floor(sizeof($participations) / 2);
+        }
+        $this->affectationTerrains($matchs, $nbTerrains, $em, $event);
+        $em->flush();
+        return $this->redirectToRoute('admin_see_planning_meets', [
+            "idEvent" => $idEvent
+        ]);
 
     }
 
@@ -1392,30 +1212,17 @@ class AdminController extends AbstractController
      * fonction qui permet de créer une finale poule 4 à 6
      * @Route("/creationFinale/{idEvent}", name="creation_finale_4_6", requirements={"idEvent": "\d+"})
      */
-    public function creerFinale4_6($idEvent, EntityManagerInterface $em){
+    public function creerFinale4_6($idEvent, EntityManagerInterface $em)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "Finale"]);
 
-        $event1 = new Event();
-        $event1->setDiscipline($event->getDiscipline());
-        $event1->setGender($event->getGender());
-        $event1->setMeridianBreak($event->getMeridianBreak());
-        $event1->setDuration($event->getDuration());
-        $event1->setBreakRest($event->getBreakRest());
-        $event1->setCategory($event->getCategory());
-        $event1->setType($event->getType());
-        $event1->setCompetition($event->getCompetition());
-        $event1->setName($event->getName());
-        $event1->setNbrFields($event->getNbrFields());
-        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
-        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
-        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "Finale"]));
-        $event1->setPhase($event->getPhase());
+        $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
 
-
-        for($i=0; $i<2;$i++){
+        for ($i = 0; $i < 2; $i++) {
             $participation = new Participation();
             $participation->setEvent($event1);
             $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
@@ -1430,19 +1237,17 @@ class AdminController extends AbstractController
      * fonction qui crée la finale pour 4 à 6 poules
      * @Route("/rencontre1vs1/{idEvent}", name="creation_rencontre_1vs1", requirements={"idEvent": "\d+"})
      */
-    public function creerRencontre1vs1($idEvent, EntityManagerInterface $em){
+    public function creerRencontre1vs1($idEvent, EntityManagerInterface $em)
+    {
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
         $nbTerrains = $event->getNbrFields();
         $matchs = [];
-        $j = 0;
-            $match = new Match();
-            $match->setEvent($event);
-            $match->setParticipation1($participations[$j]);
-            $match->setParticipation2($participations[$j+1]);
 
-            $em->persist($match);
-            $matchs[] = $match;
+        $match = RencontreUtils::creerMatch1vs1($participations, $event);
+
+        $em->persist($match);
+        $matchs[] = $match;
 
         if ($nbTerrains > floor(sizeof($participations) / 2)) {
             $nbTerrains = floor(sizeof($participations) / 2);
@@ -1459,28 +1264,17 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 3emeplace poule 4 à 6
      * @Route("/creation3emePlace/{idEvent}", name="creation_3eme_place_4_6", requirements={"idEvent": "\d+"})
      */
-    public function creer3emePlace4_6($idEvent, EntityManagerInterface $em){
+    public function creer3emePlace4_6($idEvent, EntityManagerInterface $em)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "3ème place"]);
 
-        $event1 = new Event();
-        $event1->setDiscipline($event->getDiscipline());
-        $event1->setGender($event->getGender());
-        $event1->setMeridianBreak($event->getMeridianBreak());
-        $event1->setDuration($event->getDuration());
-        $event1->setBreakRest($event->getBreakRest());
-        $event1->setCategory($event->getCategory());
-        $event1->setType($event->getType());
-        $event1->setCompetition($event->getCompetition());
-        $event1->setName($event->getName());
-        $event1->setNbrFields($event->getNbrFields());
-        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
-        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
-        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "3ème place"]));
-        $event1->setPhase($event->getPhase());
+        $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
-        for($i=0; $i<2;$i++){
+
+        for ($i = 0; $i < 2; $i++) {
             $participation = new Participation();
             $participation->setEvent($event1);
             $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
@@ -1495,25 +1289,13 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 5emeplace
      * @Route("/creation5emePlace/{idEvent}", name="creation_5eme_place_6_7", requirements={"idEvent": "\d+"})
      */
-    public function creer5emePlace6_7($idEvent, EntityManagerInterface $em){
+    public function creer5emePlace6_7($idEvent, EntityManagerInterface $em)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "5ème place"]);
 
-        $event1 = new Event();
-        $event1->setDiscipline($event->getDiscipline());
-        $event1->setGender($event->getGender());
-        $event1->setMeridianBreak($event->getMeridianBreak());
-        $event1->setDuration($event->getDuration());
-        $event1->setBreakRest($event->getBreakRest());
-        $event1->setCategory($event->getCategory());
-        $event1->setType($event->getType());
-        $event1->setCompetition($event->getCompetition());
-        $event1->setName($event->getName());
-        $event1->setNbrFields($event->getNbrFields());
-        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
-        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
-        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "5ème place"]));
-        $event1->setPhase($event->getPhase());
+        $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
 
@@ -1526,8 +1308,8 @@ class AdminController extends AbstractController
                 return $ad > $bd ? -1 : 1;
             }
         });
-        $k=4;
-        for($i=0; $i<2;$i++){
+        $k = 4;
+        for ($i = 0; $i < 2; $i++) {
 
             $participation = new Participation();
             $participation->setEvent($event1);
@@ -1535,8 +1317,8 @@ class AdminController extends AbstractController
             $em->persist($participation);
             $k++;
         }
-        if(sizeof($participations) === 7){
-            $participations[sizeof($participations)-1]->setPositionClassement(7);
+        if (sizeof($participations) === 7) {
+            $participations[sizeof($participations) - 1]->setPositionClassement(7);
         }
         $em->flush();
 
@@ -1547,25 +1329,13 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 3emeplace
      * @Route("/creation3emePlace7/{idEvent}", name="creation_3eme_place_6_7", requirements={"idEvent": "\d+"})
      */
-    public function creer3emePlace6_7($idEvent, EntityManagerInterface $em){
+    public function creer3emePlace6_7($idEvent, EntityManagerInterface $em)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "3ème place"]);
 
-        $event1 = new Event();
-        $event1->setDiscipline($event->getDiscipline());
-        $event1->setGender($event->getGender());
-        $event1->setMeridianBreak($event->getMeridianBreak());
-        $event1->setDuration($event->getDuration());
-        $event1->setBreakRest($event->getBreakRest());
-        $event1->setCategory($event->getCategory());
-        $event1->setType($event->getType());
-        $event1->setCompetition($event->getCompetition());
-        $event1->setName($event->getName());
-        $event1->setNbrFields($event->getNbrFields());
-        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
-        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
-        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "3ème place"]));
-        $event1->setPhase($event->getPhase());
+        $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
 
@@ -1578,8 +1348,8 @@ class AdminController extends AbstractController
                 return $ad > $bd ? -1 : 1;
             }
         });
-        $k=2;
-        for($i=0; $i<2;$i++){
+        $k = 2;
+        for ($i = 0; $i < 2; $i++) {
             $participation = new Participation();
             $participation->setEvent($event1);
             $participation->setParticipant($participations[$k]->getParticipant());
@@ -1595,25 +1365,13 @@ class AdminController extends AbstractController
      * fonction qui permet de créer une finale poule 7
      * @Route("/creationFinale7/{idEvent}", name="creation_finale_7", requirements={"idEvent": "\d+"})
      */
-    public function creerFinale7($idEvent, EntityManagerInterface $em){
+    public function creerFinale7($idEvent, EntityManagerInterface $em)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "Finale"]);
 
-        $event1 = new Event();
-        $event1->setDiscipline($event->getDiscipline());
-        $event1->setGender($event->getGender());
-        $event1->setMeridianBreak($event->getMeridianBreak());
-        $event1->setDuration($event->getDuration());
-        $event1->setBreakRest($event->getBreakRest());
-        $event1->setCategory($event->getCategory());
-        $event1->setType($event->getType());
-        $event1->setCompetition($event->getCompetition());
-        $event1->setName($event->getName());
-        $event1->setNbrFields($event->getNbrFields());
-        $event1->setStartAt($event->getStartAt()->add(new \DateInterval('P1DT0H')));
-        $event1->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
-        $event1->setRound($em->getRepository(Round::class)->findOneBy(["name" => "Finale"]));
-        $event1->setPhase($event->getPhase());
+        $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
 
@@ -1626,7 +1384,7 @@ class AdminController extends AbstractController
                 return $ad > $bd ? -1 : 1;
             }
         });
-        for($i=0; $i<2;$i++){
+        for ($i = 0; $i < 2; $i++) {
             $participation = new Participation();
             $participation->setEvent($event1);
             $participation->setParticipant($participations[$i]->getParticipant());

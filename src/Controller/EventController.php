@@ -12,6 +12,7 @@ use App\models\Category;
 use App\Repository\EventRepository;
 use App\Repository\MatchRepository;
 use App\Repository\ParticipationRepository;
+use App\Utils\EventUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,15 +87,10 @@ class EventController extends AbstractController
         $score1 = $request->request->get('score1');
         $score2 = $request->request->get('score2');
 
-        $match->setScoreTeam1($score1);
-        $match->setScoreTeam2($score2);
-        if($score1>$score2){
-            $match->setWinner($match->getParticipation1());
-            $match->setLooser($match->getParticipation2());
-        }elseif($score1 < $score2){
-            $match->setWinner($match->getParticipation2());
-            $match->setLooser($match->getParticipation1());
-        }
+        //Enregistre les résultats
+        EventUtils::setResult($match, $score1, $score2);
+
+
         switch ($match->getEvent()->getRound()->getName()){
             case "Finale": $match->getWinner()->setPositionClassement(1);
                             if($match->getWinner() == $match->getParticipation1()){
@@ -178,7 +174,8 @@ class EventController extends AbstractController
     public function afficherClassement($idEvent, ParticipationRepository $pr, EventRepository $er){
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
         $event = $er->find($idEvent);
-
+        $participationsPoule = [];
+        $poules =[];
         if($event->getPoule()){
             $poules = $pr->nbrPoules($idEvent);
             $totalParticipants = $pr->findParticipationInAnEventSimple($idEvent);
@@ -210,7 +207,6 @@ class EventController extends AbstractController
                 }
             });
         }
-
 
         //$this->classerParPoints($participations);
         return $this->render('event/classement.html.twig', [
