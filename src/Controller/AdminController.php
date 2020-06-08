@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Data\EventCriteria;
+use App\Data\RechercheCriteria;
 use App\Entity\Athlet;
 use App\Entity\Category;
 use App\Entity\Company;
@@ -389,14 +391,90 @@ class AdminController extends AbstractController
      * @Route("/events", name="events")
      * show all events
      */
-    public function getEvents(EntityManagerInterface $em)
+    public function getEvents(EntityManagerInterface $em, Request $req)
     {
-
+        $criteria = $this->buildCriteria($req, $em);
+        $eventsFiltered = $em->getRepository(Event::class)->findEventsFiltered($criteria);
         $events = $em->getRepository(Event::class)->findAll();
+        $competitions = $em->getRepository(Competition::class)->findAll();
+        $disciplines = $em->getRepository(Discipline::class)->findAll();
+        $categories = $em->getRepository(Category::class)->findAll();
+        $types = $em->getRepository(Type::class)->findAll();
+        $rounds = $em->getRepository(Round::class)->findAll();
 
         return $this->render('admin/events.html.twig', [
-            "events" => $events
+            "events" => $events,
+            "criteria" => $criteria,
+            "eventsFiltered" => $eventsFiltered,
+            "competitions" => $competitions,
+            "disciplines" => $disciplines,
+            "categories" => $categories,
+            "types" => $types,
+            "rounds" => $rounds
         ]);
+    }
+
+    public function buildCriteria(Request $req, EntityManagerInterface $em){
+        $criteria = new EventCriteria();
+        if($req->query->get('search')){
+            $criteria->setSearch($req->query->get('search'));
+        }
+        if($req->query->get('competition') != "" && $req->query->get('competition') != null){
+            if($req->query->get('competition') == "All"){
+
+            }else{
+                $idCompetition = $req->query->get('competition');
+                $competition = $em->getRepository(Competition::class)->find($idCompetition);
+                $criteria->setCompetition($competition);
+            }
+        }
+        if($req->query->get('discipline') != "" && $req->query->get('discipline') != null){
+            if($req->query->get('discipline') == "All"){
+
+            }else{
+                $idDiscipline = $req->query->get('discipline');
+                $discipline = $em->getRepository(Discipline::class)->find($idDiscipline);
+                $criteria->setDiscipline($discipline);
+            }
+        }
+        if($req->query->get('gender') != "" && $req->query->get('gender') != null){
+            if($req->query->get('gender') == "All"){
+
+            }else{
+                $criteria->setGender($req->query->get('gender'));
+            }
+        }
+
+        if($req->query->get('category') != "" && $req->query->get('category') != null){
+            if($req->query->get('category') == "All"){
+
+            }else{
+                $idCategory = $req->query->get('category');
+                $category = $em->getRepository(Category::class)->find($idCategory);
+                $criteria->setCategory($category);
+            }
+        }
+        if($req->query->get('type') != "" && $req->query->get('type') != null){
+            if($req->query->get('type') == "All"){
+
+            }else{
+                $idType = $req->query->get('type');
+                $type = $em->getRepository(Type::class)->find($idType);
+                $criteria->setType($type);
+            }
+        }
+
+        if($req->query->get('round') != "" && $req->query->get('round') != null){
+            if($req->query->get('round') == "All"){
+
+            }else{
+                $idRound = $req->query->get('round');
+                $round = $em->getRepository(Round::class)->find($idRound);
+                $criteria->setRound($round);
+            }
+        }
+
+        return $criteria;
     }
 
     /**
@@ -1498,5 +1576,186 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
     }
 
+    /**
+     * fonction qui permet de créer barrages des poules
+     * @Route("/creationBarrage2Poule9/{idEvent}", name="creation_barrage_9", requirements={"idEvent": "\d+"})
+     */
+    public function creerBarrage2poules9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
+    {
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "Barrage"]);
 
+        $event1 = EventUtils::creationPhase($event, $round);
+        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $em->persist($event1);
+
+        $poules = $pr->nbrPoules($idEvent);
+
+        for ($i = 0; $i < sizeof($poules); $i++) {
+            $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
+        }
+        for($j=0;$j<sizeof($poules); $j++){
+            //Etabli le classement par nbr de points
+            usort($participationsPoule[$j], function ($a, $b) {
+                $ad = $a->getPointsClassement();
+                $bd = $b->getPointsClassement();
+                if ($ad == $bd) {
+                    return 0;
+                } else {
+                    return $ad > $bd ? -1 : 1;
+                }
+            });
+        }
+        $participationsA = [];
+        for($j=0;$j<2;$j++){
+            for($i=1; $i<3;$i++){
+                $participationsA[] = $participationsPoule[$j][$i];
+            }
+        }
+
+
+        for ($i = 0; $i < sizeof($participationsA); $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($participationsA[$i]->getParticipant());
+            $em->persist($participation);
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui permet de créer event de 5emeplace poule 9
+     * @Route("/creation5emePlace9/{idEvent}", name="creation_5eme_place_9", requirements={"idEvent": "\d+"})
+     */
+    public function creer5emePlace9($idEvent, EntityManagerInterface $em)
+    {
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "5ème place"]);
+
+        $event1 = EventUtils::creationPhase($event, $round);
+        $event1->setPhaseIn($event->getPhaseIn());
+        $em->persist($event1);
+
+        for ($i = 0; $i < 2; $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+            $em->persist($participation);
+        }
+        $em->flush();
+
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui permet de créer demi finales post-barrages poule 9
+     * @Route("/creationDemiFinalePostBarrage9/{idEvent}", name="creation_demi_finale_9", requirements={"idEvent": "\d+"})
+     */
+    public function creerDemiFinale9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
+    {
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        $roundDemi = $em->getRepository(Round::class)->findOneBy(["name" => "1/2 finale"]);
+        $roundPoules = $em->getRepository(Round::class)->findOneBy(["name" => "Phase de poules 1"]);
+        $matchsPoule = $em->getRepository(Match::class)->findMatchesWithAnEventAndRound($event->getName(), $roundPoules, $event->getCompetition());
+
+        $event1 = EventUtils::creationPhase($event, $roundDemi);
+        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $em->persist($event1);
+
+        $poules = $pr->nbrPoules($matchsPoule[0]->getEvent()->getId());
+
+        for ($i = 0; $i < sizeof($poules); $i++) {
+            $participationsPoule[] = $pr->getParPoules($matchsPoule[0]->getEvent()->getId(), $poules[$i]->getPoule());
+        }
+        for($j=0;$j<sizeof($poules); $j++){
+            //Etabli le classement par nbr de points
+            usort($participationsPoule[$j], function ($a, $b) {
+                $ad = $a->getPointsClassement();
+                $bd = $b->getPointsClassement();
+                if ($ad == $bd) {
+                    return 0;
+                } else {
+                    return $ad > $bd ? -1 : 1;
+                }
+            });
+        }
+        for($j=0;$j<sizeof($participationsPoule);$j++){
+            for($k=0;$k<1;$k++){
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($participationsPoule[$j][$k]->getParticipant());
+                $em->persist($participation);
+            }
+        }
+        for ($i = 0; $i < 2; $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+            $em->persist($participation);
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui permet de créer une poule de classement 9
+     * @Route("/creationPouleClassement9/{idEvent}", name="creation_poule_classement_9", requirements={"idEvent": "\d+"})
+     */
+    public function creerPouleClassement9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
+    {
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "Poule de classement"]);
+
+        $event1 = EventUtils::creationPhase($event, $round);
+        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $em->persist($event1);
+
+        $poules = $pr->nbrPoules($idEvent);
+
+        for ($i = 0; $i < sizeof($poules); $i++) {
+            $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
+        }
+        dump($participationsPoule);
+        for($j=0;$j<sizeof($poules); $j++){
+            //Etabli le classement par nbr de points
+            usort($participationsPoule[$j], function ($a, $b) {
+                $ad = $a->getPointsClassement();
+                $bd = $b->getPointsClassement();
+                if ($ad == $bd) {
+                    return 0;
+                } else {
+                    return $ad > $bd ? -1 : 1;
+                }
+            });
+        }
+
+        for($m=0; $m<sizeof($poules);$m++){
+            $k=1;
+            if(sizeof($participationsPoule[$m]) % 2 == 1){
+                for($j=0; $j<2;$j++){
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($participationsPoule[$m][sizeof($participationsPoule[$m])-$k]->getParticipant());
+                    $em->persist($participation);
+                    $k++;
+                }
+            }else{
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($participationsPoule[$m][sizeof($participationsPoule[$m])-$k]->getParticipant());
+                $em->persist($participation);
+            }
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
 }

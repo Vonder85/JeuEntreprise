@@ -18,8 +18,8 @@
                                 onclick="window.location='{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}'">
                             Créer 1/2 finales
                         </button>
-                    {% endif %}
-                    {% if event.round.name is same as ("Finale")%}
+
+                    {% elseif event.round.name is same as ("Finale")%}
                         <button class="btn btn-secondary mt-4"
                                 onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
                             Créer Match
@@ -39,6 +39,12 @@
                                    onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
                                Créer Match
                            </button>
+                       {% elseif event.round.name is same as ("Barrage")%}
+                           <button class="btn btn-secondary mt-4"
+                                   onclick="window.location='{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}'">
+                               Créer Barrages
+                           </button>
+
                            {% else %}
                     <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
                         <button class="btn btn-secondary mt-4">Créer rencontres</button>

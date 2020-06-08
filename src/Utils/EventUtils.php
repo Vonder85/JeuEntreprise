@@ -35,20 +35,6 @@ class EventUtils
         }
     }
 
-    public static function equipePresente($phase, $rencontre)
-    {
-        $part1 = $rencontre->getParticipation1()->getId();
-        $part2 = $rencontre->getParticipation2()->getId();
-        if (sizeof($phase) > 0) {
-            for($i=0; $i<sizeof($phase); $i++) {
-                if ($part1 == $phase[$i]->getParticipation1()->getId() || $part1 == $phase[$i]->getParticipation2()->getId() || $part2 == $phase[$i]->getParticipation1()->getId() || $part2 == $phase[$i]->getParticipation2()->getId()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-    }
 
     public static function classerParPoints($participations){
         $participationsTries = usort($participations, function ($a, $b) {
@@ -94,5 +80,6 @@ class EventUtils
         });
         return $tabParticipations;
     }
+
 
 }

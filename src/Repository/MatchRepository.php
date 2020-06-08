@@ -29,6 +29,21 @@ class MatchRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->execute();
     }
+
+    /**
+     * find matches for an event and round
+     */
+    public function findMatchesWithAnEventAndRound($eventName, $round, $competition){
+        $qb = $this->createQueryBuilder('m');
+        $qb->andWhere('e.name = :event')
+            ->setParameter('event', $eventName)
+            ->andWhere('e.competition = :competition')
+            ->setParameter('competition', $competition)
+            ->andWhere('e.round = :round')
+            ->setParameter('round', $round);
+        $qb->leftJoin('m.event', 'e');
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Match[] Returns an array of Match objects
     //  */

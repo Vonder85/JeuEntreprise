@@ -132,7 +132,7 @@ class EventController extends AbstractController
          * @var $match Match
          */
         foreach ($matchs as $match){
-            if($match->getScoreTeam1()){
+            if($match->getScoreTeam1() === 0 || $match->getScoreTeam1() > 0){
                 if($match->getScoreTeam1() > $match->getScoreTeam2()){
                     $match->getParticipation1()->setVictory($match->getParticipation1()->getVictory() +1);
                     $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +3);
@@ -147,10 +147,24 @@ class EventController extends AbstractController
                     $match->getParticipation2()->setNul($match->getParticipation2()->getNul() +1);
                     $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +1);
                 }
-            }else{
-
             }
 
+        }
+        if($event->getRound()->getName() === "Poule de classement"){
+            usort($participations, function ($a, $b) {
+                $ad = $a->getPointsClassement();
+                $bd = $b->getPointsClassement();
+                if ($ad == $bd) {
+                    return 0;
+                } else {
+                    return $ad > $bd ? -1 : 1;
+                }
+            });
+            $j=7;
+            foreach ($participations as $participation){
+                $participation->setPositionClassement($j);
+                $j++;
+            }
         }
         $em->flush();
         return $this->redirectToRoute('event_afficher_classement', [
@@ -167,9 +181,9 @@ class EventController extends AbstractController
         $event = $er->find($idEvent);
         $participationsPoule = [];
         $poules =[];
+
         if($event->getPoule()){
             $poules = $pr->nbrPoules($idEvent);
-            $totalParticipants = $pr->findParticipationInAnEventSimple($idEvent);
             for ($i = 0; $i < sizeof($poules); $i++) {
                 $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
             }
@@ -185,7 +199,6 @@ class EventController extends AbstractController
                     }
                 });
             }
-            dump($participationsPoule);
         }else{
             //Etabli le classement par nbr de points
             usort($participations, function ($a, $b) {

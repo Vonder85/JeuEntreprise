@@ -15,7 +15,7 @@ class RencontreUtils
         if (sizeof($tabIdsParticipations) % 2 == 1) {
             $nbMatchs = sizeof($tabIdsParticipations) / 2;
 
-            for ($e = 0; $e < sizeof($tabIdsParticipations) - 1; $e++) {
+            for ($e = 0; $e < sizeof($tabIdsParticipations); $e++) {
                 $l = 0;
 
                 for ($i = 0; $i < $nbMatchs; $i++) {
@@ -244,8 +244,6 @@ class RencontreUtils
                 $j++;
             }
         } while (!empty($rencontres));
-
-
     }
 
 

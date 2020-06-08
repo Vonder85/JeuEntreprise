@@ -14,6 +14,10 @@
         {% if participants|length is same as (6, 7) %}
             <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_5eme_place_6_7', {"idEvent": event.id}) }}'">Créer 5ème place</button>
         {% endif %}
+        {% if event.round.name is same as ('Barrage') %}
+            <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_5eme_place_9', {"idEvent": event.id}) }}'">Créer 5ème place</button>
+            <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_demi_finale_9', {"idEvent": event.id}) }}'">Créer 1/2 finales</button>
+        {% endif %}
         <h1>{{ event.round.name }}</h1>
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}

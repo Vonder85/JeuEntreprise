@@ -14,15 +14,15 @@
             </div>
             <div class="col-6">
                 {% if event.type.name is same as ("Tournoi par équipes") %}
-                {{ form_start(participationForm) }}
-                {{ form_widget(participationForm) }}
-                <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Ajouter participant</button>
-                {{ form_end(participationForm) }}
+                    {{ form_start(participationForm) }}
+                    {{ form_widget(participationForm) }}
+                    <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Ajouter participant</button>
+                    {{ form_end(participationForm) }}
                 {% else %}
-                {{ form_start(participationAthletForm) }}
-                {{ form_widget(participationAthletForm) }}
-                <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Ajouter participant</button>
-                {{ form_end(participationAthletForm) }}
+                    {{ form_start(participationAthletForm) }}
+                    {{ form_widget(participationAthletForm) }}
+                    <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Ajouter participant</button>
+                    {{ form_end(participationAthletForm) }}
                 {% endif %}
 
                 <a href="{{ path('admin_create_meet', {"idEvent": event.id}) }}">
@@ -32,12 +32,22 @@
                     <button class="btn btn-secondary">Voir rencontres</button>
                 </a>
                 {% if event.poule %}
-                <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement des poules</button>
+                    <button class="btn btn-secondary"
+                            onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">
+                        Voir classement des poules
+                    </button>
                 {% else %}
-                {% if event.phaseIn is same as (1)  %}
+                    {% if event.phaseIn is same as (1) %}
 
-                <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
+                        <button class="btn btn-secondary"
+                                onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">
+                            Voir classement
+                        </button>
+                    {% endif %}
                 {% endif %}
+                {% if event.round.name is same as ('Poule de classement')  %}
+
+                    <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
                 {% endif %}
                 {% if event.type.name is same as ("Tournoi par équipes") %}
                     <table class="table mb-0 mt-4">
