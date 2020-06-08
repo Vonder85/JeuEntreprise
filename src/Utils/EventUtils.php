@@ -80,4 +80,17 @@ class EventUtils
         return $event1;
     }
 
+    public static function classerParOrdrePoints($tabParticipations){
+        usort($tabParticipations, function ($a, $b) {
+            $ad = $a->getPointsClassement();
+            $bd = $b->getPointsClassement();
+            if ($ad == $bd) {
+                return 0;
+            } else {
+                return $ad > $bd ? -1 : 1;
+            }
+        });
+        return $tabParticipations;
+    }
+
 }

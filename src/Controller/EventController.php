@@ -207,26 +207,12 @@ class EventController extends AbstractController
                 }
             });
         }
-
-        //$this->classerParPoints($participations);
         return $this->render('event/classement.html.twig', [
             "participations" => $participations,
             "event"=>$event,
             "participationsPoule" => $participationsPoule,
             "poules" => $poules
         ]);
-    }
-
-    public function classerParPoints($tabParticipations){
-        usort($tabParticipations, function ($a, $b) {
-            $ad = $a->getPointsClassement();
-            $bd = $b->getPointsClassement();
-            if ($ad == $bd) {
-                return 0;
-            } else {
-                return $ad > $bd ? -1 : 1;
-            }
-        });
     }
 
     /**

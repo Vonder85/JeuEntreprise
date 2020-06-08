@@ -196,4 +196,50 @@ class RencontreUtils
 
         return $match;
     }
+
+    public static function affectationTerrains($rencontres, $nbrTerrains, $event)
+    {
+        $timeToAdd = $event->getDuration() + $event->getBreakRest();
+        //get array of fields
+        $j = 1;
+        for ($i = 0; $i < $nbrTerrains; $i++) {
+            $fields[$i] = $j;
+            $j++;
+        }
+        $numeroPhase = 1;
+        $phases = [];
+        $date = $event->getStartAt();
+        do {
+            $phases[$numeroPhase] = [];
+            $k = 0;
+            do {
+                //Création phase de rencontres
+                if (!EventUtils::equipePresente($phases[$numeroPhase], $rencontres[$k])) {
+                    $rencontres[$k]->setField($fields[0]);
+                    $rencontres[$k]->setHeure(clone($date));
+                    array_splice($fields, 0, 1);
+                    array_push($phases[$numeroPhase], $rencontres[$k]);
+                    array_splice($rencontres, $k, 1);
+                } else {
+                    $k++;
+                }
+            } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
+
+            if ($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()) {
+                $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
+            } else {
+                $date->sub(new \DateInterval('PT0H' . $timeToAdd . 'M'));
+                $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
+            }
+
+            $numeroPhase++;
+            //get array of fields
+            $j = 1;
+            for ($i = 0; $i < $nbrTerrains; $i++) {
+                $fields[$i] = $j;
+                $j++;
+            }
+        } while (!empty($rencontres));
+
+    }
 }
