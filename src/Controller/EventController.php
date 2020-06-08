@@ -93,25 +93,16 @@ class EventController extends AbstractController
 
         switch ($match->getEvent()->getRound()->getName()){
             case "Finale": $match->getWinner()->setPositionClassement(1);
-                            if($match->getWinner() == $match->getParticipation1()){
-                                $match->getParticipation2()->setPositionClassement(2);
-                            }else{
-                                $match->getParticipation1()->setPositionClassement(2);
-                            }
+                            $match->getLooser()->setPositionClassement(2);
                             break;
             case "3ème place": $match->getWinner()->setPositionClassement(3);
-                                if($match->getWinner() == $match->getParticipation1()){
-                                    $match->getParticipation2()->setPositionClassement(4);
-                                }else{
-                                    $match->getParticipation1()->setPositionClassement(4);
-                                }
+                                $match->getLooser()->setPositionClassement(4);
                                 break;
             case "5ème place": $match->getWinner()->setPositionClassement(5);
-                                if($match->getWinner() == $match->getParticipation1()){
-                                    $match->getParticipation2()->setPositionClassement(6);
-                                }else{
-                                    $match->getParticipation1()->setPositionClassement(6);
-                                }
+                                $match->getLooser()->setPositionClassement(6);
+                                break;
+            case "7ème place": $match->getWinner()->setPositionClassement(7);
+                                $match->getLooser()->setPositionClassement(8);
                                 break;
         }
         $em->flush();
@@ -168,7 +159,7 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("afficherClassement/{idEvent}", name="afficher_classement", requirements={"idEvent": "\d+"})
+     * @Route("/afficherClassement/{idEvent}", name="afficher_classement", requirements={"idEvent": "\d+"})
      * fonction qui permet l'affichage du tableau
      */
     public function afficherClassement($idEvent, ParticipationRepository $pr, EventRepository $er){
@@ -234,6 +225,7 @@ class EventController extends AbstractController
             }
         }
         $em->flush();
+        dump($classement);
             return $this->render('event/classementGeneral.html.twig',[
             "event" => $event,
             "classement" => $classement

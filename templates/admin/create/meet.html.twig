@@ -34,6 +34,11 @@
                                    onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
                                Créer Match
                            </button>
+                       {% elseif event.round.name is same as ("7ème place")%}
+                           <button class="btn btn-secondary mt-4"
+                                   onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                               Créer Match
+                           </button>
                            {% else %}
                     <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
                         <button class="btn btn-secondary mt-4">Créer rencontres</button>

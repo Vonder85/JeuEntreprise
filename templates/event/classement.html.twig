@@ -30,9 +30,12 @@
                     </button>
                 {% endif %}
             {% endif %}
-
         {% endif %}
         {% if event.poule %}
+            <button class="btn btn-secondary"
+                    onclick="window.location='{{ path('admin_creation_demifinale_8', {"idEvent": event.id}) }}'">
+                Créer 1/2 finales
+            </button>
             {% set p = 1 %}
             {% for l in 0..poules|length-1 %}
                 <table class="table table-striped table-dark mb-4 mt-4">

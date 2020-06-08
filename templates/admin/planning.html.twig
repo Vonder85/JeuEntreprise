@@ -6,6 +6,10 @@
         {% if event.round.name is same as ("1/2 finale") %}
             <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_finale_4_6', {"idEvent": event.id}) }}'">Créer Finale</button>
             <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_3eme_place_4_6', {"idEvent":event.id}) }}'">Créer match 3ème place</button>
+            {% if matchs|length is same as (4) %}
+                <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_5eme_place_8', {"idEvent": event.id}) }}'">Créer match 5ème place</button>
+                <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_7eme_place_8', {"idEvent":event.id}) }}'">Créer match 7ème place</button>
+            {% endif %}
         {% endif %}
         {% if participants|length is same as (6, 7) %}
             <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_5eme_place_6_7', {"idEvent": event.id}) }}'">Créer 5ème place</button>
@@ -13,7 +17,7 @@
         <h1>{{ event.round.name }}</h1>
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}
-                {% if event.type.name is same as ("Tournoi par équipes") %}
+
                     {% if k == 1 %}
                         <table class="table table-striped table-dark mb-4 mt-4">
                             <h2>Poule A</h2>
@@ -171,7 +175,7 @@
                             </tbody>
                         </table>
                     {% endif %}
-                {% endif %}
+
             {% endfor %}
         {% else %}
         {% if event.type.name is same as ("Tournoi individuel") %}

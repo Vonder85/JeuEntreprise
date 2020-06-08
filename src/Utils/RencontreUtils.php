@@ -69,7 +69,7 @@ class RencontreUtils
             if (sizeof($participations[$m]) % 2 == 1) {
                 $nbMatchs = sizeof($participations[$m]) / 2;
 
-                for ($e = 0; $e < sizeof($participations[$m]) - 1; $e++) {
+                for ($e = 0; $e < sizeof($participations[$m]); $e++) {
                     $l = 0;
 
                     for ($i = 0; $i < $nbMatchs; $i++) {
@@ -116,7 +116,8 @@ class RencontreUtils
         return $matchs;
     }
 
-    public static function generateRencontresAllerRetour($tabIdsParticipations, $event){
+    public static function generateRencontresAllerRetour($tabIdsParticipations, $event)
+    {
         $matchs = [];
 
         for ($m = 0; $m < 2; $m++) {
@@ -171,11 +172,12 @@ class RencontreUtils
         return $matchs;;
     }
 
-    public static function creerDemiFinalePoule4($participations, $event){
+    public static function creerDemiFinalePoule4($participations, $event)
+    {
         $matchs = [];
         $j = 0;
         $k = 3;
-        for($i=0;$i<2;$i++){
+        for ($i = 0; $i < 2; $i++) {
             $match = new Match();
             $match->setEvent($event);
             $match->setParticipation1($participations[$j]);
@@ -187,12 +189,13 @@ class RencontreUtils
         return $matchs;
     }
 
-    public static function creerMatch1vs1($participations, $event){
+    public static function creerMatch1vs1($participations, $event)
+    {
         $j = 0;
         $match = new Match();
         $match->setEvent($event);
         $match->setParticipation1($participations[$j]);
-        $match->setParticipation2($participations[$j+1]);
+        $match->setParticipation2($participations[$j + 1]);
 
         return $match;
     }
@@ -214,16 +217,17 @@ class RencontreUtils
             $k = 0;
             do {
                 //Création phase de rencontres
-                if (!EventUtils::equipePresente($phases[$numeroPhase], $rencontres[$k])) {
-                    $rencontres[$k]->setField($fields[0]);
-                    $rencontres[$k]->setHeure(clone($date));
-                    array_splice($fields, 0, 1);
-                    array_push($phases[$numeroPhase], $rencontres[$k]);
-                    array_splice($rencontres, $k, 1);
-                } else {
+                    if (!(in_array('ok',RencontreUtils::equipePresente($phases[$numeroPhase], $rencontres[$k])))) {
+                        $rencontres[$k]->setField($fields[0]);
+                        $rencontres[$k]->setHeure(clone($date));
+                        array_splice($fields, 0, 1);
+                        array_push($phases[$numeroPhase], $rencontres[$k]);
+                        array_splice($rencontres, $k, 1);
+                    }  else {
                     $k++;
                 }
             } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
+
 
             if ($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()) {
                 $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
@@ -241,5 +245,25 @@ class RencontreUtils
             }
         } while (!empty($rencontres));
 
+
+    }
+
+
+    public static function equipePresente($phase, $rencontre)
+    {
+        $resultat = [];
+        $part1 = $rencontre->getParticipation1()->getId();
+        $part2 = $rencontre->getParticipation2()->getId();
+        if (sizeof($phase) > 0) {
+            for ($i = 0; $i < sizeof($phase); $i++) {
+                if ($part1 == $phase[$i]->getParticipation1()->getId() || $part1 == $phase[$i]->getParticipation2()->getId() || $part2 == $phase[$i]->getParticipation1()->getId() || $part2 == $phase[$i]->getParticipation2()->getId()) {
+                    $resultat[] = 'ok';
+                } else {
+                    $resultat[] = 'Nok';
+                }
+            }
+
+        }
+        return $resultat;
     }
 }
