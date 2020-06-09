@@ -23,9 +23,7 @@
                             <option value="{{ i }}">{{ i }}</option>
                         {% endfor %}
                     </select><br>
-                <a href="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
-                    <button class="btn btn-secondary mt-4">Créer rencontres des poules</button>
-                </a>
+                    <button type="submit" class="btn btn-secondary mt-4">Créer rencontres des poules</button>
                 </form>
             {% else %}
 
@@ -38,8 +36,7 @@
                                 <option value="{{ i }}">{{ i }}</option>
                             {% endfor %}
                         </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4"
-                                onclick="window.location='{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}'">
+                        <button type="submit" class="btn btn-secondary mt-4">
                             Créer 1/2 finales
                         </button>
                     </form>
@@ -51,8 +48,7 @@
                                 <option value="{{ i }}">{{ i }}</option>
                             {% endfor %}
                         </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4"
-                                onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                        <button type="submit" class="btn btn-secondary mt-4">
                             Créer Match
                         </button>
                     </form>
@@ -64,8 +60,7 @@
                                 <option value="{{ i }}">{{ i }}</option>
                             {% endfor %}
                         </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4"
-                                onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                        <button type="submit" class="btn btn-secondary mt-4">
                             Créer Match
                         </button>
                     </form>
@@ -77,8 +72,7 @@
                                 <option value="{{ i }}">{{ i }}</option>
                             {% endfor %}
                         </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4"
-                                onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                        <button type="submit" class="btn btn-secondary mt-4">
                             Créer Match
                         </button>
                     </form>
@@ -90,8 +84,7 @@
                                 <option value="{{ i }}">{{ i }}</option>
                             {% endfor %}
                         </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4"
-                                onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                        <button type="submit" class="btn btn-secondary mt-4">
                             Créer Match
                         </button>
                     </form>
@@ -104,8 +97,7 @@
                                 <option value="{{ i }}">{{ i }}</option>
                             {% endfor %}
                         </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4"
-                                onclick="window.location='{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}'">
+                        <button type="submit" class="btn btn-secondary mt-4">
                             Créer Barrages
                         </button>
                     </form>
@@ -117,9 +109,8 @@
                                 <option value="{{ i }}">{{ i }}</option>
                             {% endfor %}
                         </select><br>
-                        <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
-                            <button type="submit" class="btn btn-secondary mt-4">Créer rencontres</button>
-                        </a>
+                        <button type="submit" class="btn btn-secondary mt-4">Créer rencontres</button>
+
                     </form>
                     <a href="{{ path('admin_creer_rencontre_aller_retour', {"idEvent": event.id}) }}">
                         <button class="btn btn-secondary mt-4">Créer championnat Aller Retour</button>
