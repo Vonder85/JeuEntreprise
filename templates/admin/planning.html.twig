@@ -3,6 +3,7 @@
 {% block title %}Liste des matchs | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
+
         {% if event.round.name is same as ("1/2 finale") %}
             <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_finale_4_6', {"idEvent": event.id}) }}'">Créer Finale</button>
             <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_3eme_place_4_6', {"idEvent":event.id}) }}'">Créer match 3ème place</button>
@@ -19,6 +20,13 @@
             <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('admin_creation_demi_finale_9', {"idEvent": event.id}) }}'">Créer 1/2 finales</button>
         {% endif %}
         <h1>{{ event.round.name }}</h1>
+        {% if event.round.name is same as ("Finale") %}
+            {% for match in matchs %}
+                 {% if match.scoreTeam1 is not same as ("NULL") %}
+            <button class="btn btn-secondary mt-4" onclick="window.location='{{ path('event_classement_general', {'idEvent': event.id}) }}'">Classement final</button>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}
 

@@ -8,56 +8,128 @@
     <div class="row">
         <div class="col-6">
             {% if event.poule %}
+                <form method="post" action="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
+                    {% for i in 1..nbrPoules|length %}
+                        <label for="nbrTerrains{{ i }}">Nombre terrains Poule {{ i }}</label>
+                        <select name="poule{{ i }}">
+                            {% for j in 0..event.nbrFields %}
+                                <option value="{{ j }}">{{ j }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endfor %}
+                    <label for="terrains">A partir du terrain</label><br>
+                    <select name="aPartir" class="form-control">
+                        {% for i in 0..20 %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select><br>
                 <a href="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
                     <button class="btn btn-secondary mt-4">Créer rencontres des poules</button>
                 </a>
+                </form>
             {% else %}
 
-                    {% if event.round.name is same as ("1/2 finale") %}
-                        <button class="btn btn-secondary mt-4"
+                {% if event.round.name is same as ("1/2 finale") %}
+                    <form method="post"
+                          action="{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}">
+                        <label for="terrains">A partir du terrain</label><br>
+                        <select name="aPartir" class="form-control">
+                            {% for i in 0..20 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select><br>
+                        <button type="submit" class="btn btn-secondary mt-4"
                                 onclick="window.location='{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}'">
                             Créer 1/2 finales
                         </button>
-
-                    {% elseif event.round.name is same as ("Finale")%}
-                        <button class="btn btn-secondary mt-4"
+                    </form>
+                {% elseif event.round.name is same as ("Finale") %}
+                    <form method="post" action="{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}">
+                        <label for="terrains">A partir du terrain</label><br>
+                        <select name="aPartir" class="form-control">
+                            {% for i in 0..20 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select><br>
+                        <button type="submit" class="btn btn-secondary mt-4"
                                 onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
                             Créer Match
                         </button>
-                   {% elseif event.round.name is same as ("3ème place") %}
-                       <button class="btn btn-secondary mt-4"
-                               onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
-                           Créer Match
-                       </button>
-                       {% elseif event.round.name is same as ("5ème place")%}
-                           <button class="btn btn-secondary mt-4"
-                                   onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
-                               Créer Match
-                           </button>
-                       {% elseif event.round.name is same as ("7ème place")%}
-                           <button class="btn btn-secondary mt-4"
-                                   onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
-                               Créer Match
-                           </button>
-                       {% elseif event.round.name is same as ("Barrage")%}
-                           <button class="btn btn-secondary mt-4"
-                                   onclick="window.location='{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}'">
-                               Créer Barrages
-                           </button>
-
-                           {% else %}
-                    <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
-                        <button class="btn btn-secondary mt-4">Créer rencontres</button>
-                    </a>
+                    </form>
+                {% elseif event.round.name is same as ("3ème place") %}
+                    <form method="post" action="{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}">
+                        <label for="terrains">A partir du terrain</label><br>
+                        <select name="aPartir" class="form-control">
+                            {% for i in 0..20 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select><br>
+                        <button type="submit" class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                            Créer Match
+                        </button>
+                    </form>
+                {% elseif event.round.name is same as ("5ème place") %}
+                    <form method="post" action="{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}">
+                        <label for="terrains">A partir du terrain</label><br>
+                        <select name="aPartir" class="form-control">
+                            {% for i in 0..20 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select><br>
+                        <button type="submit" class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                            Créer Match
+                        </button>
+                    </form>
+                {% elseif event.round.name is same as ("7ème place") %}
+                    <form method="post" action="{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}">
+                        <label for="terrains">A partir du terrain</label><br>
+                        <select name="aPartir" class="form-control">
+                            {% for i in 0..20 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select><br>
+                        <button type="submit" class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}'">
+                            Créer Match
+                        </button>
+                    </form>
+                {% elseif event.round.name is same as ("Barrage") %}
+                    <form method="post"
+                          action="{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}">
+                        <label for="terrains">A partir du terrain</label><br>
+                        <select name="aPartir" class="form-control">
+                            {% for i in 0..20 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select><br>
+                        <button type="submit" class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_rencontres_demi_finale4_6', {"idEvent": event.id}) }}'">
+                            Créer Barrages
+                        </button>
+                    </form>
+                {% else %}
+                    <form method="post" action="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
+                        <label for="terrains">A partir du terrain</label><br>
+                        <select name="aPartir" class="form-control">
+                            {% for i in 0..20 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select><br>
+                        <a href="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
+                            <button type="submit" class="btn btn-secondary mt-4">Créer rencontres</button>
+                        </a>
+                    </form>
                     <a href="{{ path('admin_creer_rencontre_aller_retour', {"idEvent": event.id}) }}">
                         <button class="btn btn-secondary mt-4">Créer championnat Aller Retour</button>
                     </a>
+                {% endif %}
             {% endif %}
-            {% endif %}
-{% if event.round.name is same as ("Phase de poules 1") %}
-            <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
-                <button class="btn btn-secondary mt-4">Voir rencontres</button>
-            </a>
+            {% if event.round.name is same as ("Phase de poules 1") %}
+                <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
+                    <button class="btn btn-secondary mt-4">Voir rencontres</button>
+                </a>
             {% endif %}
             <br>
             {% if event.poule %}

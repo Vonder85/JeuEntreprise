@@ -44,6 +44,19 @@ class MatchRepository extends ServiceEntityRepository
         $qb->leftJoin('m.event', 'e');
         return $qb->getQuery()->execute();
     }
+
+    /**
+     * find matches for an event and poule
+     */
+    public function findMatchesWithAnEventAndPoule($event, $poule){
+        $qb = $this->createQueryBuilder('m');
+        $qb->andWhere('m.event = :event')
+            ->setParameter('event', $event)
+            ->andWhere('p1.poule = :poule')
+            ->setParameter('poule', $poule);
+        $qb->leftJoin('m.participation1', 'p1');
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Match[] Returns an array of Match objects
     //  */

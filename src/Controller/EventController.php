@@ -8,6 +8,7 @@ use App\Entity\Discipline;
 use App\Entity\Event;
 use App\Entity\Match;
 use App\Entity\Participation;
+use App\Entity\Round;
 use App\models\Category;
 use App\Repository\EventRepository;
 use App\Repository\MatchRepository;
@@ -121,6 +122,8 @@ class EventController extends AbstractController
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        $roundPoules = $em->getRepository(Round::class)->findOneBy(['name' => 'Phase de poules 1']);
+        $participationsTotal = $em->getRepository(Participation::class)->findParticipationsWithAnEventAndRound($event->getName(), $roundPoules, $event->getCompetition());
 
         foreach ($participations as $participation){
             $participation->setVictory(0);
@@ -151,6 +154,12 @@ class EventController extends AbstractController
 
         }
         if($event->getRound()->getName() === "Poule de classement"){
+            $j= 0;
+            if(sizeof($participationsTotal) === 9){
+                $j=7;
+            }elseif (sizeof($participationsTotal) === 11){
+                $j=9;
+            }
             usort($participations, function ($a, $b) {
                 $ad = $a->getPointsClassement();
                 $bd = $b->getPointsClassement();
@@ -160,7 +169,6 @@ class EventController extends AbstractController
                     return $ad > $bd ? -1 : 1;
                 }
             });
-            $j=7;
             foreach ($participations as $participation){
                 $participation->setPositionClassement($j);
                 $j++;

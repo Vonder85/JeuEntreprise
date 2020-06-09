@@ -3,7 +3,6 @@
 {% block title %}Liste des matchs | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
-        <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}
                 {% if event.type.name is same as ("Tournoi par équipes") %}

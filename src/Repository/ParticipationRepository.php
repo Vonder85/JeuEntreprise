@@ -148,6 +148,34 @@ class ParticipationRepository extends ServiceEntityRepository
         $qb->leftJoin('p.participant', 'pa');
         return $qb->getQuery()->execute();
     }
+
+    /**
+     * Recupère nbr participants avec un event et une poule
+     */
+    public function getNbrParticipantsWithEventAndPoule($event, $poule){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere("p.event = :event")
+            ->setParameter("event", $event)
+            ->andWhere("p.poule = :poule")
+            ->setParameter('poule', $poule);
+        return $qb->getQuery()->execute();
+    }
+
+
+    /**
+     * find participations for an event and round
+     */
+    public function findParticipationsWithAnEventAndRound($eventName, $round, $competition){
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere('e.name = :event')
+            ->setParameter('event', $eventName)
+            ->andWhere('e.competition = :competition')
+            ->setParameter('competition', $competition)
+            ->andWhere('e.round = :round')
+            ->setParameter('round', $round);
+        $qb->leftJoin('p.event', 'e');
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Participation[] Returns an array of Participation objects
     //  */

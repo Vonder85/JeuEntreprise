@@ -41,12 +41,22 @@
                         onclick="window.location='{{ path('admin_creation_poule_classement_9', {"idEvent": event.id}) }}'">
                     Créer Poule de classement
                 </button>
-                {% else %}
-            <button class="btn btn-secondary"
-                    onclick="window.location='{{ path('admin_creation_demifinale_8', {"idEvent": event.id}) }}'">
-                Créer 1/2 finales
-            </button>
-                    {% endif %}
+                {% elseif participations|length is same as (11) %}
+
+                    <button class="btn btn-secondary"
+                            onclick="window.location='{{ path('admin_creation_poule_classement_9', {"idEvent": event.id}) }}'">
+                        Créer Poule de classement
+                    </button>
+                    <button class="btn btn-secondary"
+                            onclick="window.location='{{ path('admin_creation_demifinale_8', {"idEvent": event.id}) }}'">
+                        Créer 1/2 finales
+                    </button>
+            {% else %}
+                <button class="btn btn-secondary"
+                        onclick="window.location='{{ path('admin_creation_demifinale_8', {"idEvent": event.id}) }}'">
+                    Créer 1/2 finales
+                </button>
+            {% endif %}
             {% set p = 1 %}
             {% for l in 0..poules|length-1 %}
                 <table class="table table-striped table-dark mb-4 mt-4">
@@ -80,7 +90,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
-            {% set p = p+1 %}
+                {% set p = p+1 %}
             {% endfor %}
         {% else %}
             <table class="table table-striped table-dark mb-4 mt-4">

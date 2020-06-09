@@ -9,7 +9,7 @@
                 <h3>{{ event.name }}</h3>
                 {{ form_start(eventForm) }}
                 {{ form_widget(eventForm) }}
-                <button type="submit" id="btnSave" class="btn btn-secondary mb-4">Valider</button>
+                <button type="submit" id="btnSave" class="btn btn-secondary mb-4 mt-4">Valider</button>
                 {{ form_end(eventForm) }}
             </div>
             <div class="col-6">
@@ -32,10 +32,12 @@
                     <button class="btn btn-secondary">Voir rencontres</button>
                 </a>
                 {% if event.poule %}
+                    {% if nbrPoules|length > 1 %}
                     <button class="btn btn-secondary"
                             onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">
                         Voir classement des poules
                     </button>
+                        {% endif %}
                 {% else %}
                     {% if event.phaseIn is same as (1) %}
 

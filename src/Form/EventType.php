@@ -61,8 +61,9 @@ class EventType extends AbstractType
             ->add('breakRest', null, ['label' => 'Durée pause'])
             ->add('meridianBreakHour', DateTimeType::class, ['label' => 'Heure de début de la pause méridienne'])
             ->add('meridianBreak', null, ['label' => 'Durée pause méridienne'])
-            ->add('nbrFields', null, ['label' => 'Nombre de terrains'])
             ->add('poule', null, ['label' => 'Poules ?'])
+            ->add('nbrFields', null, ['label' => 'Nombre de terrains'])
+
 
         ;
     }
