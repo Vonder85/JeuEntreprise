@@ -172,18 +172,16 @@ class RencontreUtils
         return $matchs;;
     }
 
-    public static function creerDemiFinalePoule4($participations, $event)
+    public static function creerDemiFinale($participations, $event)
     {
         $matchs = [];
         $j = 0;
-        $k = 3;
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < sizeof($participations)/2; $i++) {
             $match = new Match();
             $match->setEvent($event);
             $match->setParticipation1($participations[$j]);
-            $match->setParticipation2($participations[$k]);
+            $match->setParticipation2($participations[sizeof($participations)-($j+1)]);
             $j++;
-            $k--;
             $matchs[] = $match;
         }
         return $matchs;
@@ -316,5 +314,109 @@ class RencontreUtils
 
         }
         return $resultat;
+    }
+
+    public static function creerConsolante($poules, $participationsPoule){
+        //Récupérer les deux derniers de chaque poule
+        $participations = [];
+        for($i=0; $i<sizeof($poules); $i++){
+            for($j=2; $j>0;$j--){
+                $participations[] = $participationsPoule[$i][sizeof($participationsPoule[$i])-$j];
+            }
+        }
+        return $participations;
+    }
+
+    public static function creerTournoiPrincipal($poules, $participationsPoule){
+        //Récupérer tous sauf les deux derniers de chaque poule
+        $participations = [];
+        for($i=0; $i<sizeof($poules); $i++){
+            for($j=2; $j>0;$j--){
+                array_splice($participationsPoule[$i], sizeof($participationsPoule[$i])-$j, 1);
+            }
+        }
+        for($i=0; $i<sizeof($poules);$i++){
+            for($j=0; $j< sizeof($participationsPoule[$i]); $j++){
+                $participations[] = $participationsPoule[$i][$j];
+            }
+        }
+        return $participations;
+    }
+
+    public static function affectationPoule($nbPoule, $participations, $count){
+        if ($nbPoule == 2) {
+            $j = 1;
+            for ($i = 0; $i < $nbPoule; $i++) {
+                if (sizeof($participations) % 2 == 1) {
+                    $poules[] = array_slice($participations, 0, $count + $j);
+
+                    array_splice($participations, 0, $count + $j);
+                    $j--;
+                } else {
+                    $poules[] = array_slice($participations, 0, $count);
+                    array_splice($participations, 0, $count);
+                }
+            }
+
+        } elseif ($nbPoule == 3 && sizeof($participations) === 14) {
+
+            for ($i = 0; $i < $nbPoule - 1; $i++) {
+                $k = 1;
+                $poules[] = array_slice($participations, 0, $count + $k);
+                array_splice($participations, 0, $count + $k);
+            }
+            $poules[] = array_slice($participations, 0, $count);
+        } else {
+
+            for ($i = 0; $i < $nbPoule; $i++) {
+                $poules[] = array_slice($participations, 0, $count);
+
+                array_splice($participations, 0, $count);
+
+            }
+
+        }
+        return $poules;
+    }
+
+    public static function affectationPoulesConsolante($nbPoule, $participations, $count){
+        $poules = [];
+        $h = 0;
+        for ($i = 0; $i < $nbPoule; $i++) {
+
+            for($j=0; $j<$count;$j++){
+                $poules[$i][] = array_slice($participations, $h, 1);
+                $h = $h+2;
+            }
+            $h=1;
+        }
+        return $poules;
+    }
+
+    public static function creerQuartFinale($participations, $event){
+        $matchs = [];
+        //pour les deux premiers match des quarts
+        for($i=0; $i < 2; $i++){
+            $match = new Match();
+            $match->setEvent($event);
+            $match->setParticipation1($participations[$i]);
+            $match->setParticipation2($participations[$i+5]);
+            $matchs[] = $match;
+        }
+        //Pour le 3ème match des quarts
+            $match = new Match();
+            $match->setEvent($event);
+            $match->setParticipation1($participations[2]);
+            $match->setParticipation2($participations[3]);
+            $matchs[] = $match;
+
+        //Pour le 4ème match des quarts
+        $match = new Match();
+        $match->setEvent($event);
+        $match->setParticipation1($participations[4]);
+        $match->setParticipation2($participations[7]);
+        $matchs[] = $match;
+
+        return $matchs;
     }
 }

@@ -1162,45 +1162,32 @@ class AdminController extends AbstractController
     {
         $nbPoule = $request->request->get('nbPoules');
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
-        $count = floor(sizeof($participations) / $nbPoule);
+        $count = sizeof($participations) / $nbPoule;
+        $event = $em->getRepository(Event::class)->find($idEvent);
 
+        if ($event->getRound()->getName() === "Tournoi consolante") {
+            $poules = RencontreUtils::affectationPoulesConsolante($nbPoule, $participations, $count);
 
-        if ($nbPoule == 2) {
-            $j = 1;
-            for ($i = 0; $i < $nbPoule; $i++) {
-                if (sizeof($participations) % 2 == 1) {
-                    $poules[] = array_slice($participations, 0, $count + $j);
-
-                    array_splice($participations, 0, $count + $j);
-                    dump($participations);
-                    $j--;
-                } else {
-                    $poules[] = array_slice($participations, 0, $count);
-                    array_splice($participations, 0, $count);
-                    dump($participations);
+            $k = 'A';
+            foreach ($poules as $poule) {
+                for ($j = 0; $j < sizeof($poule); $j++) {
+                    $poule[$j][0]->setPoule($k);
+                    $em->persist($poule[$j][0]);
                 }
-            }
 
+                $k++;
+            }
         } else {
-            for ($i = 0; $i < $nbPoule; $i++) {
-                $poules[] = array_slice($participations, 0, $count);
+            $poules = RencontreUtils::affectationPoule($nbPoule, $participations, $count);
+            $k = 'A';
+            foreach ($poules as $poule) {
+                for ($j = 0; $j < sizeof($poule); $j++) {
+                    $poule[$j]->setPoule($k);
+                    $em->persist($poule[$j]);
+                }
 
-                array_splice($participations, 0, $count);
-
-                dump($participations);
+                $k++;
             }
-
-        }
-
-        dump($poules);
-
-        $k = 'A';
-        foreach ($poules as $poule) {
-            for ($j = 0; $j < sizeof($poule); $j++) {
-                $poule[$j]->setPoule($k);
-                $em->persist($poule[$j]);
-            }
-            $k++;
         }
         $em->flush();
         return $this->redirectToRoute('admin_create_meet', ['idEvent' => $idEvent]);
@@ -1239,7 +1226,8 @@ class AdminController extends AbstractController
      * Fonction créant automatiquement la phase du format Type 2 pour des poules de 4 à 7
      * @Route("/creationPhase2/{idEvent}", name="creation_phase2", requirements={"idEvent": "\d+"})
      */
-    public function creationPhase2Type2Poule4a6($idEvent, ParticipationRepository $pr, EntityManagerInterface $em)
+    public
+    function creationPhase2Type2Poule4a6($idEvent, ParticipationRepository $pr, EntityManagerInterface $em)
     {
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
@@ -1272,9 +1260,10 @@ class AdminController extends AbstractController
 
     /**
      * fonction qui crée les rencontres de la 1/2 finale pour 4 à 6 poules
-     * @Route("/rencontreDemiFinale/{idEvent}", name="creation_rencontres_demi_finale4_6", requirements={"idEvent": "\d+"})
+     * @Route("/rencontreDemiFinale/{idEvent}", name="creation_rencontres_demi_finale", requirements={"idEvent": "\d+"})
      */
-    public function creerRencontresDemiFinale($idEvent, EntityManagerInterface $em, Request $request)
+    public
+    function creerRencontresDemiFinale($idEvent, EntityManagerInterface $em, Request $request)
     {
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
@@ -1285,7 +1274,7 @@ class AdminController extends AbstractController
         if (sizeof($participations) === 8 || sizeof($participations) === 12) {
             $parts = array_chunk($participations, 4);
             foreach ($parts as $part) {
-                $matchs[] = RencontreUtils::creerDemiFinalePoule4($part, $event);
+                $matchs[] = RencontreUtils::creerDemiFinale($part, $event);
             }
             for ($j = 0; $j < sizeof($matchs); $j++) {
                 for ($i = 0; $i < 2; $i++) {
@@ -1298,7 +1287,7 @@ class AdminController extends AbstractController
             }
 
         } else {
-            $matchs = RencontreUtils::creerDemiFinalePoule4($participations, $event);
+            $matchs = RencontreUtils::creerDemiFinale($participations, $event);
             foreach ($matchs as $match) {
                 $em->persist($match);
             }
@@ -1316,21 +1305,39 @@ class AdminController extends AbstractController
      * fonction qui permet de créer une finale poule 4 à 6
      * @Route("/creationFinale/{idEvent}", name="creation_finale_4_6", requirements={"idEvent": "\d+"})
      */
-    public function creerFinale4_6($idEvent, EntityManagerInterface $em)
+    public
+    function creerFinale4_6($idEvent, EntityManagerInterface $em, Request $request)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
-        $round = $em->getRepository(Round::class)->findOneBy(["name" => "Finale"]);
+        $roundName = $request->request->get('round');
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
 
         $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
 
-        for ($i = 0; $i < 2; $i++) {
-            $participation = new Participation();
-            $participation->setEvent($event1);
-            $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
-            $em->persist($participation);
+        if ($roundName == "1/2 finale") {
+            for ($i = 0; $i < sizeof($matchs); $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $em->persist($participation);
+            }
+
+            for ($i = 0; $i < sizeof($matchs); $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $em->persist($participation);
+            }
+        } else {
+            for ($i = 0; $i < 2; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $em->persist($participation);
+            }
         }
         $em->flush();
 
@@ -1338,10 +1345,44 @@ class AdminController extends AbstractController
     }
 
     /**
+     * fonction qui crée les rencontres de la 1/4 finale
+     * @Route("/rencontreQuartFinale/{idEvent}", name="creation_rencontres_quartFinale", requirements={"idEvent": "\d+"})
+     */
+    public
+    function creerRencontresQuartFinale($idEvent, EntityManagerInterface $em, Request $request)
+    {
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $nbTerrains = $event->getNbrFields();
+        $aPartir = $request->request->get('aPartir');
+        $nbTerrains = RencontreUtils::nbrTerrains($nbTerrains, $participations);
+
+
+        $matchs[] = RencontreUtils::creerQuartFinale($participations, $event);
+
+        for ($j = 0; $j < sizeof($matchs); $j++) {
+            for ($i = 0; $i < 4; $i++) {
+                $em->persist($matchs[$j][$i]);
+            }
+        }
+        //Afectation des terrains en fonction du nombre de demi finales
+        for ($k = 0; $k < sizeof($matchs); $k++) {
+            RencontreUtils::affectationTerrains($matchs[$k], $nbTerrains, $event, $aPartir);
+        }
+
+        $em->flush();
+        return $this->redirectToRoute('admin_see_planning_meets', [
+            "idEvent" => $idEvent
+        ]);
+
+    }
+
+    /**
      * fonction qui crée la finale pour 4 à 6 poules
      * @Route("/rencontre1vs1/{idEvent}", name="creation_rencontre_1vs1", requirements={"idEvent": "\d+"})
      */
-    public function creerRencontre1vs1($idEvent, EntityManagerInterface $em, Request $request)
+    public
+    function creerRencontre1vs1($idEvent, EntityManagerInterface $em, Request $request)
     {
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
@@ -1363,10 +1404,15 @@ class AdminController extends AbstractController
     }
 
     /**
+     *
+     */
+
+    /**
      * fonction qui permet de créer event de 3emeplace poule 4 à 6
      * @Route("/creation3emePlace/{idEvent}", name="creation_3eme_place_4_6", requirements={"idEvent": "\d+"})
      */
-    public function creer3emePlace4_6($idEvent, EntityManagerInterface $em)
+    public
+    function creer3emePlace4_6($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
@@ -1391,7 +1437,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 5emeplace
      * @Route("/creation5emePlace/{idEvent}", name="creation_5eme_place_6_7", requirements={"idEvent": "\d+"})
      */
-    public function creer5emePlace6_7($idEvent, EntityManagerInterface $em)
+    public
+    function creer5emePlace6_7($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
@@ -1431,7 +1478,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 3emeplace
      * @Route("/creation3emePlace7/{idEvent}", name="creation_3eme_place_6_7", requirements={"idEvent": "\d+"})
      */
-    public function creer3emePlace6_7($idEvent, EntityManagerInterface $em)
+    public
+    function creer3emePlace6_7($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
@@ -1467,7 +1515,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer une finale poule 7
      * @Route("/creationFinale7/{idEvent}", name="creation_finale_7", requirements={"idEvent": "\d+"})
      */
-    public function creerFinale7($idEvent, EntityManagerInterface $em)
+    public
+    function creerFinale7($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
@@ -1502,13 +1551,17 @@ class AdminController extends AbstractController
      * fonction qui permet de créer 1/2 finales des poules
      * @Route("/creationDemiFinale2Poule8/{idEvent}", name="creation_demifinale_8", requirements={"idEvent": "\d+"})
      */
-    public function creerDemiFinale2poules8($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
+    public
+    function creerDemiFinale2poules8($idEvent, EntityManagerInterface $em, ParticipationRepository $pr, Request $request)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
-        $round = $em->getRepository(Round::class)->findOneBy(["name" => "1/2 Finale"]);
+        $participations = $pr->findParticipationInAnEvent($idEvent);
+        $roundName = $request->request->get('round');
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
 
         $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn() + 1);
+        $event1->setPoule(false);
         $em->persist($event1);
 
         $poules = $pr->nbrPoules($idEvent);
@@ -1528,63 +1581,70 @@ class AdminController extends AbstractController
                 }
             });
         }
-        $participationsA = [];
-        for ($j = 0; $j < 2; $j++) {
-            for ($i = 0; $i < 2; $i++) {
-                $participationsA[] = $participationsPoule[$j][$i];
-            }
-        }
-
-        $participationsB = [];
-
-        for ($j = 0; $j < 2; $j++) {
-            for ($i = 2; $i < 4; $i++) {
-                $participationsB[] = $participationsPoule[$j][$i];
-            }
-        }
-
-        if(sizeof($participationsPoule[0]) + sizeof($participationsPoule[1]) === 12){
-            $participationsC = [];
-
+        if (sizeof($participations) !== 14) {
+            $participationsA = [];
             for ($j = 0; $j < 2; $j++) {
-                for ($i = 4; $i < 6; $i++) {
-                    $participationsC[] = $participationsPoule[$j][$i];
+                for ($i = 0; $i < 2; $i++) {
+                    $participationsA[] = $participationsPoule[$j][$i];
                 }
+
             }
-        }
-
-        if(sizeof($participationsPoule[0]) + sizeof($participationsPoule[1]) === 13){
-            $participationsPoule[0][sizeof($participationsPoule[0])-1]->setPositionClassement(13);
-            array_splice($participationsPoule[0], sizeof($participationsPoule[0])-1, 1);
-            $participationsC = [];
-
-            for ($j = 0; $j < 2; $j++) {
-                for ($i = 4; $i < 6; $i++) {
-                    $participationsC[] = $participationsPoule[$j][$i];
-                }
-            }
-        }
-
-
-        for ($i = 0; $i < 4; $i++) {
-            $participation = new Participation();
-            $participation->setEvent($event1);
-            $participation->setParticipant($participationsA[$i]->getParticipant());
-            $em->persist($participation);
-        }
-
-        for ($i = 0; $i < 4; $i++) {
-            $participation = new Participation();
-            $participation->setEvent($event1);
-            $participation->setParticipant($participationsB[$i]->getParticipant());
-            $em->persist($participation);
-        }
-
-        if(sizeof($participationsC) > 0){
             for ($i = 0; $i < 4; $i++) {
                 $participation = new Participation();
                 $participation->setEvent($event1);
-                $participation->setParticipant($participationsC[$i]->getParticipant());
+                $participation->setParticipant($participationsA[$i]->getParticipant());
+                $em->persist($participation);
+            }
+
+            $participationsB = [];
+            for ($j = 0; $j < 2; $j++) {
+                for ($i = 2; $i < 4; $i++) {
+                    $participationsB[] = $participationsPoule[$j][$i];
+                }
+
+            }
+            for ($i = 0; $i < 4; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($participationsB[$i]->getParticipant());
+                $em->persist($participation);
+            }
+            $participationsC = [];
+            if (sizeof($participations) === 12) {
+                for ($j = 0; $j < 2; $j++) {
+                    for ($i = 4; $i < 6; $i++) {
+                        $participationsC[] = $participationsPoule[$j][$i];
+                    }
+                }
+            }
+
+            if (sizeof($participations) === 13) {
+                $participationsPoule[0][sizeof($participationsPoule[0]) - 1]->setPositionClassement(13);
+                array_splice($participationsPoule[0], sizeof($participationsPoule[0]) - 1, 1);
+                for ($j = 0; $j < 2; $j++) {
+                    for ($i = 4; $i < 6; $i++) {
+                        $participationsC[] = $participationsPoule[$j][$i];
+                    }
+                }
+            }
+            if (sizeof($participationsC) > 0) {
+                for ($i = 0; $i < 4; $i++) {
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($participationsC[$i]->getParticipant());
+                    $em->persist($participation);
+                }
+            }
+        }
+
+        if (sizeof($poules) == 3 && sizeof($participations) === 14) {
+
+            $participationsQuart = RencontreUtils::creerTournoiPrincipal($poules, $participationsPoule);
+
+            foreach ($participationsQuart as $particip) {
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($particip->getParticipant());
                 $em->persist($participation);
             }
         }
@@ -1598,7 +1658,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 7emeplace
      * @Route("/creation7emePlace8/{idEvent}", name="creation_7eme_place_8", requirements={"idEvent": "\d+"})
      */
-    public function creer7emePlace8($idEvent, EntityManagerInterface $em)
+    public
+    function creer7emePlace8($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
@@ -1625,7 +1686,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 9emeplace
      * @Route("/creation9emePlace/{idEvent}", name="creation_9eme_place", requirements={"idEvent": "\d+"})
      */
-    public function creer9emePlace($idEvent, EntityManagerInterface $em)
+    public
+    function creer9emePlace($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $round = $em->getRepository(Round::class)->findOneBy(["name" => "9ème place"]);
@@ -1651,7 +1713,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 11emeplace
      * @Route("/creation11emePlace/{idEvent}", name="creation_11eme_place", requirements={"idEvent": "\d+"})
      */
-    public function creer11emePlace($idEvent, EntityManagerInterface $em)
+    public
+    function creer11emePlace($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $round = $em->getRepository(Round::class)->findOneBy(["name" => "11ème place"]);
@@ -1677,7 +1740,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 5emeplace
      * @Route("/creation5emePlace8/{idEvent}", name="creation_5eme_place_8", requirements={"idEvent": "\d+"})
      */
-    public function creer5emePlace8($idEvent, EntityManagerInterface $em)
+    public
+    function creer5emePlace8($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
@@ -1704,7 +1768,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer barrages des poules
      * @Route("/creationBarrage2Poule9/{idEvent}", name="creation_barrage_9", requirements={"idEvent": "\d+"})
      */
-    public function creerBarrage2poules9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
+    public
+    function creerBarrage2poules9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $round = $em->getRepository(Round::class)->findOneBy(["name" => "Barrage"]);
@@ -1754,7 +1819,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer event de 5emeplace poule 9
      * @Route("/creation5emePlace9/{idEvent}", name="creation_5eme_place_9", requirements={"idEvent": "\d+"})
      */
-    public function creer5emePlace9($idEvent, EntityManagerInterface $em)
+    public
+    function creer5emePlace9($idEvent, EntityManagerInterface $em)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
@@ -1779,7 +1845,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer demi finales post-barrages poule 9
      * @Route("/creationDemiFinalePostBarrage9/{idEvent}", name="creation_demi_finale_9", requirements={"idEvent": "\d+"})
      */
-    public function creerDemiFinale9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
+    public
+    function creerDemiFinale9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
@@ -1832,7 +1899,8 @@ class AdminController extends AbstractController
      * fonction qui permet de créer une poule de classement 9
      * @Route("/creationPouleClassement9/{idEvent}", name="creation_poule_classement_9", requirements={"idEvent": "\d+"})
      */
-    public function creerPouleClassement9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
+    public
+    function creerPouleClassement9($idEvent, EntityManagerInterface $em, ParticipationRepository $pr)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $round = $em->getRepository(Round::class)->findOneBy(["name" => "Poule de classement"]);
@@ -1880,7 +1948,7 @@ class AdminController extends AbstractController
                 for ($j = 0; $j < 2; $j++) {
                     $participation = new Participation();
                     $participation->setEvent($event1);
-                    $participation->setParticipant($participationsPoule[$m + 1][sizeof($participationsPoule[$m+1]) - $k]->getParticipant());
+                    $participation->setParticipant($participationsPoule[$m + 1][sizeof($participationsPoule[$m + 1]) - $k]->getParticipant());
                     $em->persist($participation);
                     $k++;
                 }
@@ -1896,4 +1964,110 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
     }
+
+    /**
+     * Fonction qui permet de créer tournoi phase2
+     * @Route("/creerTournoiPhase2/{idEvent}", name="creer_tournoi_phase2", requirements={"idEvent": "\d+"})
+     */
+    public function creerConsolante($idEvent, EntityManagerInterface $em, ParticipationRepository $pr, Request $request)
+    {
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $roundName = $request->request->get('round');
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
+        $poules = $pr->nbrPoules($idEvent);
+
+        for ($i = 0; $i < sizeof($poules); $i++) {
+            $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
+        }
+
+        for ($j = 0; $j < sizeof($poules); $j++) {
+            //Etabli le classement par nbr de points
+            usort($participationsPoule[$j], function ($a, $b) {
+                $ad = $a->getPointsClassement();
+                $bd = $b->getPointsClassement();
+                if ($ad == $bd) {
+                    return 0;
+                } else {
+                    return $ad > $bd ? -1 : 1;
+                }
+            });
+        }
+        $event1 = EventUtils::creationPhase($event, $round);
+        $event1->setPoule(false);
+        $event1->setPhaseIn($event->getPhaseIn() + 1);
+        $em->persist($event1);
+
+        if ($roundName == "Tournoi consolante") {
+            $event1->setPoule(true);
+            $participations = RencontreUtils::creerConsolante($poules, $participationsPoule);
+        } else {
+            $participations = RencontreUtils::creerTournoiPrincipal($poules, $participationsPoule);
+        }
+
+        foreach ($participations as $particip) {
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($particip->getParticipant());
+            $em->persist($participation);
+        }
+        $em->flush();
+        return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui créé les places honneur du tournoi consolante
+     * @Route("/creerPlaceHonneurConsolante/{idEvent}", name="creer_place_honneur_consolante", requirements={"idEvent": "\d+"})
+     */
+    public function creerPlaceHonneurConsolante($idEvent, EntityManagerInterface $em, ParticipationRepository $pr, Request $request)
+    {
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $roundName = $request->request->get('round');
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
+
+        $event1 = EventUtils::creationPhase($event, $round);
+        $event1->setPoule(false);
+        $em->persist($event1);
+
+        $poules = $pr->nbrPoules($idEvent);
+
+        for ($i = 0; $i < sizeof($poules); $i++) {
+            $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
+        }
+        for ($j = 0; $j < sizeof($poules); $j++) {
+            //Etabli le classement par nbr de points
+            usort($participationsPoule[$j], function ($a, $b) {
+                $ad = $a->getPointsClassement();
+                $bd = $b->getPointsClassement();
+                if ($ad == $bd) {
+                    return 0;
+                } else {
+                    return $ad > $bd ? -1 : 1;
+                }
+            });
+        }
+        $participations = [];
+        $k = 0;
+        if ($roundName === "11ème place") {
+            $k = 1;
+        } elseif ($roundName === "13ème place") {
+            $k = 2;
+        }
+
+        for ($j = 0; $j < 2; $j++) {
+            for ($i = $k; $i < $k++; $i++) {
+                $participations[] = $participationsPoule[$j][$i];
+            }
+        }
+
+        for ($i = 0; $i < sizeof($participations); $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($participations[$i]->getParticipant());
+            $em->persist($participation);
+        }
+
+        $em->flush();
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
+
 }

@@ -32,6 +32,7 @@
             {% endif %}
         {% endif %}
         {% if event.poule %}
+
             {% if participations|length is same as (9) %}
                 <button class="btn btn-secondary"
                         onclick="window.location='{{ path('admin_creation_barrage_9', {"idEvent": event.id}) }}'">
@@ -41,22 +42,69 @@
                         onclick="window.location='{{ path('admin_creation_poule_classement_9', {"idEvent": event.id}) }}'">
                     Créer Poule de classement
                 </button>
-                {% elseif participations|length is same as (11) %}
+            {% elseif participations|length is same as (11) %}
 
-                    <button class="btn btn-secondary"
-                            onclick="window.location='{{ path('admin_creation_poule_classement_9', {"idEvent": event.id}) }}'">
-                        Créer Poule de classement
-                    </button>
-                    <button class="btn btn-secondary"
-                            onclick="window.location='{{ path('admin_creation_demifinale_8', {"idEvent": event.id}) }}'">
-                        Créer 1/2 finales
-                    </button>
-            {% else %}
-                <button class="btn btn-secondary"
-                        onclick="window.location='{{ path('admin_creation_demifinale_8', {"idEvent": event.id}) }}'">
-                    Créer 1/2 finales
-                </button>
+            <button class="btn btn-secondary"
+                    onclick="window.location='{{ path('admin_creation_poule_classement_9', {"idEvent": event.id}) }}'">
+                Créer Poule de classement
+            </button>
+            <button class="btn btn-secondary"
+                    onclick="window.location='{{ path('admin_creation_demifinale_8', {"idEvent": event.id}) }}'">
+                Créer 1/2 finales
+            </button>
+            {% elseif participations|length is same as (14) %}
+                {% if event.phase == 3 %}
+
+                    <form method="post" action="{{ path('admin_creer_tournoi_phase2', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="Tournoi principal">
+                        <button class="btn btn-secondary">
+                            Créer tournoi principal
+                        </button>
+                    </form>
+                {% else %}
+                    <form method="post" action="{{ path('admin_creer_tournoi_phase2', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="Tournoi consolante">
+                        <button class="btn btn-secondary">
+                            Créer tournoi consolante
+                        </button>
+                    </form>
+                    <form method="post" action="{{ path('admin_creation_demifinale_8', {"idEvent": event.id()}) }}">
+                        <input type="hidden" name="round" value="1/4 finale">
+                        <button class="btn btn-secondary">
+                            Créer 1/4 finale
+                        </button>
+                    </form>
+                {% endif %}
+                    {% if event.round.name is same as ("Tournoi consolante") %}
+                        <form method="post"
+                              action="{{ path('admin_creer_place_honneur_consolante', {"idEvent": event.id}) }}">
+                            <input type="hidden" value="9ème place">
+                            <button class="btn btn-secondary">
+                                Créer 9ème place
+                            </button>
+                        </form>
+
+                        <form method="post"
+                              action="{{ path('admin_creer_place_honneur_consolante', {"idEvent": event.id}) }}">
+                            <input type="hidden" value="11ème place">
+                            <button class="btn btn-secondary">
+                                Créer 11ème place
+                            </button>
+                        </form>
+                        <form method="post"
+                              action="{{ path('admin_creer_place_honneur_consolante', {"idEvent": event.id}) }}">
+                            <input type="hidden" value="13ème place">
+                            <button class="btn btn-secondary">
+                                Créer 13ème place
+                            </button>
+                        </form>
+                    {% else %}
+                        <button class="btn btn-secondary"
+                                onclick="window.location='{{ path('admin_creation_demifinale_8', {"idEvent": event.id}) }}'">
+                            Créer 1/2 finales
+                        </button>
             {% endif %}
+                {% endif %}
             {% set p = 1 %}
             {% for l in 0..poules|length-1 %}
                 <table class="table table-striped table-dark mb-4 mt-4">
