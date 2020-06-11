@@ -427,6 +427,22 @@ class RencontreUtils
         return $participations;
     }
 
+    public static function creerPoule3emePlace($event, $participationsDebut, $matchs){
+        $participations = [];
+        //Récupération du dernier de la phase des matchs de poule
+        $participation = new Participation();
+        $participation->setEvent($event);
+        $participation->setParticipant($participationsDebut[sizeof($participationsDebut) -1]->getParticipant());
+
+        //Récupération des deux perdants des demi
+        for ($i = 0; $i < 2; $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+        }
+        return $participations;
+    }
+
     public static function recupererEquipePourCreationBarrage($participationsPoule){
         $participations = [];
         for ($j = 0; $j < 2; $j++) {
@@ -469,5 +485,91 @@ class RencontreUtils
             }
         }
         return $participations;
+    }
+
+    public static function creer3et5EmePlace($roundName, $event, $participations){
+        $participations = [];
+        $k=0;
+        if($roundName === "5ème place"){
+            $k = 4;
+        }elseif($roundName === "3ème place"){
+            $k=2;
+        }
+
+        for ($i = 0; $i < 2; $i++) {
+
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($participations[$k]->getParticipant());
+            $participations[] = $participation;
+            $k++;
+        }
+        return $participations;
+    }
+
+    public static function creerPhasesDemiFinale($participationsPoule, $event, $poules, $participations){
+        $participationsDemi = [];
+        if (sizeof($participations) !== 14) {
+            $participationsA = [];
+            for ($j = 0; $j < 2; $j++) {
+                for ($i = 0; $i < 2; $i++) {
+                    $participationsA[] = $participationsPoule[$j][$i];
+                }
+
+            }
+            for ($i = 0; $i < 4; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsA[$i]->getParticipant());
+                $participationsDemi[] = $participation;
+            }
+
+
+            $participationsB = [];
+            for ($j = 0; $j < 2; $j++) {
+                for ($i = 2; $i < 4; $i++) {
+                    $participationsB[] = $participationsPoule[$j][$i];
+                }
+
+            }
+            for ($i = 0; $i < 4; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsB[$i]->getParticipant());
+                $participationsDemi[] = $participation;
+            }
+
+
+
+            $participationsC = [];
+            if (sizeof($participations) === 12) {
+                for ($j = 0; $j < 2; $j++) {
+                    for ($i = 4; $i < 6; $i++) {
+                        $participationsC[] = $participationsPoule[$j][$i];
+                    }
+                }
+            }
+
+            if (sizeof($participations) === 13) {
+                $participationsPoule[0][sizeof($participationsPoule[0]) - 1]->setPositionClassement(13);
+                array_splice($participationsPoule[0], sizeof($participationsPoule[0]) - 1, 1);
+                for ($j = 0; $j < 2; $j++) {
+                    for ($i = 4; $i < 6; $i++) {
+                        $participationsC[] = $participationsPoule[$j][$i];
+                    }
+                }
+            }
+            if (sizeof($participationsC) > 0) {
+                for ($i = 0; $i < 4; $i++) {
+                    $participation = new Participation();
+                    $participation->setEvent($event);
+                    $participation->setParticipant($participationsC[$i]->getParticipant());
+                    $participationsDemi[] = $participation;
+                }
+            }
+
+        }
+
+        return $participationsDemi;
     }
 }

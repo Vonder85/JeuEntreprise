@@ -23,7 +23,8 @@ class ParticipationType extends AbstractType
                 "query_builder" => function(ParticipantRepository $pr){
                 return $pr->createQueryBuilder('p')
                     ->andWhere('p.team != :null')
-                    ->setParameter('null', "null");
+                    ->setParameter('null', "null")
+                    ->orderBy('p.name', 'asc');
                 },
                 "choice_label" => "name",
                 "label" => 'Participant',

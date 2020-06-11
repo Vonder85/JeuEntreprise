@@ -39,6 +39,16 @@ class Athlet
     private $reference;
 
     /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $gender;
+
+    /**
+     * @ORM\Column(type="string", length=80, nullable=true)
+     */
+    private $license;
+
+    /**
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $country;
@@ -113,6 +123,38 @@ class Athlet
     {
         $this->country = $country;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param mixed $gender
+     */
+    public function setGender($gender): void
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicense()
+    {
+        return $this->license;
+    }
+
+    /**
+     * @param mixed $license
+     */
+    public function setLicense($license): void
+    {
+        $this->license = $license;
     }
 
     public function __construct()
