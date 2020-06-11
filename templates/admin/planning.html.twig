@@ -12,8 +12,9 @@
                 </button>
             </form>
 
+
             <button class="btn btn-secondary mt-4"
-                    onclick="window.location='{{ path('admin_creation_3eme_place_4_6', {"idEvent":event.id}) }}'">Créer
+                    onclick="window.location='{{ path('admin_creation_3eme_place', {"idEvent":event.id}) }}'">Créer
                 match 3ème place
             </button>
 
@@ -69,7 +70,7 @@
         <h1>{{ event.round.name }}</h1>
         {% if event.round.name is same as ("Finale") %}
             {% for match in matchs %}
-                {% if match.scoreTeam1 is not same as ("NULL") %}
+                {% if match.scoreTeam1 is not null %}
                     <button class="btn btn-secondary mt-4"
                             onclick="window.location='{{ path('event_classement_general', {'idEvent': event.id}) }}'">
                         Classement final

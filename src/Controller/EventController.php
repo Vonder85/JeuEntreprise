@@ -164,7 +164,11 @@ class EventController extends AbstractController
         }
         if($event->getRound()->getName() === "Poule de classement"){
             $j= 0;
-            if(sizeof($participationsTotal) === 9){
+            if(sizeof($participationsTotal) === 5){
+                $j=3;
+            }elseif(sizeof($participationsTotal) === 7) {
+                $j = 5;
+            }elseif(sizeof($participationsTotal) === 9){
                 $j=7;
             }elseif (sizeof($participationsTotal) === 11){
                 $j=9;

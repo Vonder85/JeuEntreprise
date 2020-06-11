@@ -419,4 +419,10 @@ class RencontreUtils
 
         return $matchs;
     }
+
+    public static function creerPoule5emePlace($participations){
+        //Enlever les 4 premiers (1/2 finale)
+        array_splice($participations, 0, 4);
+        return $participations;
+    }
 }

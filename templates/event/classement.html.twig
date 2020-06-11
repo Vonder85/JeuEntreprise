@@ -16,18 +16,18 @@
             {% endif %}
             {% if participations|length == 7 %}
                 {% if is_granted("ROLE_ADMIN") %}
-                    <button class="btn btn-secondary"
-                            onclick="window.location='{{ path('admin_creation_5eme_place_6_7', {"idEvent": event.id}) }}'">
-                        Créer 5ème place
-                    </button>
-                    <button class="btn btn-secondary"
-                            onclick="window.location='{{ path('admin_creation_3eme_place_6_7', {"idEvent": event.id}) }}'">
-                        Créer 3ème place
-                    </button>
-                    <button class="btn btn-secondary"
-                            onclick="window.location='{{ path('admin_creation_finale_7', {"idEvent": event.id}) }}'">
-                        Créer Finale
-                    </button>
+                    <form method="post" action="{{ path('admin_creation_phase2', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="1/2 finale">
+                        <button type="submit" class="btn btn-secondary">
+                            Créer 1/2 finale
+                        </button>
+                    </form>
+                    <form method="post" action="{{ path('admin_creation_poule_5eme_place', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="Poule de classement">
+                        <button class="btn btn-secondary">
+                            Créer poule 5ème place
+                        </button>
+                    </form>
                 {% endif %}
             {% endif %}
         {% endif %}

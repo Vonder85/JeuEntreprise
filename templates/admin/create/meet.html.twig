@@ -8,72 +8,96 @@
     <div class="row">
         <div class="col-6">
             {% if event.poule %}
-                {% if event.round.name is same as ('Tournoi consolante') %}
-                    <form method="post" action="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
-                        {% for i in 1..nbrPoules|length %}
-                            <label for="nbrTerrains{{ i }}">Nombre terrains Poule {{ i }}</label>
-                            <select name="poule{{ i }}">
-                                {% for j in 0..event.nbrFields %}
-                                    <option value="{{ j }}">{{ j }}</option>
-                                {% endfor %}
-                            </select>
-                        {% endfor %}
-                        <br>
-                        <label for="terrains">A partir du terrain</label><br>
-                        <select name="aPartir" class="form-control">
-                            {% for i in 0..20 %}
-                                <option value="{{ i }}">{{ i }}</option>
+            {% if event.round.name is same as ('Tournoi consolante') %}
+                <form method="post" action="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
+                    {% for i in 1..nbrPoules|length %}
+                        <label for="nbrTerrains{{ i }}">Nombre terrains Poule {{ i }}</label>
+                        <select name="poule{{ i }}">
+                            {% for j in 0..event.nbrFields %}
+                                <option value="{{ j }}">{{ j }}</option>
                             {% endfor %}
-                        </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4">Créer rencontres des poules</button>
-                    </form>
-                {% else %}
-                    <form method="post" action="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
-                        {% for i in 1..nbrPoules|length %}
-                            <label for="nbrTerrains{{ i }}">Nombre terrains Poule {{ i }}</label>
-                            <select name="poule{{ i }}">
-                                {% for j in 0..event.nbrFields %}
-                                    <option value="{{ j }}">{{ j }}</option>
-                                {% endfor %}
-                            </select>
+                        </select>
+                    {% endfor %}
+                    <br>
+                    <label for="terrains">A partir du terrain</label><br>
+                    <select name="aPartir" class="form-control">
+                        {% for i in 0..20 %}
+                            <option value="{{ i }}">{{ i }}</option>
                         {% endfor %}
-                        <br>
-                        <label for="terrains">A partir du terrain</label><br>
-                        <select name="aPartir" class="form-control">
-                            {% for i in 0..20 %}
-                                <option value="{{ i }}">{{ i }}</option>
+                    </select><br>
+                    <button type="submit" class="btn btn-secondary mt-4">Créer rencontres des poules</button>
+                </form>
+            {% else %}
+                <form method="post" action="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
+                    {% for i in 1..nbrPoules|length %}
+                        <label for="nbrTerrains{{ i }}">Nombre terrains Poule {{ i }}</label>
+                        <select name="poule{{ i }}">
+                            {% for j in 0..event.nbrFields %}
+                                <option value="{{ j }}">{{ j }}</option>
                             {% endfor %}
-                        </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4">Créer rencontres des poules</button>
-                    </form>
-                {% endif %}
+                        </select>
+                    {% endfor %}
+                    <br>
+                    <label for="terrains">A partir du terrain</label><br>
+                    <select name="aPartir" class="form-control">
+                        {% for i in 0..20 %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select><br>
+                    <button type="submit" class="btn btn-secondary mt-4">Créer rencontres des poules</button>
+                </form>
+            {% endif %}
             {% else %}
 
-                {% if event.round.name is same as ("1/2 finale") %}
-                    <form method="post"
-                          action="{{ path('admin_creation_rencontres_demi_finale', {"idEvent": event.id}) }}">
-                        <label for="terrains">A partir du terrain</label><br>
-                        <select name="aPartir" class="form-control">
-                            {% for i in 0..20 %}
-                                <option value="{{ i }}">{{ i }}</option>
-                            {% endfor %}
-                        </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4">
-                            Créer 1/2 finales
-                        </button>
-                    </form>
-                {% elseif event.round.name is same as ("1/4 finale") %}
-                    <form method="post" action="{{ path('admin_creation_rencontres_quartFinale', {"idEvent": event.id}) }}">
-                        <label for="terrains">A partir du terrain</label><br>
-                        <select name="aPartir" class="form-control">
-                            {% for i in 0..20 %}
-                                <option value="{{ i }}">{{ i }}</option>
-                            {% endfor %}
-                        </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4">
-                            Créer rencontres
-                        </button>
-                    </form>
+            {% if event.round.name is same as ("1/2 finale") %}
+            <form method="post"
+                  action="{{ path('admin_creation_rencontres_demi_finale', {"idEvent": event.id}) }}">
+                <label for="terrains">A partir du terrain</label><br>
+                <select name="aPartir" class="form-control">
+                    {% for i in 0..20 %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select><br>
+                <button type="submit" class="btn btn-secondary mt-4">
+                    Créer 1/2 finales
+                </button>
+            </form>
+            {% elseif event.round.name is same as ("1/4 finale") %}
+            <form method="post"
+                  action="{{ path('admin_creation_rencontres_quartFinale', {"idEvent": event.id}) }}">
+                <label for="terrains">A partir du terrain</label><br>
+                <select name="aPartir" class="form-control">
+                    {% for i in 0..20 %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select><br>
+                <button type="submit" class="btn btn-secondary mt-4">
+                    Créer rencontres
+                </button>
+            </form>
+            {% elseif event.round.name is same as ("Phase de poules 1") %}
+            <form method="post" action="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
+                <label for="terrains">A partir du terrain</label><br>
+                <select name="aPartir" class="form-control">
+                    {% for i in 0..20 %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select><br>
+                <button type="submit" class="btn btn-secondary mt-4">Créer rencontres</button>
+
+            </form>
+            <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
+                <button class="btn btn-secondary mt-4">Voir rencontres</button>
+            </a>
+            {% elseif event.round.name is same as ("Poule de classement") %}
+            <form method="post" action="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
+                <label for="terrains">A partir du terrain</label><br>
+                <select name="aPartir" class="form-control">
+                    {% for i in 0..20 %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select><br>
+                <button type="submit" class="btn btn-secondary mt-4">Créer rencontres</button>
                 {% elseif event.round.name is same as ("Finale") or ("3ème place") or ("5ème place") or ("7ème place") or ("9ème place") or ("11ème place") or ("13ème place") %}
                     <form method="post" action="{{ path('admin_creation_rencontre_1vs1', {"idEvent": event.id}) }}">
                         <label for="terrains">A partir du terrain</label><br>
@@ -115,360 +139,355 @@
                         <button class="btn btn-secondary mt-4">Créer championnat Aller Retour</button>
                     </a>
                 {% endif %}
-            {% endif %}
-            {% if event.round.name is same as ("Phase de poules 1") %}
-                <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
-                    <button class="btn btn-secondary mt-4">Voir rencontres</button>
-                </a>
-            {% endif %}
-            <br>
-            {% if event.poule %}
-                <form method="post" action="{{ path('admin_affectation_poules', {"idEvent" : event.id}) }}"
-                      class="float-right">
-                    <label for="nbPoules">Nombre de poules : </label>
-                    <input type="number" name="nbPoules"><br>
-                    <button type="submit" class="float-right btn btn-secondary mt-1">Valider</button>
-                </form>
-            {% endif %}
+                {% endif %}
+                <br>
+                {% if event.poule %}
+                    <form method="post" action="{{ path('admin_affectation_poules', {"idEvent" : event.id}) }}"
+                          class="float-right">
+                        <label for="nbPoules">Nombre de poules : </label>
+                        <input type="number" name="nbPoules"><br>
+                        <button type="submit" class="float-right btn btn-secondary mt-1">Valider</button>
+                    </form>
+                {% endif %}
 
-            <br>
-            <br>
-            {% if event.poule %}
-                {% for k in 1..nbrPoules|length %}
-                    {% if event.type.name is same as ("Tournoi individuel") %}
-                        {% if k == 1 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule A</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom & prénom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'A' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
-                                            <td>{{ participant.athletCompany }} </td>
-                                            <td>{{ participant.athletCountry }} </td>
-                                        </tr>
+                <br>
+                <br>
+                {% if event.poule %}
+                    {% for k in 1..nbrPoules|length %}
+                        {% if event.type.name is same as ("Tournoi individuel") %}
+                            {% if k == 1 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule A</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom & prénom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'A' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
+                                                <td>{{ participant.athletCompany }} </td>
+                                                <td>{{ participant.athletCountry }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 2 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule B</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom & prénom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'B' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
-                                            <td>{{ participant.athletCompany }} </td>
-                                            <td>{{ participant.athletCountry }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 2 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule B</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom & prénom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'B' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
+                                                <td>{{ participant.athletCompany }} </td>
+                                                <td>{{ participant.athletCountry }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 3 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule C</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom & prénom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'C' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
-                                            <td>{{ participant.athletCompany }} </td>
-                                            <td>{{ participant.athletCountry }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 3 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule C</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom & prénom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'C' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
+                                                <td>{{ participant.athletCompany }} </td>
+                                                <td>{{ participant.athletCountry }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 4 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule D</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom & prénom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'D' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
-                                            <td>{{ participant.athletCompany }} </td>
-                                            <td>{{ participant.athletCountry }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 4 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule D</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom & prénom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'D' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
+                                                <td>{{ participant.athletCompany }} </td>
+                                                <td>{{ participant.athletCountry }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 5 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule E</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom & prénom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'E' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
-                                            <td>{{ participant.athletCompany }} </td>
-                                            <td>{{ participant.athletCountry }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 5 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule E</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom & prénom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'E' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
+                                                <td>{{ participant.athletCompany }} </td>
+                                                <td>{{ participant.athletCountry }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 6 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule F</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom & prénom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'F' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
-                                            <td>{{ participant.athletCompany }} </td>
-                                            <td>{{ participant.athletCountry }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 6 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule F</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom & prénom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'F' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
+                                                <td>{{ participant.athletCompany }} </td>
+                                                <td>{{ participant.athletCountry }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-                {% for k in 1..nbrPoules|length %}
-                    {% if event.type.name is same as ("Tournoi par équipes") %}
-                        {% if k == 1 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule A</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'A' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.teamName }} </td>
-                                            <td>{{ participant.companyName }} </td>
-                                            <td>{{ participant.countryName }} </td>
-                                        </tr>
+                    {% endfor %}
+                    {% for k in 1..nbrPoules|length %}
+                        {% if event.type.name is same as ("Tournoi par équipes") %}
+                            {% if k == 1 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule A</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'A' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.teamName }} </td>
+                                                <td>{{ participant.companyName }} </td>
+                                                <td>{{ participant.countryName }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 2 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule B</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'B' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.teamName }} </td>
-                                            <td>{{ participant.companyName }} </td>
-                                            <td>{{ participant.countryName }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 2 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule B</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'B' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.teamName }} </td>
+                                                <td>{{ participant.companyName }} </td>
+                                                <td>{{ participant.countryName }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 3 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule C</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'C' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.teamName }} </td>
-                                            <td>{{ participant.companyName }} </td>
-                                            <td>{{ participant.countryName }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 3 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule C</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'C' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.teamName }} </td>
+                                                <td>{{ participant.companyName }} </td>
+                                                <td>{{ participant.countryName }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 4 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule D</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'D' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.teamName }} </td>
-                                            <td>{{ participant.companyName }} </td>
-                                            <td>{{ participant.countryName }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 4 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule D</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'D' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.teamName }} </td>
+                                                <td>{{ participant.companyName }} </td>
+                                                <td>{{ participant.countryName }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 5 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule E</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'E' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.teamName }} </td>
-                                            <td>{{ participant.companyName }} </td>
-                                            <td>{{ participant.countryName }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 5 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule E</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'E' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.teamName }} </td>
+                                                <td>{{ participant.companyName }} </td>
+                                                <td>{{ participant.countryName }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elseif k == 6 %}
-                            <table class="table table-striped table-dark mb-4 mt-4">
-                                <h2>Poule F</h2>
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Entreprise</th>
-                                    <th scope="col">Pays</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% set j = 1 %}
-                                {% for participant in participations %}
-                                    {% if participant.participationPoule == 'F' %}
-                                        <tr>
-                                            <th scope="row">{{ j }}</th>
-                                            <td>{{ participant.teamName }} </td>
-                                            <td>{{ participant.companyName }} </td>
-                                            <td>{{ participant.countryName }} </td>
-                                        </tr>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% elseif k == 6 %}
+                                <table class="table table-striped table-dark mb-4 mt-4">
+                                    <h2>Poule F</h2>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Entreprise</th>
+                                        <th scope="col">Pays</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set j = 1 %}
+                                    {% for participant in participations %}
+                                        {% if participant.participationPoule == 'F' %}
+                                            <tr>
+                                                <th scope="row">{{ j }}</th>
+                                                <td>{{ participant.teamName }} </td>
+                                                <td>{{ participant.companyName }} </td>
+                                                <td>{{ participant.countryName }} </td>
+                                            </tr>
 
-                                        {% set j = j+1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                            {% set j = j+1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="col-6">
             {% if event.type.name is same as ("Tournoi par équipes") %}

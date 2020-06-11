@@ -1409,12 +1409,19 @@ class AdminController extends AbstractController
 
     /**
      * fonction qui permet de créer event de 3emeplace poule 4 à 6
-     * @Route("/creation3emePlace/{idEvent}", name="creation_3eme_place_4_6", requirements={"idEvent": "\d+"})
+     * @Route("/creation3emePlace/{idEvent}", name="creation_3eme_place", requirements={"idEvent": "\d+"})
      */
     public
-    function creer3emePlace4_6($idEvent, EntityManagerInterface $em)
+    function creer3emePlace($idEvent, EntityManagerInterface $em)
     {
+        $roundDebut = $em->getRepository(Round::class)->findOneBy(['name' => 'Phase de poules 1']);
         $event = $em->getRepository(Event::class)->find($idEvent);
+        $participationsDebut = $em->getRepository(Participation::class)->findParticipationsWithAnEventAndRound($event->getName(), $roundDebut, $event->getCompetition());
+
+        if(sizeof($participationsDebut) ===5){
+            return $this->redirectToRoute('admin_creation_poule_3eme_place', ["idEvent"=> $event->getId()]);
+        }
+
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
         $round = $em->getRepository(Round::class)->findOneBy(["name" => "3ème place"]);
 
@@ -1428,6 +1435,92 @@ class AdminController extends AbstractController
             $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
             $em->persist($participation);
         }
+        $em->flush();
+
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui permet de créer poule de 3emeplace
+     * @Route("/creationPoule3emePlace/{idEvent}", name="creation_poule_3eme_place", requirements={"idEvent": "\d+"})
+     */
+    public
+    function creerPoule3emePlace($idEvent, EntityManagerInterface $em)
+    {
+        $roundDebut = $em->getRepository(Round::class)->findOneBy(['name' => 'Phase de poules 1']);
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $participationsDebut = $em->getRepository(Participation::class)->findParticipationsWithAnEventAndRound($event->getName(), $roundDebut, $event->getCompetition());
+
+        $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => "Poule de classement"]);
+
+        $event1 = EventUtils::creationPhase($event, $round);
+        $event1->setPhaseIn($event->getPhaseIn());
+        $em->persist($event1);
+
+        usort($participationsDebut, function ($a, $b) {
+            $ad = $a->getPointsClassement();
+            $bd = $b->getPointsClassement();
+            if ($ad == $bd) {
+                return 0;
+            } else {
+                return $ad > $bd ? -1 : 1;
+            }
+        });
+        //Récupération du dernier de la phase des matchs de poule
+        $participation = new Participation();
+        $participation->setEvent($event1);
+        $participation->setParticipant($participationsDebut[sizeof($participationsDebut) -1]->getParticipant());
+        $em->persist($participation);
+
+        //Récupération des deux perdants des demi
+        for ($i = 0; $i < 2; $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+            $em->persist($participation);
+        }
+        $em->flush();
+
+        return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
+    }
+
+    /**
+     * fonction qui permet de créer poule de 5emeplace
+     * @Route("/creationPoule5emePlace/{idEvent}", name="creation_poule_5eme_place", requirements={"idEvent": "\d+"})
+     */
+    public
+    function creerPoule5emePlace($idEvent, EntityManagerInterface $em, Request $request)
+    {
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $roundName= $request->request->get('round');
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
+
+        $event1 = EventUtils::creationPhase($event, $round);
+        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $em->persist($event1);
+
+        usort($participations, function ($a, $b) {
+            $ad = $a->getPointsClassement();
+            $bd = $b->getPointsClassement();
+            if ($ad == $bd) {
+                return 0;
+            } else {
+                return $ad > $bd ? -1 : 1;
+            }
+        });
+
+        //Récupération des derniers de la phase de poule
+        $participations = RencontreUtils::creerPoule5emePlace($participations);
+
+        foreach ($participations as $particip){
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($particip->getParticipant());
+            $em->persist($participation);
+        }
+
         $em->flush();
 
         return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
@@ -1465,9 +1558,6 @@ class AdminController extends AbstractController
             $participation->setParticipant($participations[$k]->getParticipant());
             $em->persist($participation);
             $k++;
-        }
-        if (sizeof($participations) === 7) {
-            $participations[sizeof($participations) - 1]->setPositionClassement(7);
         }
         $em->flush();
 
