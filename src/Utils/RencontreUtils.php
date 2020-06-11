@@ -5,6 +5,7 @@ namespace App\Utils;
 
 
 use App\Entity\Match;
+use App\Entity\Participation;
 
 class RencontreUtils
 {
@@ -423,6 +424,50 @@ class RencontreUtils
     public static function creerPoule5emePlace($participations){
         //Enlever les 4 premiers (1/2 finale)
         array_splice($participations, 0, 4);
+        return $participations;
+    }
+
+    public static function recupererEquipePourCreationBarrage($participationsPoule){
+        $participations = [];
+        for ($j = 0; $j < 2; $j++) {
+            for ($i = 1; $i < 3; $i++) {
+                $participations[] = $participationsPoule[$j][$i];
+            }
+        }
+        return $participations;
+    }
+
+    public static function creerMatchsPhaseFinale($matchs, $event, $roundName){
+        $participations = [];
+        if ($roundName == "1/2 finale") {
+            for ($i = 0; $i < sizeof($matchs); $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
+
+            for ($i = 0; $i < sizeof($matchs); $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $participations[] = $participation;
+            }
+        } elseif($roundName === "Finale" || $roundName === "7ème place") {
+            for ($i = 0; $i < 2; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif($roundName === "9ème place"){
+            for ($i = 0; $i < 2; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $participations[] = $participation;
+            }
+        }
         return $participations;
     }
 }

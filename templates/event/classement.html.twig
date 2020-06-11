@@ -35,13 +35,25 @@
 
             {% if participations|length is same as (9) %}
                 <button class="btn btn-secondary"
-                        onclick="window.location='{{ path('admin_creation_barrage_9', {"idEvent": event.id}) }}'">
+                        onclick="window.location='{{ path('admin_creation_barrage', {"idEvent": event.id}) }}'">
                     Créer Barrages
                 </button>
                 <button class="btn btn-secondary"
                         onclick="window.location='{{ path('admin_creation_poule_classement_9', {"idEvent": event.id}) }}'">
                     Créer Poule de classement
                 </button>
+                {% elseif participations|length is same as (10) %}
+                    <button class="btn btn-secondary"
+                            onclick="window.location='{{ path('admin_creation_barrage', {"idEvent": event.id}) }}'">
+                        Créer Barrages
+                    </button>
+                    <form method="post" action="{{ path('admin_creation_demifinale_consolante', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="1/2 finale consolante">
+                        <button class="btn btn-secondary">
+                            Créer 1/2 finale consolante
+                        </button>
+                    </form>
+
             {% elseif participations|length is same as (11) %}
 
             <button class="btn btn-secondary"
