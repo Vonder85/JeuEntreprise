@@ -11,6 +11,10 @@ class EventUtils
     {
         $match->setScoreTeam1($score1);
         $match->setScoreTeam2($score2);
+        $match->getParticipation1()->setPointsMarques($match->getParticipation1()->getPointsMarques()+$score1);
+        $match->getParticipation1()->setPointsEncaisses($match->getParticipation1()->getPointsEncaisses()+$score2);
+        $match->getParticipation2()->setPointsMarques($match->getParticipation2()->getPointsMarques()+$score2);
+        $match->getParticipation2()->setPointsEncaisses($match->getParticipation1()->getPointsEncaisses()+$score1);
 
         $match->setWinner(self::getWinner($match, $score1, $score2));
         $match->setLooser(self::getLooser($match, $score1, $score2));
@@ -35,9 +39,14 @@ class EventUtils
         }
     }
 
+    public static function genererResultatsMatchsAleatoire($matchs){
+        foreach ($matchs as $match){
+            self::setResult($match, rand(0,30), rand(0,30));
+        }
+    }
 
     public static function classerParPoints($participations){
-        $participationsTries = usort($participations, function ($a, $b) {
+        usort($participations, function ($a, $b) {
             $ad = $a->getPointsClassement();
             $bd = $b->getPointsClassement();
             if ($ad == $bd) {
@@ -46,6 +55,22 @@ class EventUtils
                 return $ad > $bd ? -1 : 1;
             }
         });
+        return $participations;
+    }
+
+    public static function classerParPointsPoules($participations, $poules){
+        for($j=0; $j < sizeof($poules); $j++){
+            usort($participations[$j], function ($a, $b) {
+                $ad = $a->getPointsClassement();
+                $bd = $b->getPointsClassement();
+                if ($ad == $bd) {
+                    return 0;
+                } else {
+                    return $ad > $bd ? -1 : 1;
+                }
+            });
+        }
+        return $participations;
     }
 
     public static function creationPhase($event, $round){
@@ -67,19 +92,4 @@ class EventUtils
 
         return $event1;
     }
-
-    public static function classerParOrdrePoints($tabParticipations){
-        usort($tabParticipations, function ($a, $b) {
-            $ad = $a->getPointsClassement();
-            $bd = $b->getPointsClassement();
-            if ($ad == $bd) {
-                return 0;
-            } else {
-                return $ad > $bd ? -1 : 1;
-            }
-        });
-        return $tabParticipations;
-    }
-
-
 }

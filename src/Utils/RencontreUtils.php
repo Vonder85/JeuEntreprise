@@ -450,6 +450,7 @@ class RencontreUtils
                 $participations[] = $participationsPoule[$j][$i];
             }
         }
+        dump($participations);
         return $participations;
     }
 
@@ -569,7 +570,28 @@ class RencontreUtils
             }
 
         }
-
         return $participationsDemi;
+    }
+
+    public static function recupParticipationsAvecLoosersde2Matchs($matchs, $event){
+        $participations = [];
+        for ($i = 0; $i < 2; $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+            $participations[] = $participation;
+        }
+        return $participations;
+    }
+
+    public static function recupParticipationsAvecWinnersde2Matchs($matchs, $event){
+        $participations = [];
+        for ($i = 0; $i < 2; $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+            $participations[] = $participation;
+        }
+        return $participations;
     }
 }

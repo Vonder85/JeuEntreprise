@@ -39,13 +39,11 @@
                     </button>
                         {% endif %}
                 {% else %}
-                    {% if event.phaseIn is same as (1) %}
 
                         <button class="btn btn-secondary"
                                 onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">
                             Voir classement
                         </button>
-                    {% endif %}
                 {% endif %}
                 {% if event.round.name is same as ('Poule de classement')  %}
 

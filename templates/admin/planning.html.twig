@@ -31,30 +31,30 @@
 
             {% if matchs|length is same as (4)%}
                 <button class="btn btn-secondary mt-4"
-                        onclick="window.location='{{ path('admin_creation_5eme_place_8', {"idEvent": event.id}) }}'">
+                        onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
                     Créer match 5ème place
                 </button>
                 <button class="btn btn-secondary mt-4"
-                        onclick="window.location='{{ path('admin_creation_7eme_place_8', {"idEvent":event.id}) }}'">
+                        onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
                     Créer match 7ème place
                 </button>
             {% endif %}
             {% if matchs|length is same as (6) %}
                 {% if event.round.name is not same as ("Tournoi consolante") %}
                     <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5eme_place_8', {"idEvent": event.id}) }}'">
+                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
                         Créer match 5ème place
                     </button>
                     <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_7eme_place_8', {"idEvent":event.id}) }}'">
+                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
                         Créer match 7ème place
                     </button>
                     <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_9eme_place', {"idEvent": event.id}) }}'">
+                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
                         Créer match 9ème place
                     </button>
                     <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_11eme_place', {"idEvent":event.id}) }}'">
+                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
                         Créer match 11ème place
                     </button>
                 {% endif %}
@@ -92,6 +92,7 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
+            <button class="btn btn-secondary" onclick="window.location='{{ path('admin_generer_resultats', {"idEvent": event.id}) }}'">Générer résultats</button>
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}
 

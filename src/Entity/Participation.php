@@ -68,6 +68,16 @@ class Participation
      */
     private $positionClassement;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $pointsMarques;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $pointsEncaisses;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -243,6 +253,38 @@ class Participation
     public function setPositionClassement($positionClassement): void
     {
         $this->positionClassement = $positionClassement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPointsMarques()
+    {
+        return $this->pointsMarques;
+    }
+
+    /**
+     * @param mixed $pointsMarques
+     */
+    public function setPointsMarques($pointsMarques): void
+    {
+        $this->pointsMarques = $pointsMarques;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPointsEncaisses()
+    {
+        return $this->pointsEncaisses;
+    }
+
+    /**
+     * @param mixed $pointsEncaisses
+     */
+    public function setPointsEncaisses($pointsEncaisses): void
+    {
+        $this->pointsEncaisses = $pointsEncaisses;
     }
 
     /**

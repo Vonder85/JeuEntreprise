@@ -3,6 +3,7 @@
 {% block title %}Evènements | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
+        {% if not event.poule %}
         {% if event.phase > 1 %}
             {% if participations|length >= 4 and participations|length <=6 %}
                 {% if event.phaseIn is same as (1) %}
@@ -12,6 +13,7 @@
                             Créer phase suivante
                         </button>
                     {% endif %}
+                {% endif %}
                 {% endif %}
             {% endif %}
             {% if participations|length == 7 %}
@@ -42,7 +44,7 @@
                         onclick="window.location='{{ path('admin_creation_poule_classement_9', {"idEvent": event.id}) }}'">
                     Créer Poule de classement
                 </button>
-            {% elseif participations|length is same as (10) %}
+            {% elseif participations|length is same as (5) %}
                 <button class="btn btn-secondary"
                         onclick="window.location='{{ path('admin_creation_barrage', {"idEvent": event.id}) }}'">
                     Créer Barrages
@@ -119,12 +121,7 @@
                             Créer 13ème place
                         </button>
                     </form>
-                {% else %}
-                    <button class="btn btn-secondary"
-                            onclick="window.location='{{ path('admin_creation_demifinales', {"idEvent": event.id}) }}'">
-                        Créer 1/2 finales
-                    </button>
-                {% endif %}
+                    {% endif %}
             {% endif %}
             {% set p = 1 %}
             {% for l in 0..poules|length-1 %}
