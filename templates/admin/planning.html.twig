@@ -3,7 +3,22 @@
 {% block title %}Liste des matchs | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
+        <h1>{{ event.round.name }}</h1>
         {% if event.round.name is same as ("1/2 finale consolante")%}
+            {% if totalParticipationsDebut == 15 %}
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="11ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 11ème place
+            </button>
+        </form>
+
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="9ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 9ème place
+            </button>
+            {% else %}
             <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
                 <input type="hidden" name="round" value="7ème place">
                 <button type="submit" class="btn btn-secondary mt-4">
@@ -16,6 +31,7 @@
             <button type="submit" class="btn btn-secondary mt-4">
                 Créer match 9ème place
             </button>
+            {% endif %}
         {% endif %}
         {% if event.round.name is same as ("1/2 finale")%}
             <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
@@ -59,12 +75,26 @@
                     </button>
                 {% endif %}
             {% endif %}
-        {% elseif event.round.name is same as ("1/4 finale") %}
+        {% elseif event.round.name is same as ("1/4 finale")%}
 
             <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
                 <input type="hidden" name="round" value="1/2 finale">
                 <button type="submit" class="btn btn-secondary mt-4">
                     Créer 1/2 finale
+                </button>
+            </form>
+        {% elseif event.round.name is same as ("1/4 finale consolante")%}
+
+            <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+                <input type="hidden" name="round" value="1/2 finale consolante">
+                <button type="submit" class="btn btn-secondary mt-4">
+                    Créer 1/2 finale consolante
+                </button>
+            </form>
+            <form method="post" action="{{ path('admin_poule_classement_15', {"idEvent": event.id}) }}">
+                <input type="hidden" name="round" value="Poule de classement">
+                <button type="submit" class="btn btn-secondary mt-4">
+                    Créer poule de classement
                 </button>
             </form>
         {% endif %}
@@ -81,7 +111,7 @@
                 1/2 finales
             </button>
         {% endif %}
-        <h1>{{ event.round.name }}</h1>
+
         {% if event.round.name is same as ("Finale") %}
             {% for match in matchs %}
                 {% if match.scoreTeam1 is not null %}

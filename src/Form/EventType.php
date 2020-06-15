@@ -12,6 +12,7 @@ use App\Entity\Type;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
@@ -36,7 +37,10 @@ class EventType extends AbstractType
                 "required" => 'true'
             ])
             ->add('name', HiddenType::class)
-            ->add('gender', null, ['label' => 'Genre'])
+            ->add('gender', ChoiceType::class, ['label' => 'Genre',
+                'choices'=> ['Homme' => 'Homme',
+                    'Femme' => 'Femme',
+                    'Mixte' => 'Mixte']])
             ->add('category', EntityType::class,[
                 "class" => Category::class,
                 "choice_label" => "name",

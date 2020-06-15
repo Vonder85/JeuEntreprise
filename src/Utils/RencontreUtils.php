@@ -484,6 +484,34 @@ class RencontreUtils
                 $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
                 $participations[] = $participation;
             }
+        }elseif($roundName === "1/2 finale consolante" ){
+            for ($i=0; $i<sizeof($matchs);$i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
+
+    public static function creerMatchsPhaseFinaleConsolanteAPartir15Equipes($matchs, $event, $roundName){
+        $participations = [];
+
+        if($roundName === "9ème place"){
+            for ($i = 0; $i < 2; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif($roundName === "11ème place" ){
+            for ($i=0; $i<sizeof($matchs);$i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $participations[] = $participation;
+            }
         }
         return $participations;
     }
@@ -593,5 +621,39 @@ class RencontreUtils
             $participations[] = $participation;
         }
         return $participations;
+    }
+
+    public static function recupParticipationsAvecLoosers($matchs, $event){
+        $participations = [];
+        for ($i = 0; $i < sizeof($matchs); $i++) {
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+            $participations[] = $participation;
+        }
+        return $participations;
+    }
+
+    public static function creerQuartFinale3Poules($participations, $event)
+    {
+        $matchs = [];
+        $j = 0;
+        //Récupère les deux première rencontres
+        for ($i = 0; $i < 2; $i++) {
+            $match = new Match();
+            $match->setEvent($event);
+            $match->setParticipation1($participations[$j]);
+            $match->setParticipation2($participations[$j+3]);
+            $j = 2;
+            $matchs[] = $match;
+        }
+        //Puis le dernier match
+        $match= new Match();
+        $match->setEvent($event);
+        $match->setParticipation1($participations[4]);
+        $match->setParticipation2($participations[1]);
+        $matchs[] = $match;
+
+        return $matchs;
     }
 }

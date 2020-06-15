@@ -171,6 +171,8 @@ class EventController extends AbstractController
                 $j=7;
             }elseif (sizeof($participationsTotal) === 11){
                 $j=9;
+            }elseif (sizeof($participationsTotal) === 15){
+                $j=13;
             }
 
             $participations = EventUtils::classerParPoints($participations);
@@ -201,6 +203,7 @@ class EventController extends AbstractController
                 $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
             }
             $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+
         }else{
             //Etabli le classement par nbr de points
            $participations = EventUtils::classerParPoints($participations);

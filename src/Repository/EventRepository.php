@@ -62,6 +62,22 @@ class EventRepository extends ServiceEntityRepository
         $qb->Select("e.id as eventId, e.published,e.name as eventName, d.name as disciplineName, r.name as roundName, ca.name as categoryName, t.name as typeName");
         return $qb->getQuery()->execute();
     }
+
+
+    /**
+     * Récupérer un event avec eventName, roundName et competition
+     */
+    public function findEventWithEventNameRoundNameAndCompetition($eventName, $roundName, $competition){
+        $qb = $this->createQueryBuilder('e');
+        $qb->andWhere('e.name = :eventName')
+            ->setParameter('eventName', $eventName)
+            ->andWhere('r.name = :roundName')
+            ->setParameter('roundName', $roundName)
+            ->andWhere('e.competition = :competition')
+            ->setParameter('competition', $competition);
+        $qb->leftJoin('e.round', 'r');
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Event[] Returns an array of Event objects
     //  */

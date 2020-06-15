@@ -2,8 +2,6 @@
 
 namespace App\Utils;
 use App\Entity\Event;
-use App\Entity\Match;
-use App\Entity\Round;
 
 class EventUtils
 {
@@ -76,27 +74,28 @@ class EventUtils
         return $participations;
     }
 
-    public static function classerParPointsPoules($participations, $poules){
-        for($j=0; $j < sizeof($poules); $j++){
+    public static function classerParPointsPoules($participations, $poules)
+    {
+        for ($j = 0; $j < sizeof($poules); $j++) {
             usort($participations[$j], function ($a, $b) {
                 $ad = $a->getPointsClassement();
                 $bd = $b->getPointsClassement();
                 if ($ad == $bd) {
-                    if($a->getVictory() > $b->getVictory()){
+                    if ($a->getVictory() > $b->getVictory()) {
                         return -1;
-                    }elseif($a->getVictory() < $b->getVictory()){
+                    } elseif ($a->getVictory() < $b->getVictory()) {
                         return 1;
-                    }else{
-                        if($a->getNul() > $b->getNul()){
+                    } else {
+                        if ($a->getNul() > $b->getNul()) {
                             return -1;
-                        }elseif($a->getNul() > $b->getNul()){
+                        } elseif ($a->getNul() > $b->getNul()) {
                             return 1;
-                        }else{
-                            if(($a->getPointsMarques() - $a->getPointsEncaisses()) > ($b->getPointsMarques() - $b->getPointsEncaisses())){
+                        } else {
+                            if (($a->getPointsMarques() - $a->getPointsEncaisses()) > ($b->getPointsMarques() - $b->getPointsEncaisses())) {
                                 return -1;
-                            }elseif (($a->getPointsMarques() - $a->getPointsEncaisses()) < ($b->getPointsMarques() - $b->getPointsEncaisses())){
+                            } elseif (($a->getPointsMarques() - $a->getPointsEncaisses()) < ($b->getPointsMarques() - $b->getPointsEncaisses())) {
                                 return 1;
-                            }else{
+                            } else {
                                 return 0;
                             }
                         }
@@ -105,8 +104,8 @@ class EventUtils
                     return $ad > $bd ? -1 : 1;
                 }
             });
-            return $participations;
         }
+        return $participations;
     }
 
     public static function creationPhase($event, $round){
