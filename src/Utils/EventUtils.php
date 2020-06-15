@@ -50,7 +50,25 @@ class EventUtils
             $ad = $a->getPointsClassement();
             $bd = $b->getPointsClassement();
             if ($ad == $bd) {
-                return 0;
+                if($a->getVictory() > $b->getVictory()){
+                    return -1;
+                }elseif($a->getVictory() < $b->getVictory()){
+                    return 1;
+                }else{
+                    if($a->getNul() > $b->getNul()){
+                        return -1;
+                    }elseif($a->getNul() > $b->getNul()){
+                        return 1;
+                    }else{
+                        if(($a->getPointsMarques() - $a->getPointsEncaisses()) > ($b->getPointsMarques() - $b->getPointsEncaisses())){
+                            return -1;
+                        }elseif (($a->getPointsMarques() - $a->getPointsEncaisses()) < ($b->getPointsMarques() - $b->getPointsEncaisses())){
+                            return 1;
+                        }else{
+                            return 0;
+                        }
+                    }
+                }
             } else {
                 return $ad > $bd ? -1 : 1;
             }
@@ -64,13 +82,31 @@ class EventUtils
                 $ad = $a->getPointsClassement();
                 $bd = $b->getPointsClassement();
                 if ($ad == $bd) {
-                    return 0;
+                    if($a->getVictory() > $b->getVictory()){
+                        return -1;
+                    }elseif($a->getVictory() < $b->getVictory()){
+                        return 1;
+                    }else{
+                        if($a->getNul() > $b->getNul()){
+                            return -1;
+                        }elseif($a->getNul() > $b->getNul()){
+                            return 1;
+                        }else{
+                            if(($a->getPointsMarques() - $a->getPointsEncaisses()) > ($b->getPointsMarques() - $b->getPointsEncaisses())){
+                                return -1;
+                            }elseif (($a->getPointsMarques() - $a->getPointsEncaisses()) < ($b->getPointsMarques() - $b->getPointsEncaisses())){
+                                return 1;
+                            }else{
+                                return 0;
+                            }
+                        }
+                    }
                 } else {
                     return $ad > $bd ? -1 : 1;
                 }
             });
+            return $participations;
         }
-        return $participations;
     }
 
     public static function creationPhase($event, $round){

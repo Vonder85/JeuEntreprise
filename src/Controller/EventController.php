@@ -9,7 +9,6 @@ use App\Entity\Event;
 use App\Entity\Match;
 use App\Entity\Participation;
 use App\Entity\Round;
-use App\models\Category;
 use App\Repository\EventRepository;
 use App\Repository\MatchRepository;
 use App\Repository\ParticipationRepository;
@@ -128,13 +127,13 @@ class EventController extends AbstractController
      * @Route("/creationClassement/{idEvent}", name="creation_classement", requirements={"idEvent": "\d+"})
      */
     public function classementSportsCo($idEvent, EntityManagerInterface $em){
-        $participationss = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
         $roundPoules = $em->getRepository(Round::class)->findOneBy(['name' => 'Phase de poules 1']);
         $participationsTotal = $em->getRepository(Participation::class)->findParticipationsWithAnEventAndRound($event->getName(), $roundPoules, $event->getCompetition());
 
-        foreach ($participationss as $participation){
+        foreach ($participations as $participation){
             $participation->setVictory(0);
             $participation->setDefeat(0);
             $participation->setNul(0);
@@ -174,7 +173,7 @@ class EventController extends AbstractController
                 $j=9;
             }
 
-            $participations = EventUtils::classerParPoints($participationss);
+            $participations = EventUtils::classerParPoints($participations);
             foreach ($participations as $participation){
                 $participation->setPositionClassement($j);
                 $j++;
@@ -191,7 +190,7 @@ class EventController extends AbstractController
      * fonction qui permet l'affichage du tableau
      */
     public function afficherClassement($idEvent, ParticipationRepository $pr, EventRepository $er){
-        $participationss = $pr->findParticipationInAnEventSimple($idEvent);
+        $participations = $pr->findParticipationInAnEventSimple($idEvent);
         $event = $er->find($idEvent);
         $participationsPoule = [];
         $poules =[];
@@ -201,10 +200,10 @@ class EventController extends AbstractController
             for ($i = 0; $i < sizeof($poules); $i++) {
                 $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
             }
-            $participations = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+            $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
         }else{
             //Etabli le classement par nbr de points
-           $participations = EventUtils::classerParPoints($participationss);
+           $participations = EventUtils::classerParPoints($participations);
         }
         return $this->render('event/classement.html.twig', [
             "participations" => $participations,

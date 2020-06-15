@@ -1514,10 +1514,8 @@ class AdminController extends AbstractController
             $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
         }
 
-        for ($j = 0; $j < sizeof($poules); $j++) {
-            //Etabli le classement par nbr de points
-            $participationsPoule = EventUtils::classerParPoints($participationsPoule[$j]);
-        }
+        //Etabli le classement par nbr de points
+        $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
         if(sizeof($participations) !== 14){
             $participationsDemi = RencontreUtils::creerPhasesDemiFinale($participationsPoule, $event1, $poules, $participations);
@@ -1561,10 +1559,9 @@ class AdminController extends AbstractController
         for ($i = 0; $i < sizeof($poules); $i++) {
             $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
         }
-        for ($j = 0; $j < sizeof($poules); $j++) {
-            //Etabli le classement par nbr de points
-            $participationsPoule = EventUtils::classerParPoints($participationsPoule[$j]);
-        }
+        //Etabli le classement par nbr de points
+        $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+
         //Récupérer les deux derniers de chaque poule
             $participations = RencontreUtils::creerConsolante($poules,$participationsPoule);
 
@@ -1610,7 +1607,6 @@ class AdminController extends AbstractController
             array_splice($matchs, 0, 4);
             $participations[] = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
         }
-
 
         foreach ($participations as $participation){
             $em->persist($participation);
@@ -1705,10 +1701,9 @@ class AdminController extends AbstractController
         for ($i = 0; $i < sizeof($poules); $i++) {
             $participationsPoule[] = $pr->getParPoules($matchsPoule[0]->getEvent()->getId(), $poules[$i]->getPoule());
         }
-        for ($j = 0; $j < sizeof($poules); $j++) {
-            //Etabli le classement par nbr de points
-            $participationsPoule = EventUtils::classerParPoints($participationsPoule[$j]);
-        }
+        //Etabli le classement par nbr de points
+        $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+
         for ($j = 0; $j < sizeof($participationsPoule); $j++) {
             for ($k = 0; $k < 1; $k++) {
                 $participation = new Participation();
@@ -1803,18 +1798,9 @@ class AdminController extends AbstractController
             $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
         }
 
-        for ($j = 0; $j < sizeof($poules); $j++) {
-            //Etabli le classement par nbr de points
-            usort($participationsPoule[$j], function ($a, $b) {
-                $ad = $a->getPointsClassement();
-                $bd = $b->getPointsClassement();
-                if ($ad == $bd) {
-                    return 0;
-                } else {
-                    return $ad > $bd ? -1 : 1;
-                }
-            });
-        }
+        //Etabli le classement par nbr de points
+        $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+
         $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPoule(false);
         $event1->setPhaseIn($event->getPhaseIn() + 1);
@@ -1856,10 +1842,10 @@ class AdminController extends AbstractController
         for ($i = 0; $i < sizeof($poules); $i++) {
             $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
         }
-        for ($j = 0; $j < sizeof($poules); $j++) {
+
             //Etabli le classement par nbr de points
-            $participations = EventUtils::classerParPoints($participationsPoule[$j]);
-        }
+            $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+
         $participations = [];
         $k = 0;
         if ($roundName === "11ème place") {
