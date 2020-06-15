@@ -421,6 +421,20 @@ class RencontreUtils
         return $matchs;
     }
 
+    public static function creerParticipationsQuartFinale15Equipes($participationsPoule, $event){
+        $participations = [];
+        //Récupère les 2 premiers de chaque poule
+        for($j=0; $j<sizeof($participationsPoule);$j++){
+            for($i=0; $i < 2; $i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$j][$i]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
+
     public static function creerPoule5emePlace($participations){
         //Enlever les 4 premiers (1/2 finale)
         array_splice($participations, 0, 4);
@@ -656,4 +670,27 @@ class RencontreUtils
 
         return $matchs;
     }
+
+    public static function creerQuartFinaleAPArtir15Equipes($participations, $event){
+        $matchs = [];
+        //pour les trois premiers match des quarts
+        for($i=0; $i < 4; $i++){
+            if($i === 1){
+                $match = new Match();
+                $match->setEvent($event);
+                $match->setParticipation1($participations[$i]);
+                $match->setParticipation2($participations[4]);
+                $matchs[] = $match;
+            }else{
+                $match = new Match();
+                $match->setEvent($event);
+                $match->setParticipation1($participations[$i]);
+                $match->setParticipation2($participations[sizeof($participations) - ($i === 0? 1: $i)]);
+                $matchs[] = $match;
+            }
+        }
+
+        return $matchs;
+    }
+
 }

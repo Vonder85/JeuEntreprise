@@ -90,7 +90,6 @@ class EventController extends AbstractController
         //Enregistre les résultats
         EventUtils::setResult($match, $score1, $score2);
 
-
         switch ($match->getEvent()->getRound()->getName()){
             case "Finale": $match->getWinner()->setPositionClassement(1);
                             $match->getLooser()->setPositionClassement(2);
@@ -224,10 +223,11 @@ class EventController extends AbstractController
         $event = $em->getRepository(Event::class)->find($idEvent);
         $events = $em->getRepository(Event::class)->findBy(['name' => $event->getName()]);
         $participations = $em->getRepository(Participation::class)->getParticipationWithAnEventName($event->getName(), $event->getCompetition());
+        dump($participations);
+
         $classement = [];
         foreach ($events as $item){
             $item->setPublished(true);
-            $em->persist($item);
         }
         foreach ($participations as $participation){
             if($participation['positionClassement'] !== null){
@@ -235,7 +235,7 @@ class EventController extends AbstractController
             }
         }
         $em->flush();
-        dump($classement);
+
             return $this->render('event/classementGeneral.html.twig',[
             "event" => $event,
             "classement" => $classement

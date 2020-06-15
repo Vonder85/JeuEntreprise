@@ -41,8 +41,8 @@
                     Créer 1/4 finale consolante
                 </button>
             </form>
-            <form method="post" action="{{ path('admin_creation_demifinale_consolante', {"idEvent": event.id}) }}">
-                <input type="hidden" name="round" value="1/4 finale consolante">
+            <form method="post" action="{{ path('admin_creation_quart_a_partir_15', {"idEvent": event.id}) }}">
+                <input type="hidden" name="round" value="1/4 finale">
                 <button class="btn btn-secondary">
                     Créer 1/4 finale
                 </button>
