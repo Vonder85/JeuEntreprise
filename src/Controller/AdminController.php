@@ -1256,11 +1256,13 @@ class AdminController extends AbstractController
     {
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
+        $roundPhase1 = $em->getRepository(Round::class)->findOneBy(['name' => 'Phase de poules 1']);
+        $participationsDebut = $em->getRepository(Participation::class)->findParticipationsWithAnEventAndRound($event->getName(), $roundPhase1, $event->getCompetition());
         $nbTerrains = $event->getNbrFields();
         $aPartir = $request->request->get('aPartir');
         $nbTerrains = RencontreUtils::nbrTerrains($nbTerrains, $participations);
 
-        if(sizeof($participations) === 8 && ($event->getRound()->getName() == "1/4 finale consolante" ||$event->getRound()->getName() == "1/4 finale")){
+        if(sizeof($participations) === 8 && ($event->getRound()->getName() == "1/4 finale consolante" ||$event->getRound()->getName() == "1/4 finale") && sizeof($participationsDebut) === 16){
             $matchs = RencontreUtils::creerDemiFinale($participations, $event);
             foreach ($matchs as $match) {
                 $em->persist($match);
@@ -1338,7 +1340,7 @@ class AdminController extends AbstractController
 
         if($totalParticipationsDebut === 15 && $event->getRound()->getName() == "1/2 finale consolante"){
             $participations = RencontreUtils::creerMatchsPhaseFinaleConsolanteAPartir15Equipes($matchs, $event1, $roundName);
-        }elseif($totalParticipationsDebut === 16 && $event->getRound()->getName() == "1/4 finale consolante" || $event->getRound()->getName() == "1/2 finale consolante") {
+        }elseif(($totalParticipationsDebut === 16 || $totalParticipationsDebut === 17) && $event->getRound()->getName() == "1/4 finale consolante" || $event->getRound()->getName() == "1/2 finale consolante") {
             $participations = RencontreUtils::creerMatchsPhaseFinaleConsolanteAPartir15Equipes($matchs, $event1, $roundName);
         }else {
             $participations = RencontreUtils::creerMatchsPhaseFinale($matchs, $event1, $roundName);
@@ -1680,6 +1682,7 @@ class AdminController extends AbstractController
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
+        $participations = $pr->findParticipationInAnEventSimple($idEvent);
 
         $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn() + 1);
@@ -1693,6 +1696,11 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
+        //Attribution 17eme place pour le dernier de la poule de 5
+        if(sizeof($participations) === 17){
+            $dernier = array_splice($participationsPoule[0],sizeof($participationsPoule[0])-1,1);
+            $dernier[0]->setPositionClassement(17);
+        }
         //Récupérer les deux derniers de chaque poule
             $participations = RencontreUtils::creerConsolante($poules,$participationsPoule);
 
@@ -2036,7 +2044,7 @@ class AdminController extends AbstractController
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
-        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $participationsDebut = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
 
         $event1 = EventUtils::creationPhase($event, $round);
@@ -2051,56 +2059,58 @@ class AdminController extends AbstractController
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
         $participations = RencontreUtils::creerParticipationsQuartFinale15Equipes($participationsPoule, $event1);
 
-        //Récupérer les 2 meilleurs troisièmes
-        //Récupérer tous le 3ème de chaque poule
-        $les3emes = [];
-        for($i=0; $i < sizeof($participationsPoule); $i++){
-            $les3emes[] = $participationsPoule[$i][2];
-        }
-        //Classer les 3emes par points
-        $les3emes = EventUtils::classerParPoints($les3emes);
+        if($participationsDebut == 15){
+            //Récupérer les 2 meilleurs troisièmes
+            //Récupérer tous le 3ème de chaque poule
+            $les3emes = [];
+            for($i=0; $i < sizeof($participationsPoule); $i++){
+                $les3emes[] = $participationsPoule[$i][2];
+            }
+            //Classer les 3emes par points
+            $les3emes = EventUtils::classerParPoints($les3emes);
 
-        if($les3emes[0]->getPoule() === 'A' && $les3emes[1]->getPoule() === 'B'){
-            for($i=0; $i<2; $i++){
-                $participation = new Participation();
-                $participation->setEvent($event1);
-                $participation->setParticipant($les3emes[$i]->getParticipant());
-                array_push($participations, $participation);
-            }
-        }elseif($les3emes[0]->getPoule() === 'A' && $les3emes[1]->getPoule() === 'C'){
-            for($i=0; $i<2; $i++){
-                $participation = new Participation();
-                $participation->setEvent($event1);
-                $participation->setParticipant($les3emes[$i]->getParticipant());
-                array_push($participations, $participation);
-            }
-        }elseif($les3emes[0]->getPoule() === 'B' && $les3emes[1]->getPoule() === 'A'){
-            for($i=1; $i=0; $i--){
-                $participation = new Participation();
-                $participation->setEvent($event1);
-                $participation->setParticipant($les3emes[$i]->getParticipant());
-                array_push($participations, $participation);
-            }
-        }elseif($les3emes[0]->getPoule() === 'B' && $les3emes[1]->getPoule() === 'C'){
-            for($i=1; $i=0; $i--){
-                $participation = new Participation();
-                $participation->setEvent($event1);
-                $participation->setParticipant($les3emes[$i]->getParticipant());
-                array_push($participations, $participation);
-            }
-        }elseif($les3emes[0]->getPoule() === 'C' && $les3emes[1]->getPoule() === 'A'){
-            for($i=1; $i=0; $i--){
-                $participation = new Participation();
-                $participation->setEvent($event1);
-                $participation->setParticipant($les3emes[$i]->getParticipant());
-                array_push($participations, $participation);
-            }
-        }elseif($les3emes[0]->getPoule() === 'C' && $les3emes[1]->getPoule() === 'B') {
-            for ($i = 0; $i < 2; $i++) {
-                $participation = new Participation();
-                $participation->setEvent($event1);
-                $participation->setParticipant($les3emes[$i]->getParticipant());
-                array_push($participations, $participation);
+            if($les3emes[0]->getPoule() === 'A' && $les3emes[1]->getPoule() === 'B'){
+                for($i=0; $i<2; $i++){
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($les3emes[$i]->getParticipant());
+                    array_push($participations, $participation);
+                }
+            }elseif($les3emes[0]->getPoule() === 'A' && $les3emes[1]->getPoule() === 'C'){
+                for($i=0; $i<2; $i++){
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($les3emes[$i]->getParticipant());
+                    array_push($participations, $participation);
+                }
+            }elseif($les3emes[0]->getPoule() === 'B' && $les3emes[1]->getPoule() === 'A'){
+                for($i=1; $i=0; $i--){
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($les3emes[$i]->getParticipant());
+                    array_push($participations, $participation);
+                }
+            }elseif($les3emes[0]->getPoule() === 'B' && $les3emes[1]->getPoule() === 'C'){
+                for($i=1; $i=0; $i--){
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($les3emes[$i]->getParticipant());
+                    array_push($participations, $participation);
+                }
+            }elseif($les3emes[0]->getPoule() === 'C' && $les3emes[1]->getPoule() === 'A'){
+                for($i=1; $i=0; $i--){
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($les3emes[$i]->getParticipant());
+                    array_push($participations, $participation);
+                }
+            }elseif($les3emes[0]->getPoule() === 'C' && $les3emes[1]->getPoule() === 'B') {
+                for ($i = 0; $i < 2; $i++) {
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($les3emes[$i]->getParticipant());
+                    array_push($participations, $participation);
+                }
             }
         }
 

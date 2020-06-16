@@ -23,8 +23,8 @@
                         <button class="btn btn-secondary mt-4">Voir rencontres</button>
                     </a>
                 {% endif %}
-                {% endif %}
-                {% if event.round.name is same as ('Tournoi consolante') %}
+            {% endif %}
+                {% if event.round.name is same as ('Tournoi consolante') or event.poule %}
                     <form method="post" action="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
                         {% for i in 1..nbrPoules|length %}
                             <label for="nbrTerrains{{ i }}">Nombre terrains Poule {{ i }}</label>

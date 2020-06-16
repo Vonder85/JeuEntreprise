@@ -367,8 +367,13 @@ class RencontreUtils
                 array_splice($participations, 0, $count + $k);
             }
             $poules[] = array_slice($participations, 0, $count);
-        } else {
-
+        } elseif($nbPoule == 4 && sizeof($participations) === 17){
+            //Création de la poule de 5
+            for($i=0; $i< $nbPoule;$i++){
+                $poules[] = array_slice($participations, 0, ($count + ($i===0 ? 1 : 0)));
+                array_splice($participations, 0, ($count + ($i===0 ? 1 : 0)));
+            }
+        }else {
             for ($i = 0; $i < $nbPoule; $i++) {
                 $poules[] = array_slice($participations, 0, $count);
 
