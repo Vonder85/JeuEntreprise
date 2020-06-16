@@ -435,6 +435,20 @@ class RencontreUtils
         return $participations;
     }
 
+    public static function creerParticipationsHuitemeFinale16Equipes($participationsPoule, $event){
+        $participations = [];
+        //Récupère les 4 premiers de chaque poule
+        for($j=0; $j<sizeof($participationsPoule);$j++){
+            for($i=0; $i < 4; $i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$j][$i]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
+
     public static function creerPoule5emePlace($participations){
         //Enlever les 4 premiers (1/2 finale)
         array_splice($participations, 0, 4);
@@ -505,6 +519,20 @@ class RencontreUtils
                 $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
                 $participations[] = $participation;
             }
+        }elseif($roundName === "1/4 finale consolante"){
+            for ($i=0; $i<sizeof($matchs);$i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif($roundName === "1/4 finale"){
+            for ($i=0; $i<sizeof($matchs);$i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
         }
         return $participations;
     }
@@ -520,6 +548,33 @@ class RencontreUtils
                 $participations[] = $participation;
             }
         }elseif($roundName === "11ème place" ){
+            for ($i=0; $i<2;$i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif($roundName === "13ème place"){
+            for ($i = 2; $i < 4; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif($roundName === "15ème place"){
+            for ($i = 2; $i < 4; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif($roundName === "1/2 finale consolante"){
+            for ($i=0; $i<sizeof($matchs);$i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
             for ($i=0; $i<sizeof($matchs);$i++){
                 $participation = new Participation();
                 $participation->setEvent($event);

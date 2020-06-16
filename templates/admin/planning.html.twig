@@ -4,8 +4,34 @@
 {% block body %}
     <div class="container">
         <h1>{{ event.round.name }}</h1>
-        {% if event.round.name is same as ("1/2 finale consolante")%}
-            {% if totalParticipationsDebut == 15 %}
+        {% if event.round.name is same as ("1/2 finale consolante") and totalParticipationsDebut == 16 %}
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="15ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 15ème place
+            </button>
+        </form>
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="13ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 13ème place
+            </button>
+        </form>
+
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="11ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 11ème place
+            </button>
+        </form>
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="9ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 9ème place
+            </button>
+        </form>
+        {% elseif event.round.name is same as ("1/2 finale consolante") %}
+        {% if totalParticipationsDebut == 15 %}
         <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
             <input type="hidden" name="round" value="11ème place">
             <button type="submit" class="btn btn-secondary mt-4">
@@ -26,341 +52,372 @@
                 </button>
             </form>
 
-        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
-            <input type="hidden" name="round" value="9ème place">
-            <button type="submit" class="btn btn-secondary mt-4">
-                Créer match 9ème place
-            </button>
-            {% endif %}
-        {% endif %}
-
-        {% if event.round.name is same as ("1/2 finale")%}
             <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
-                <input type="hidden" name="round" value="Finale">
-                <button class="btn btn-secondary mt-4">
-                    Créer Finale
+                <input type="hidden" name="round" value="9ème place">
+                <button type="submit" class="btn btn-secondary mt-4">
+                    Créer match 9ème place
                 </button>
-            </form>
-            {% if totalParticipationsDebut is same as (15) %}
-                <form method="post" action="{{ path('admin_creation_rencontres_357emeplace', {"idEvent": event.id}) }}">
-                    <input type="hidden" name="round" value="3ème place">
-                    <button class="btn btn-secondary mt-4">
-                        Créer 3ème place
+                {% endif %}
+                {% endif %}
+
+                {% if event.round.name is same as ("1/2 finale") %}
+                    <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="Finale">
+                        <button class="btn btn-secondary mt-4">
+                            Créer Finale
+                        </button>
+                    </form>
+                    {% if totalParticipationsDebut is same as (15) or (16) %}
+                        <form method="post"
+                              action="{{ path('admin_creation_rencontres_357emeplace', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="3ème place">
+                            <button class="btn btn-secondary mt-4">
+                                Créer 3ème place
+                            </button>
+                        </form>
+                        <form method="post"
+                              action="{{ path('admin_creation_rencontres_357emeplace', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="5ème place">
+                            <button class="btn btn-secondary mt-4">
+                                Créer 5ème place
+                            </button>
+                        </form>
+                        <form method="post"
+                              action="{{ path('admin_creation_rencontres_357emeplace', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="7ème place">
+                            <button class="btn btn-secondary mt-4">
+                                Créer 7ème place
+                            </button>
+                        </form>
+                    {% elseif matchs|length is same as (4) %}
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
+                            Créer match 5ème place
+                        </button>
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
+                            Créer match 7ème place
+                        </button>
+                    {% else %}
+
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_3eme_place', {"idEvent":event.id}) }}'">
+                            Créer
+                            match 3ème place
+                        </button>
+
+
+                    {% endif %}
+                    {% if matchs|length is same as (6) %}
+                        {% if event.round.name is not same as ("Tournoi consolante") %}
+                            <button class="btn btn-secondary mt-4"
+                                    onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
+                                Créer match 5ème place
+                            </button>
+                            <button class="btn btn-secondary mt-4"
+                                    onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
+                                Créer match 7ème place
+                            </button>
+                            <button class="btn btn-secondary mt-4"
+                                    onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
+                                Créer match 9ème place
+                            </button>
+                            <button class="btn btn-secondary mt-4"
+                                    onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
+                                Créer match 11ème place
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if event.round.name is same as ("1/4 finale") %}
+
+                    <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="1/2 finale">
+                        <button type="submit" class="btn btn-secondary mt-4">
+                            Créer 1/2 finale
+                        </button>
+                    </form>
+                {% elseif event.round.name is same as ("1/4 finale consolante") %}
+                    {% if totalParticipationsDebut is same as (16) %}
+                        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="1/2 finale consolante">
+                            <button type="submit" class="btn btn-secondary mt-4">
+                                Créer 1/2 finale consolante
+                            </button>
+                        </form>
+                    {% else %}
+                        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="1/2 finale consolante">
+                            <button type="submit" class="btn btn-secondary mt-4">
+                                Créer 1/2 finale consolante
+                            </button>
+                        </form>
+
+                        <form method="post" action="{{ path('admin_poule_classement_15', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="Poule de classement">
+                            <button type="submit" class="btn btn-secondary mt-4">
+                                Créer poule de classement
+                            </button>
+                        </form>
+
+                    {% endif %}
+                {% elseif event.round.name is same as ("1/8 finale") %}
+                    <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="1/4 finale">
+                        <button class="btn btn-secondary">
+                            Créer 1/4 finale
+                        </button>
+                    </form>
+                    <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="1/4 finale consolante">
+                        <button class="btn btn-secondary">
+                            Créer 1/4 finale consolante
+                        </button>
+                    </form>
+                {% endif %}
+                {% if event.round.name is same as ('Barrage') %}
+                    <form method="post" action="{{ path('admin_creation_5eme_place_9', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="5ème place">
+                        <button class="btn btn-secondary mt-4">
+                            Créer 5ème place
+                        </button>
+                    </form>
+
+                    <button class="btn btn-secondary mt-4"
+                            onclick="window.location='{{ path('admin_creation_demi_finale_barrage', {"idEvent": event.id}) }}'">
+                        Créer
+                        1/2 finales
                     </button>
-                </form>
-                <form method="post" action="{{ path('admin_creation_rencontres_357emeplace', {"idEvent": event.id}) }}">
-                    <input type="hidden" name="round" value="5ème place">
-                    <button class="btn btn-secondary mt-4">
-                        Créer 5ème place
-                    </button>
-                </form>
-                <form method="post" action="{{ path('admin_creation_rencontres_357emeplace', {"idEvent": event.id}) }}">
-                    <input type="hidden" name="round" value="7ème place">
-                    <button class="btn btn-secondary mt-4">
-                        Créer 7ème place
-                    </button>
-                </form>
-            {% elseif matchs|length is same as (4)%}
-                <button class="btn btn-secondary mt-4"
-                        onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
-                    Créer match 5ème place
+                {% endif %}
+
+                {% if event.round.name is same as ("Finale") %}
+                    {% for match in matchs %}
+                        {% if not match.scoreTeam1 == null  %}
+                            <button class="btn btn-secondary mt-4"
+                                    onclick="window.location='{{ path('event_classement_general', {'idEvent': event.id}) }}'">
+                                Classement final
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <button class="btn btn-secondary"
+                        onclick="window.location='{{ path('admin_generer_resultats', {"idEvent": event.id}) }}'">Générer
+                    résultats
                 </button>
-                <button class="btn btn-secondary mt-4"
-                        onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
-                    Créer match 7ème place
-                </button>
+                {% if event.poule %}
+                    {% for k in 1..nbrPoules|length %}
+
+                        {% if k == 1 %}
+                            <table class="table table-striped table-dark mb-4 mt-4">
+                                <h2>Poule A</h2>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Equipe 1</th>
+                                    <th scope="col">Equipe 2</th>
+                                    <th scope="col">Terrain</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Score</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for match in matchs %}
+                                    {% if match.participation1.poule == 'A' %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                            <td>{{ match.participation1.participant.name }}</td>
+                                            <td>{{ match.participation2.participant.name }}</td>
+                                            <td>{{ match.field }}</td>
+                                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% elseif k == 2 %}
+                            <table class="table table-striped table-dark mb-4 mt-4">
+                                <h2>Poule B</h2>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Equipe 1</th>
+                                    <th scope="col">Equipe 2</th>
+                                    <th scope="col">Terrain</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Score</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for match in matchs %}
+                                    {% if match.participation1.poule == 'B' %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                            <td>{{ match.participation1.participant.name }}</td>
+                                            <td>{{ match.participation2.participant.name }}</td>
+                                            <td>{{ match.field }}</td>
+                                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% elseif k == 3 %}
+                            <table class="table table-striped table-dark mb-4 mt-4">
+                                <h2>Poule C</h2>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Equipe 1</th>
+                                    <th scope="col">Equipe 2</th>
+                                    <th scope="col">Terrain</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Score</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for match in matchs %}
+                                    {% if match.participation1.poule == 'C' %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                            <td>{{ match.participation1.participant.name }}</td>
+                                            <td>{{ match.participation2.participant.name }}</td>
+                                            <td>{{ match.field }}</td>
+                                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% elseif k == 4 %}
+                            <table class="table table-striped table-dark mb-4 mt-4">
+                                <h2>Poule D</h2>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Equipe 1</th>
+                                    <th scope="col">Equipe 2</th>
+                                    <th scope="col">Terrain</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Score</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for match in matchs %}
+                                    {% if match.participation1.poule == 'D' %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                            <td>{{ match.participation1.participant.name }}</td>
+                                            <td>{{ match.participation2.participant.name }}</td>
+                                            <td>{{ match.field }}</td>
+                                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% elseif k == 5 %}
+                            <table class="table table-striped table-dark mb-4 mt-4">
+                                <h2>Poule E</h2>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Equipe 1</th>
+                                    <th scope="col">Equipe 2</th>
+                                    <th scope="col">Terrain</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Score</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for match in matchs %}
+                                    {% if match.participation1.poule == 'E' %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                            <td>{{ match.participation1.participant.name }}</td>
+                                            <td>{{ match.participation2.participant.name }}</td>
+                                            <td>{{ match.field }}</td>
+                                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% elseif k == 6 %}
+                            <table class="table table-striped table-dark mb-4 mt-4">
+                                <h2>Poule F</h2>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Equipe 1</th>
+                                    <th scope="col">Equipe 2</th>
+                                    <th scope="col">Terrain</th>
+                                    <th scope="col">Heure</th>
+                                    <th scope="col">Score</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for match in matchs %}
+                                    {% if match.participation1.poule == 'F' %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                            <td>{{ match.participation1.participant.name }}</td>
+                                            <td>{{ match.participation2.participant.name }}</td>
+                                            <td>{{ match.field }}</td>
+                                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+
+                    {% endfor %}
                 {% else %}
-
-            <button class="btn btn-secondary mt-4"
-                    onclick="window.location='{{ path('admin_creation_3eme_place', {"idEvent":event.id}) }}'">Créer
-                match 3ème place
-            </button>
-
-
-            {% endif %}
-            {% if matchs|length is same as (6) %}
-                {% if event.round.name is not same as ("Tournoi consolante") %}
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
-                        Créer match 5ème place
-                    </button>
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
-                        Créer match 7ème place
-                    </button>
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
-                        Créer match 9ème place
-                    </button>
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
-                        Créer match 11ème place
-                    </button>
+                    {% if event.type.name is same as ("Tournoi individuel") %}
+                        <table class="table table-striped table-dark mb-4 mt-4">
+                            <thead>
+                            <tr>
+                                <th scope="col">Equipe 1</th>
+                                <th scope="col">Equipe 2</th>
+                                <th scope="col">Terrain</th>
+                                <th scope="col">Heure</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for match in matchs %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    <td>{{ match.participation1.participant.name }}</td>
+                                    <td>{{ match.participation2.participant.name }}</td>
+                                    <td>{{ match.field }}</td>
+                                    <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                    <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    {% if event.type.name is same as ("Tournoi par équipes") %}
+                        <table class="table table-striped table-dark mb-4 mt-4">
+                            <thead>
+                            <tr>
+                                <th scope="col">Equipe 1</th>
+                                <th scope="col">Equipe 2</th>
+                                <th scope="col">Terrain</th>
+                                <th scope="col">Heure</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for match in matchs %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    <td>{{ match.participation1.participant.name }}</td>
+                                    <td>{{ match.participation2.participant.name }}</td>
+                                    <td>{{ match.field }}</td>
+                                    <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                    <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        {% endif %}
-        {% if event.round.name is same as ("1/4 finale")%}
-
-            <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
-                <input type="hidden" name="round" value="1/2 finale">
-                <button type="submit" class="btn btn-secondary mt-4">
-                    Créer 1/2 finale
+                <button class="btn btn-secondary mt-4 mb-4 align-items-center"
+                        onclick="window.location='{{ path('admin_edit_event', {"id":event.id}) }}'">Retour
                 </button>
-            </form>
-        {% elseif event.round.name is same as ("1/4 finale consolante")%}
-
-            <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
-                <input type="hidden" name="round" value="1/2 finale consolante">
-                <button type="submit" class="btn btn-secondary mt-4">
-                    Créer 1/2 finale consolante
-                </button>
-            </form>
-            <form method="post" action="{{ path('admin_poule_classement_15', {"idEvent": event.id}) }}">
-                <input type="hidden" name="round" value="Poule de classement">
-                <button type="submit" class="btn btn-secondary mt-4">
-                    Créer poule de classement
-                </button>
-            </form>
-        {% endif %}
-        {% if event.round.name is same as ('Barrage') %}
-            <form method="post" action="{{ path('admin_creation_5eme_place_9', {"idEvent": event.id}) }}">
-                <input type="hidden" name="round" value="5ème place">
-                <button class="btn btn-secondary mt-4">
-                    Créer 5ème place
-                </button>
-            </form>
-
-            <button class="btn btn-secondary mt-4"
-                    onclick="window.location='{{ path('admin_creation_demi_finale_barrage', {"idEvent": event.id}) }}'">Créer
-                1/2 finales
-            </button>
-        {% endif %}
-
-        {% if event.round.name is same as ("Finale") %}
-            {% for match in matchs %}
-                {% if match.scoreTeam1 < 1 or match.scoreTeam1 > 0%}
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('event_classement_general', {'idEvent': event.id}) }}'">
-                        Classement final
-                    </button>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-            <button class="btn btn-secondary" onclick="window.location='{{ path('admin_generer_resultats', {"idEvent": event.id}) }}'">Générer résultats</button>
-        {% if event.poule %}
-            {% for k in 1..nbrPoules|length %}
-
-                {% if k == 1 %}
-                    <table class="table table-striped table-dark mb-4 mt-4">
-                        <h2>Poule A</h2>
-                        <thead>
-                        <tr>
-                            <th scope="col">Equipe 1</th>
-                            <th scope="col">Equipe 2</th>
-                            <th scope="col">Terrain</th>
-                            <th scope="col">Heure</th>
-                            <th scope="col">Score</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for match in matchs %}
-                            {% if match.participation1.poule == 'A' %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                    <td>{{ match.participation1.participant.name }}</td>
-                                    <td>{{ match.participation2.participant.name }}</td>
-                                    <td>{{ match.field }}</td>
-                                    <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                    <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% elseif k == 2 %}
-                    <table class="table table-striped table-dark mb-4 mt-4">
-                        <h2>Poule B</h2>
-                        <thead>
-                        <tr>
-                            <th scope="col">Equipe 1</th>
-                            <th scope="col">Equipe 2</th>
-                            <th scope="col">Terrain</th>
-                            <th scope="col">Heure</th>
-                            <th scope="col">Score</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for match in matchs %}
-                            {% if match.participation1.poule == 'B' %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                    <td>{{ match.participation1.participant.name }}</td>
-                                    <td>{{ match.participation2.participant.name }}</td>
-                                    <td>{{ match.field }}</td>
-                                    <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                    <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% elseif k == 3 %}
-                    <table class="table table-striped table-dark mb-4 mt-4">
-                        <h2>Poule C</h2>
-                        <thead>
-                        <tr>
-                            <th scope="col">Equipe 1</th>
-                            <th scope="col">Equipe 2</th>
-                            <th scope="col">Terrain</th>
-                            <th scope="col">Heure</th>
-                            <th scope="col">Score</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for match in matchs %}
-                            {% if match.participation1.poule == 'C' %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                    <td>{{ match.participation1.participant.name }}</td>
-                                    <td>{{ match.participation2.participant.name }}</td>
-                                    <td>{{ match.field }}</td>
-                                    <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                    <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% elseif k == 4 %}
-                    <table class="table table-striped table-dark mb-4 mt-4">
-                        <h2>Poule D</h2>
-                        <thead>
-                        <tr>
-                            <th scope="col">Equipe 1</th>
-                            <th scope="col">Equipe 2</th>
-                            <th scope="col">Terrain</th>
-                            <th scope="col">Heure</th>
-                            <th scope="col">Score</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for match in matchs %}
-                            {% if match.participation1.poule == 'D' %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                    <td>{{ match.participation1.participant.name }}</td>
-                                    <td>{{ match.participation2.participant.name }}</td>
-                                    <td>{{ match.field }}</td>
-                                    <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                    <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% elseif k == 5 %}
-                    <table class="table table-striped table-dark mb-4 mt-4">
-                        <h2>Poule E</h2>
-                        <thead>
-                        <tr>
-                            <th scope="col">Equipe 1</th>
-                            <th scope="col">Equipe 2</th>
-                            <th scope="col">Terrain</th>
-                            <th scope="col">Heure</th>
-                            <th scope="col">Score</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for match in matchs %}
-                            {% if match.participation1.poule == 'E' %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                    <td>{{ match.participation1.participant.name }}</td>
-                                    <td>{{ match.participation2.participant.name }}</td>
-                                    <td>{{ match.field }}</td>
-                                    <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                    <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% elseif k == 6 %}
-                    <table class="table table-striped table-dark mb-4 mt-4">
-                        <h2>Poule F</h2>
-                        <thead>
-                        <tr>
-                            <th scope="col">Equipe 1</th>
-                            <th scope="col">Equipe 2</th>
-                            <th scope="col">Terrain</th>
-                            <th scope="col">Heure</th>
-                            <th scope="col">Score</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for match in matchs %}
-                            {% if match.participation1.poule == 'F' %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                    <td>{{ match.participation1.participant.name }}</td>
-                                    <td>{{ match.participation2.participant.name }}</td>
-                                    <td>{{ match.field }}</td>
-                                    <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                    <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-
-            {% endfor %}
-        {% else %}
-            {% if event.type.name is same as ("Tournoi individuel") %}
-                <table class="table table-striped table-dark mb-4 mt-4">
-                    <thead>
-                    <tr>
-                        <th scope="col">Equipe 1</th>
-                        <th scope="col">Equipe 2</th>
-                        <th scope="col">Terrain</th>
-                        <th scope="col">Heure</th>
-                        <th scope="col">Score</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for match in matchs %}
-                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                            <td>{{ match.participation1.participant.name }}</td>
-                            <td>{{ match.participation2.participant.name }}</td>
-                            <td>{{ match.field }}</td>
-                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-            {% if event.type.name is same as ("Tournoi par équipes") %}
-                <table class="table table-striped table-dark mb-4 mt-4">
-                    <thead>
-                    <tr>
-                        <th scope="col">Equipe 1</th>
-                        <th scope="col">Equipe 2</th>
-                        <th scope="col">Terrain</th>
-                        <th scope="col">Heure</th>
-                        <th scope="col">Score</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for match in matchs %}
-                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                            <td>{{ match.participation1.participant.name }}</td>
-                            <td>{{ match.participation2.participant.name }}</td>
-                            <td>{{ match.field }}</td>
-                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        {% endif %}
-        <button class="btn btn-secondary mt-4 mb-4 align-items-center"
-                onclick="window.location='{{ path('admin_edit_event', {"id":event.id}) }}'">Retour
-        </button>
     </div>
 {% endblock %}

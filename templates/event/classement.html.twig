@@ -34,7 +34,14 @@
             {% endif %}
         {% endif %}
         {% if event.poule %}
-        {% if participations|length is same as (15) %}
+        {% if participations|length is same as (16) %}
+            <form method="post" action="{{ path('admin_creation_huitième_a_partir_16', {"idEvent": event.id}) }}">
+                <input type="hidden" name="round" value="1/8 finale">
+                <button class="btn btn-secondary">
+                    Créer 1/8 finale
+                </button>
+            </form>
+        {% elseif participations|length is same as (15) %}
             <form method="post" action="{{ path('admin_creation_demifinale_consolante', {"idEvent": event.id}) }}">
                 <input type="hidden" name="round" value="1/4 finale consolante">
                 <button class="btn btn-secondary">
