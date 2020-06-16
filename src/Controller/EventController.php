@@ -115,6 +115,12 @@ class EventController extends AbstractController
             case "15ème place": $match->getWinner()->setPositionClassement(15);
                                 $match->getLooser()->setPositionClassement(16);
                                 break;
+            case "17ème place": $match->getWinner()->setPositionClassement(15);
+                                $match->getLooser()->setPositionClassement(16);
+                                break;
+            case "19ème place": $match->getWinner()->setPositionClassement(15);
+                                $match->getLooser()->setPositionClassement(16);
+                                break;
         }
         $em->flush();
         $this->addFlash('success', 'Résultat modifié');

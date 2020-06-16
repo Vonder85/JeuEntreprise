@@ -753,4 +753,55 @@ class RencontreUtils
         return $matchs;
     }
 
+    public static function participations17emeplace($participationsPoule){
+        $derniers = [];
+        $participations= [];
+        //recupération des 3 derniers
+        for($i=0; $i < sizeof($participationsPoule);$i++){
+            $derniers[] = $participationsPoule[$i][sizeof($participationsPoule[$i])-1];
+        }
+        //recupération des 2 moins bon
+        $derniers = EventUtils::classerParPoints($derniers);
+        for($i=1;$i<sizeof($derniers);$i++){
+            $participations[] = $derniers[$i];
+        }
+        return $participations;
+    }
+
+    public static function participationsQuartFinaleConsolante18equipes($participationsPoule, $event){
+        $participations = [];
+        $troisiemes= [];
+        $sixiemes = [];
+        //Récupération du 3ème des 3èmes
+        for($i=0; $i<sizeof($participationsPoule);$i++){
+            $troisiemes[] = $participationsPoule[$i][2];
+        }
+        $troisiemes = EventUtils::classerParPoints($troisiemes);
+        $dernierTroisieme = $troisiemes[2];
+        array_push($participations,$dernierTroisieme);
+
+        //Récupération des 4eme et 5eme
+        for($i=0;$i<sizeof($participationsPoule);$i++){
+            for($j=3;$j<5;$j++){
+                $participations[]= $participationsPoule[$i][$j];
+            }
+        }
+
+        //Récupération du meilleur 6eme
+        for($i=0; $i<sizeof($participationsPoule);$i++){
+            $sixiemes[] = $participationsPoule[$i][sizeof($participationsPoule[$i])-1];
+        }
+        $sixiemes = EventUtils::classerParPoints($sixiemes);
+        $premierSixieme = $sixiemes[0];
+        array_push($participations,$premierSixieme);
+
+        foreach ($participations as $particip){
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($particip->getParticipant());
+
+            $participations[] = $participation;
+        }
+        return $participations;
+    }
 }

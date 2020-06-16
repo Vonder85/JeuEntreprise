@@ -41,8 +41,8 @@
                     Créer 1/8 finale
                 </button>
             </form>
-        {% elseif participations|length is same as (15) or (17)%}
-            <form method="post" action="{{ path('admin_creation_demifinale_consolante', {"idEvent": event.id}) }}">
+        {% elseif participations|length is same as (15) or (17) or (18)%}
+            <form method="post" action="{{ path('admin_creation_quartfinales_18equipes', {"idEvent": event.id}) }}">
                 <input type="hidden" name="round" value="1/4 finale consolante">
                 <button class="btn btn-secondary">
                     Créer 1/4 finale consolante
@@ -54,6 +54,15 @@
                     Créer 1/4 finale
                 </button>
             </form>
+            {% if participations|length == 18 %}
+                <form method="post"
+                      action="{{ path('admin_creer_place_honneur_consolante', {"idEvent": event.id}) }}">
+                    <input type="hidden" name="round" value="17ème place">
+                    <button class="btn btn-secondary">
+                        Créer 17ème place
+                    </button>
+                </form>
+              {% endif %}
             {% elseif participations|length is same as (9) %}
                 <button class="btn btn-secondary"
                         onclick="window.location='{{ path('admin_creation_barrage', {"idEvent": event.id}) }}'">
