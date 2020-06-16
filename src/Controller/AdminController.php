@@ -1649,6 +1649,8 @@ class AdminController extends AbstractController
         $participations = [];
         if($roundName === "1/4 finale consolante") {
         $participations = RencontreUtils::participationsQuartFinaleConsolante18equipes($participationsPoule, $event1);
+        }else{
+
         }
         foreach ($participations as $participation){
             $em->persist($participation);
@@ -2103,7 +2105,7 @@ class AdminController extends AbstractController
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
         $participations = RencontreUtils::creerParticipationsQuartFinale15Equipes($participationsPoule, $event1);
 
-        if($participationsDebut == 15){
+        if(sizeof($participationsDebut) == 15 || sizeof($participationsDebut) == 18){
             //Récupérer les 2 meilleurs troisièmes
             //Récupérer tous le 3ème de chaque poule
             $les3emes = [];
