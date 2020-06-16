@@ -317,13 +317,19 @@ class RencontreUtils
         return $resultat;
     }
 
-    public static function creerConsolante($poules, $participationsPoule){
+    public static function creerConsolante($poules, $participationsPoule, $event){
         //Récupérer les deux derniers de chaque poule
         $participations = [];
         for($i=0; $i<sizeof($poules); $i++){
             for($j=2; $j>0;$j--){
                 $participations[] = $participationsPoule[$i][sizeof($participationsPoule[$i])-$j];
             }
+        }
+        foreach ($participations as $particip) {
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($particip->getParticipant());
+            $participations[] = $participation;
         }
         return $participations;
     }
@@ -373,12 +379,16 @@ class RencontreUtils
                 $poules[] = array_slice($participations, 0, ($count + ($i===0 ? 1 : 0)));
                 array_splice($participations, 0, ($count + ($i===0 ? 1 : 0)));
             }
+        }elseif(sizeof($participations) === 19) {
+            // Création de la poule de 4 puis des poules de 5
+                for($i=0; $i < $nbPoule; $i++){
+                    $poules[] = array_slice($participations, 0, ($count + ($i===$nbPoule-1 ? 0 : 1)));
+                    array_splice($participations, 0, ($count + ($i=== $nbPoule-1 ? 0 : 1)));
+                }
         }else {
             for ($i = 0; $i < $nbPoule; $i++) {
                 $poules[] = array_slice($participations, 0, $count);
-
                 array_splice($participations, 0, $count);
-
             }
 
         }
@@ -800,6 +810,23 @@ class RencontreUtils
             $participation->setEvent($event);
             $participation->setParticipant($particip->getParticipant());
 
+            $participations[] = $participation;
+        }
+        return $participations;
+    }
+
+    public static function participationsQuartConsolante19equipes($participationsPoule, $event){
+        $participations = [];
+        //Récupération des 3eme et 4eme de chaque poule
+        for($i=0; $i < sizeof($participationsPoule); $i++){
+            for($j=2; $j<4;$j++){
+                $participations[] = $participationsPoule[$i][$j];
+            }
+        }
+        foreach($participations as $particip){
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($particip->getParticipant());
             $participations[] = $participation;
         }
         return $participations;

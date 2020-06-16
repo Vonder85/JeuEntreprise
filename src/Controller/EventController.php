@@ -181,6 +181,8 @@ class EventController extends AbstractController
                 $j=9;
             }elseif (sizeof($participationsTotal) === 15){
                 $j=13;
+            }elseif (sizeof($participationsTotal) === 19){
+                $j=17;
             }
 
             $participations = EventUtils::classerParPoints($participations);
