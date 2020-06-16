@@ -583,6 +583,20 @@ class RencontreUtils
                 $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
                 $participations[] = $participation;
             }
+        }elseif($roundName === "17ème place"){
+            for ($i = 4; $i < 6; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif($roundName === "19ème place"){
+            for ($i = 4; $i < 6; $i++) {
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $participations[] = $participation;
+            }
         }elseif($roundName === "1/2 finale consolante"){
             for ($i=0; $i<sizeof($matchs);$i++){
                 $participation = new Participation();
@@ -829,6 +843,16 @@ class RencontreUtils
             $participation->setParticipant($particip->getParticipant());
             $participations[] = $participation;
         }
+        return $participations;
+    }
+
+    public static function participationsDernierChaquePoule($participationsPoule){
+        $participations = [];
+        //Récupération du dernier de chaque poule
+        for($i=0; $i < sizeof($participationsPoule); $i++){
+               array_push($participations, $participationsPoule[$i][sizeof($participationsPoule[$i])-1]);
+        }
+
         return $participations;
     }
 }

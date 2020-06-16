@@ -61,7 +61,7 @@
                     Créer 1/4 finale
                 </button>
             </form>
-        {% elseif participations|length is same as (15) or (17) or (19)%}
+        {% elseif participations|length is same as (15) or (17) or (19) or (20)%}
             <form method="post" action="{{ path('admin_creation_demifinale_consolante', {"idEvent": event.id}) }}">
                 <input type="hidden" name="round" value="1/4 finale consolante">
                 <button class="btn btn-secondary">

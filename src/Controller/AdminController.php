@@ -1264,7 +1264,7 @@ class AdminController extends AbstractController
         $aPartir = $request->request->get('aPartir');
         $nbTerrains = RencontreUtils::nbrTerrains($nbTerrains, $participations);
 
-        if(sizeof($participations) === 8 && ($event->getRound()->getName() == "1/4 finale consolante" ||$event->getRound()->getName() == "1/4 finale") && (sizeof($participationsDebut) === 16 || sizeof($participationsDebut) === 18 || sizeof($participationsDebut) === 19)){
+        if(sizeof($participations) === 8 && ($event->getRound()->getName() == "1/4 finale consolante" ||$event->getRound()->getName() == "1/4 finale") && (sizeof($participationsDebut) === 16 || sizeof($participationsDebut) === 18 || sizeof($participationsDebut) === 19 || sizeof($participationsDebut) === 20)){
             $matchs = RencontreUtils::creerDemiFinale($participations, $event);
             foreach ($matchs as $match) {
                 $em->persist($match);
@@ -1340,13 +1340,13 @@ class AdminController extends AbstractController
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
 
-       if(($totalParticipationsDebut === 16 || $totalParticipationsDebut === 17 || $totalParticipationsDebut === 15 || $totalParticipationsDebut === 18|| $totalParticipationsDebut === 19) && ($event->getRound()->getName() == "1/4 finale consolante" || $event->getRound()->getName() == "1/2 finale consolante")) {
+       if(($totalParticipationsDebut === 16 || $totalParticipationsDebut === 17 || $totalParticipationsDebut === 15 || $totalParticipationsDebut === 18 || $totalParticipationsDebut === 19 || $totalParticipationsDebut === 20) && ($event->getRound()->getName() == "1/4 finale consolante" || $event->getRound()->getName() == "1/2 finale consolante")) {
             $participations = RencontreUtils::creerMatchsPhaseFinaleConsolanteAPartir15Equipes($matchs, $event1, $roundName);
         }else {
             $participations = RencontreUtils::creerMatchsPhaseFinale($matchs, $event1, $roundName);
 
             if($event->getRound()->getName() == "1/4 finale consolante" && $totalParticipationsDebut === 15){
-                $eventPhase1 = $em->getRepository(Event::class)->findEventWithEventNameRoundNameAndCompetition($event->getName(), "Phase de poules 1", $event->getCompetition());
+                $eventPhase1 = $em->getRepository(Event::class)->findEventWithEventNameRoundNameAndCompetition($event->getName(), $roundPhase1, $event->getCompetition());
                 $poules = $em->getRepository(Participation::class)->nbrPoules($eventPhase1[0]->getId());
                 //Récupération des participations par poules de la phase1
                 for ($i = 0; $i < sizeof($poules); $i++) {
@@ -1367,12 +1367,32 @@ class AdminController extends AbstractController
                 $participation->setParticipant($les3emes[sizeof($les3emes)-1]->getParticipant());
                 array_push($participations, $participation);
             }
-
         }
-
         foreach ($participations as $participation){
             $em->persist($participation);
         }
+        $participations = [];
+       //Récupération des 5eme de chaque poule de la premiere phase
+        if($totalParticipationsDebut == 20 && $event->getRound()->getName() == "1/4 finale consolante"){
+            $eventPhasePoule = $em->getRepository(Event::class)->findEventWithEventNameRoundNameAndCompetition($event->getName(), $roundPhase1->getName(), $event->getCompetition());
+            $poules = $em->getRepository(Participation::class)->nbrPoules($eventPhasePoule[0]->getId());
+            //Récupération des participations par poules de la phase1
+            for ($i = 0; $i < sizeof($poules); $i++) {
+                $participationsPoule[] = $em->getRepository(Participation::class)->getParPoules($eventPhasePoule[0]->getId(), $poules[$i]->getPoule());
+            }
+            $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+            $participations[] = RencontreUtils::participationsDernierChaquePoule($participationsPoule);
+
+            foreach ($participations as $particip){
+                for($i=0; $i<sizeof($particip); $i++){
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($particip[$i]->getParticipant());
+                    $em->persist($participation);
+                }
+            }
+        }
+
         $em->flush();
 
         return $this->redirectToRoute('admin_edit_event', ["id" => $event1->getId()]);
@@ -1740,14 +1760,13 @@ class AdminController extends AbstractController
             $dernier = array_splice($participationsPoule[0],sizeof($participationsPoule[0])-1,1);
             $dernier[0]->setPositionClassement(17);
         }
-        if(sizeof($participations) == 19){
+        if(sizeof($participations) == 19 || sizeof($participations) == 20){
             //Récupère les 3eme et 4eme
             $participations = RencontreUtils::participationsQuartConsolante19equipes($participationsPoule,$event1);
         }else{
             //Récupérer les deux derniers de chaque poule
             $participations = RencontreUtils::creerConsolante($poules,$participationsPoule, $event1);
         }
-
 
         foreach ($participations as $participation){
             $em->persist($participation);
