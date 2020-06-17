@@ -371,7 +371,17 @@ class RencontreUtils
                 array_splice($participations, 0, $count + $k);
             }
             $poules[] = array_slice($participations, 0, $count);
-        } elseif($nbPoule == 4 && (sizeof($participations) === 17 || sizeof($participations) === 21)){
+        } elseif ($nbPoule == 3 && sizeof($participations) === 13) {
+            $k = 1;
+            $poules[] = array_slice($participations, 0, $count + $k);
+            array_splice($participations, 0, $count + $k);
+            for ($i = 0; $i < $nbPoule - 1; $i++) {
+                $k = 1;
+                $poules[] = array_slice($participations, 0, $count);
+                array_splice($participations, 0, $count);
+            }
+            $poules[] = array_slice($participations, 0, $count);
+        }elseif($nbPoule == 4 && (sizeof($participations) === 17 || sizeof($participations) === 21)){
             //Création de la poule de la plus conséquente en premier
             for($i=0; $i< $nbPoule;$i++){
                 $poules[] = array_slice($participations, 0, ($count + ($i===0 ? 1 : 0)));
@@ -507,7 +517,6 @@ class RencontreUtils
                 $participations[] = $participationsPoule[$j][$i];
             }
         }
-        dump($participations);
         return $participations;
     }
 
@@ -884,7 +893,7 @@ class RencontreUtils
         $participations = [];
         //Récupération des 4eme et 5eme de chaque poule
         for($i=0; $i < sizeof($participationsPoule); $i++){
-            for($j=3; $i=== 1 ? $j<4 : $j <5;$j++){
+            for($j=3; ($i=== 1 || $i===2) ? $j<4 : $j <5;$j++){
                 $participation = new Participation();
                 $participation->setEvent($event);
                 $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());

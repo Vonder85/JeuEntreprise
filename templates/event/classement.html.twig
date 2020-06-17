@@ -109,6 +109,14 @@
                 </button>
             </form>
                     {% endif %}
+            {% if event.phase == 3 and participations|length == 13 %}
+                <form method="post" action="{{ path('admin_tournoi_consolante_3phases', {"idEvent": event.id}) }}">
+                    <input type="hidden" name="round" value="Barrage">
+                    <button type="submit" class="btn btn-secondary">
+                        Créer Barrage
+                    </button>
+                </form>
+            {% endif %}
         {% elseif participations|length is same as (16) %}
             <form method="post" action="{{ path('admin_creation_huitième_a_partir_16', {"idEvent": event.id}) }}">
                 <input type="hidden" name="round" value="1/8 finale">

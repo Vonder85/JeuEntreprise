@@ -2307,8 +2307,13 @@ class AdminController extends AbstractController
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
 
         $event1 = EventUtils::creationPhase($event, $round);
-        $event1->setPhaseIn($event->getPhaseIn()+1);
-        $event1->setPoule(true);
+        if($roundName == "Barrage"){
+            $event1->setPhaseIn($event->getPhaseIn());
+            $event1->setPoule(false);
+        }else{
+            $event1->setPhaseIn($event->getPhaseIn()+1);
+            $event1->setPoule(true);
+        }
         $em->persist($event1);
 
         $poules = $pr->nbrPoules($idEvent);
@@ -2321,15 +2326,33 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if(sizeof($participations) == 7){
+        if($roundName == "Barrage"){
+            //Récupérer les 3emes des poules de 4
+            for($i=1; $i<sizeof($participationsPoule);$i++){
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($participationsPoule[$i][2]->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif(sizeof($participations) == 7){
             //Récupérer les 3ème et 4eme de poule de phase 1
             $participations = RencontreUtils::participations3emeet4emePoule7($participationsPoule,$event1);
         }elseif(sizeof($participations) == 8 || sizeof($participations) == 12){
             $participations = RencontreUtils::participations3emeet4eme($participationsPoule,$event1);
         }elseif(sizeof($participations) ==9){
             $participations = RencontreUtils::participations4emeet5emePoule9($participationsPoule,$event1);
+        }elseif(sizeof($participations) == 13){
+            //Récupération des 4et5emes
+            $participations = RencontreUtils::participations4emeet5emePoule9($participationsPoule,$event1);
+            //Récupération du perdant du barrage
+            $roundBarrage = $em->getRepository(Round::class)->findOneBy(['name' => "Barrage"]);
+            $matchBarrage = $em->getRepository(Match::class)->findMatchesWithAnEventAndRound($event->getName(),$roundBarrage, $event->getCompetition());
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($matchBarrage[0]->getLooser()->getParticipant());
+            //Ajouter le perdant du barrage aux participations
+            array_push($participations, $participation);
         }
-
 
         foreach ($participations as $participation){
             $em->persist($participation);

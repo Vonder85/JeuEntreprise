@@ -4,7 +4,7 @@
 {% block body %}
     <div class="container">
         <h1>{{ event.round.name }}</h1>
-        {% if event.round.name is same as ("1/2 finale consolante") and (totalParticipationsDebut == 16 or 17 or 18 or 19 or 20 or 21) and event.phase == 2%}
+        {% if event.round.name is same as ("1/2 finale consolante") and (totalParticipationsDebut == 16 or 17 or 18 or 19 or 20 or 21) and event.phase == 2 %}
         {% if totalParticipationsDebut == 20 or 21 %}
             <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
                 <input type="hidden" name="round" value="19ème place">
@@ -124,34 +124,34 @@
                         Créer match 7ème place
                     </button>
                 {% else %}
-            <form method="post"
-                  action="{{ path('admin_creation_3579eme_place', {"idEvent": event.id}) }}">
-                <input type="hidden" name="round" value="3ème place">
-                <button class="btn btn-secondary mt-4">
-                    Créer 3ème place
-                </button>
-            </form>
-            {% endif %}
-            {% if matchs|length is same as (6) %}
-                {% if event.round.name is not same as ("Tournoi consolante") %}
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
-                        Créer match 5ème place
-                    </button>
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
-                        Créer match 7ème place
-                    </button>
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
-                        Créer match 9ème place
-                    </button>
-                    <button class="btn btn-secondary mt-4"
-                            onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
-                        Créer match 11ème place
-                    </button>
+                    <form method="post"
+                          action="{{ path('admin_creation_3579eme_place', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="3ème place">
+                        <button class="btn btn-secondary mt-4">
+                            Créer 3ème place
+                        </button>
+                    </form>
                 {% endif %}
-            {% endif %}
+                {% if matchs|length is same as (6) %}
+                    {% if event.round.name is not same as ("Tournoi consolante") %}
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
+                            Créer match 5ème place
+                        </button>
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
+                            Créer match 7ème place
+                        </button>
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent": event.id}) }}'">
+                            Créer match 9ème place
+                        </button>
+                        <button class="btn btn-secondary mt-4"
+                                onclick="window.location='{{ path('admin_creation_5et7et9et11eme_place', {"idEvent":event.id}) }}'">
+                            Créer match 11ème place
+                        </button>
+                    {% endif %}
+                {% endif %}
             {% endif %}
             {% if event.round.name is same as ("1/4 finale") %}
 
@@ -200,18 +200,21 @@
                 </form>
             {% endif %}
             {% if event.round.name is same as ('Barrage') %}
-                <form method="post" action="{{ path('admin_creation_5eme_place_9', {"idEvent": event.id}) }}">
-                    <input type="hidden" name="round" value="5ème place">
-                    <button class="btn btn-secondary mt-4">
-                        Créer 5ème place
-                    </button>
-                </form>
+                {% if event.phase == 3 %}
+                {% else %}
+                    <form method="post" action="{{ path('admin_creation_5eme_place_9', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="5ème place">
+                        <button class="btn btn-secondary mt-4">
+                            Créer 5ème place
+                        </button>
+                    </form>
 
-                <button class="btn btn-secondary mt-4"
-                        onclick="window.location='{{ path('admin_creation_demi_finale_barrage', {"idEvent": event.id}) }}'">
-                    Créer
-                    1/2 finales
-                </button>
+                    <button class="btn btn-secondary mt-4"
+                            onclick="window.location='{{ path('admin_creation_demi_finale_barrage', {"idEvent": event.id}) }}'">
+                        Créer
+                        1/2 finales
+                    </button>
+                {% endif %}
             {% endif %}
 
             {% if event.round.name is same as ("Finale") %}
