@@ -3,6 +3,7 @@
 {% block title %}Evènements | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
+        <h1>{{ event.round.name }}</h1>
         {% if not event.poule %}
         {% if event.phase > 1 %}
 
@@ -50,6 +51,19 @@
                             <input type="hidden" name="round" value="7ème place">
                             <button class="btn btn-secondary">
                                 Créer 7ème place
+                            </button>
+                        </form>
+                    {% elseif participations|length == 6 %}
+                        <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="11ème place">
+                            <button class="btn btn-secondary">
+                                Créer 11ème place
+                            </button>
+                        </form>
+                        <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="1/2 finale consolante">
+                            <button class="btn btn-secondary">
+                                Créer 1/2 finale
                             </button>
                         </form>
                 {% endif %}

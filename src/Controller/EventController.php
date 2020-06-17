@@ -141,6 +141,11 @@ class EventController extends AbstractController
         $roundPoules = $em->getRepository(Round::class)->findOneBy(['name' => 'Phase de poules 1']);
         $participationsTotal = $em->getRepository(Participation::class)->findParticipationsWithAnEventAndRound($event->getName(), $roundPoules, $event->getCompetition());
 
+        if($participations[0]->getPoule() === null){
+            $this->addFlash("info", "Les poules ne sont pas encore créées, veuillez les créer.");
+            return $this->redirectToRoute('admin_edit_event',['id'=>$idEvent]);
+        }
+
         foreach ($participations as $participation){
             $participation->setVictory(0);
             $participation->setDefeat(0);
