@@ -32,12 +32,12 @@
                     <button class="btn btn-secondary">Voir rencontres</button>
                 </a>
                 {% if event.poule %}
-                    {% if nbrPoules|length > 1 %}
+
                     <button class="btn btn-secondary"
                             onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">
                         Voir classement des poules
                     </button>
-                        {% endif %}
+
                 {% elseif event.phaseIn is same as (1) %}
 
                         <button class="btn btn-secondary"

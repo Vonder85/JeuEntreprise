@@ -317,19 +317,17 @@ class RencontreUtils
         return $resultat;
     }
 
-    public static function creerConsolante($poules, $participationsPoule, $event){
+    public static function participationsDeuxderniersPoule($poules, $participationsPoule, $event){
         //Récupérer les deux derniers de chaque poule
         $participations = [];
         for($i=0; $i<sizeof($poules); $i++){
             for($j=2; $j>0;$j--){
-                $participations[] = $participationsPoule[$i][sizeof($participationsPoule[$i])-$j];
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$i][sizeof($participationsPoule[$i])-$j]->getParticipant());
+                $participations[] = $participation;
+
             }
-        }
-        foreach ($participations as $particip) {
-            $participation = new Participation();
-            $participation->setEvent($event);
-            $participation->setParticipant($particip->getParticipant());
-            $participations[] = $participation;
         }
         return $participations;
     }
@@ -436,7 +434,7 @@ class RencontreUtils
         return $matchs;
     }
 
-    public static function creerParticipationsQuartFinale15Equipes($participationsPoule, $event){
+    public static function participations2premiersPoule($participationsPoule, $event){
         $participations = [];
         //Récupère les 2 premiers de chaque poule
         for($j=0; $j<sizeof($participationsPoule);$j++){
@@ -829,19 +827,39 @@ class RencontreUtils
         return $participations;
     }
 
-    public static function participationsQuartConsolante19equipes($participationsPoule, $event){
+    public static function participations3emeet4emePoule7($participationsPoule, $event){
         $participations = [];
         //Récupération des 3eme et 4eme de chaque poule
         for($i=0; $i < sizeof($participationsPoule); $i++){
             for($j=2; $j<4;$j++){
-                $participations[] = $participationsPoule[$i][$j];
+                if($i === 1){
+                    $participation = new Participation();
+                    $participation->setEvent($event);
+                    $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
+                    $participations[] = $participation;
+                    $j++;
+                }else{
+                    $participation = new Participation();
+                    $participation->setEvent($event);
+                    $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
+                    $participations[] = $participation;
+                }
             }
         }
-        foreach($participations as $particip){
-            $participation = new Participation();
-            $participation->setEvent($event);
-            $participation->setParticipant($particip->getParticipant());
-            $participations[] = $participation;
+
+        return $participations;
+    }
+
+    public static function participations3emeet4eme($participationsPoule, $event){
+        $participations = [];
+        //Récupération des 3eme et 4eme de chaque poule
+        for($i=0; $i < sizeof($participationsPoule); $i++){
+            for($j=2; $j<4;$j++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$j][$i]->getParticipant());
+                $participations[] = $participation;
+            }
         }
         return $participations;
     }
