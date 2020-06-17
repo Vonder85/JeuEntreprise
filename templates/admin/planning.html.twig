@@ -4,8 +4,8 @@
 {% block body %}
     <div class="container">
         <h1>{{ event.round.name }}</h1>
-        {% if event.round.name is same as ("1/2 finale consolante") and (totalParticipationsDebut == 16 or 17 or 18 or 19 or 20) %}
-        {% if totalParticipationsDebut == 20 %}
+        {% if event.round.name is same as ("1/2 finale consolante") and (totalParticipationsDebut == 16 or 17 or 18 or 19 or 20 or 21) %}
+        {% if totalParticipationsDebut == 20 or 21 %}
             <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
                 <input type="hidden" name="round" value="19ème place">
                 <button type="submit" class="btn btn-secondary mt-4">

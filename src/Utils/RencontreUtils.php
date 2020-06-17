@@ -373,8 +373,8 @@ class RencontreUtils
                 array_splice($participations, 0, $count + $k);
             }
             $poules[] = array_slice($participations, 0, $count);
-        } elseif($nbPoule == 4 && sizeof($participations) === 17){
-            //Création de la poule de 5
+        } elseif($nbPoule == 4 && (sizeof($participations) === 17 || sizeof($participations) === 21)){
+            //Création de la poule de la plus conséquente en premier
             for($i=0; $i< $nbPoule;$i++){
                 $poules[] = array_slice($participations, 0, ($count + ($i===0 ? 1 : 0)));
                 array_splice($participations, 0, ($count + ($i===0 ? 1 : 0)));
@@ -846,11 +846,11 @@ class RencontreUtils
         return $participations;
     }
 
-    public static function participationsDernierChaquePoule($participationsPoule){
+    public static function participations5emeChaquePoule($participationsPoule){
         $participations = [];
         //Récupération du dernier de chaque poule
         for($i=0; $i < sizeof($participationsPoule); $i++){
-               array_push($participations, $participationsPoule[$i][sizeof($participationsPoule[$i])-1]);
+               array_push($participations, $participationsPoule[$i][4]);
         }
 
         return $participations;
