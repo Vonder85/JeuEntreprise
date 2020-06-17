@@ -203,6 +203,15 @@ class EventController extends AbstractController
                         $j++;
                     }
                 }
+            }elseif(sizeof($participationsTotal) == 9){
+                if($event->getRound()->getName() == "Tournoi consolante"){
+                    $j= 7;
+                    $participations = EventUtils::classerParPoints($participations);
+                    foreach ($participations as $participation){
+                        $participation->setPositionClassement($j);
+                        $j++;
+                    }
+                }
             }
         }
 

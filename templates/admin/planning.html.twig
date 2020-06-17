@@ -83,7 +83,15 @@
                             Créer Finale
                         </button>
                     </form>
-                    {% if totalParticipationsDebut is same as (15) or (16) or (17) or (18)%}
+                    {% if matchs|length == 2 %}
+                        <form method="post"
+                              action="{{ path('admin_creation_rencontres_357emeplace', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="3ème place">
+                            <button class="btn btn-secondary mt-4">
+                                Créer 3ème place
+                            </button>
+                        </form>
+                    {% elseif totalParticipationsDebut is same as (15) or (16) or (17) or (18)%}
                         <form method="post"
                               action="{{ path('admin_creation_rencontres_357emeplace', {"idEvent": event.id}) }}">
                             <input type="hidden" name="round" value="3ème place">
@@ -124,6 +132,7 @@
 
 
                     {% endif %}
+                {% endif %}
                     {% if matchs|length is same as (6) %}
                         {% if event.round.name is not same as ("Tournoi consolante") %}
                             <button class="btn btn-secondary mt-4"
@@ -144,7 +153,7 @@
                             </button>
                         {% endif %}
                     {% endif %}
-                {% endif %}
+
                 {% if event.round.name is same as ("1/4 finale") %}
 
                     <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
