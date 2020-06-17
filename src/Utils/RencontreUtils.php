@@ -857,7 +857,7 @@ class RencontreUtils
             for($j=2; $j<4;$j++){
                 $participation = new Participation();
                 $participation->setEvent($event);
-                $participation->setParticipant($participationsPoule[$j][$i]->getParticipant());
+                $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
                 $participations[] = $participation;
             }
         }

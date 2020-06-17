@@ -2279,6 +2279,7 @@ class AdminController extends AbstractController
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
+        $participations = $pr->findParticipationInAnEventSimple($idEvent);
 
         $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn()+1);
@@ -2290,13 +2291,18 @@ class AdminController extends AbstractController
         for ($i = 0; $i < sizeof($poules); $i++) {
             $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
         }
-        $participations = [];
+
 
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        //Récupérer les 3ème et 4eme de poule de phase 1
-        $participations = RencontreUtils::participations3emeet4emePoule7($participationsPoule,$event1);
+        if(sizeof($participations) == 7){
+            //Récupérer les 3ème et 4eme de poule de phase 1
+            $participations = RencontreUtils::participations3emeet4emePoule7($participationsPoule,$event1);
+        }elseif(sizeof($participations) == 8){
+            $participations = RencontreUtils::participations3emeet4eme($participationsPoule,$event1);
+        }
+
 
         foreach ($participations as $participation){
             $em->persist($participation);
@@ -2371,6 +2377,12 @@ class AdminController extends AbstractController
             //Récupérer le 1er et 2eme de poule
             $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
         }elseif($roundName == "3ème place"){
+            //Récupérer les deux derniers de la poule
+            $participations = RencontreUtils::participationsDeuxderniersPoule($poules, $participationsPoule, $event1);
+        }elseif($roundName == "5ème place"){
+            //Récupérer les deux derniers de la poule
+            $participations = RencontreUtils::participations2premiersPoule($participationsPoule, $event1);
+        }elseif($roundName == "7ème place"){
             //Récupérer les deux derniers de la poule
             $participations = RencontreUtils::participationsDeuxderniersPoule($poules, $participationsPoule, $event1);
         }

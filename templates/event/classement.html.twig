@@ -38,6 +38,20 @@
         {% if event.phase == 3%}
             {% if event.round.name is same as ('Tournoi consolante') %}
                 {% if participations|length == 3 %}
+
+                    {% elseif  participations|length == 4 %}
+                        <form method="post" action="{{ path('admin_places_357finale_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="5ème place">
+                            <button class="btn btn-secondary">
+                                Créer 5ème place
+                            </button>
+                        </form>
+                        <form method="post" action="{{ path('admin_places_357finale_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="7ème place">
+                            <button class="btn btn-secondary">
+                                Créer 7ème place
+                            </button>
+                        </form>
                 {% endif %}
             {% elseif event.round.name is same as ('Tournoi principal')%}
                 {% if participations|length == 4 %}
