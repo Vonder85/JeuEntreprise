@@ -1170,7 +1170,7 @@ class AdminController extends AbstractController
         $count = sizeof($participations) / $nbPoule;
         $event = $em->getRepository(Event::class)->find($idEvent);
 
-        if (($event->getRound()->getName() === "Tournoi principal" || $event->getRound()->getName() === "Tournoi consolante") && $event->getPhase() ===3 && sizeof($participations) == 6){
+        if (($event->getRound()->getName() === "Tournoi principal" || $event->getRound()->getName() === "Tournoi consolante") && $event->getPhase() ===3 && (sizeof($participations) == 6 || sizeof($participations) == 8)){
             $poules = RencontreUtils::affectationPoulesConsolante($nbPoule, $participations, $count);
 
             $k = 'A';
@@ -2392,8 +2392,18 @@ class AdminController extends AbstractController
             $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
         }elseif(sizeof($participations) == 9){
             $participations = RencontreUtils::participations3premiersPoule($participationsPoule,$event1);
+        }elseif(sizeof($participations) == 13){
+            //Récupération des trois premiers de la poule de 5 puis 2 premiers des poules suivantes
+            $participations = RencontreUtils::participationsTournoiprincipal3et2premiers($participationsPoule, $event1);
+            //Récupération du gagnant du barrage
+            $roundBarrage = $em->getRepository(Round::class)->findOneBy(['name' => "Barrage"]);
+            $matchBarrage = $em->getRepository(Match::class)->findMatchesWithAnEventAndRound($event->getName(),$roundBarrage, $event->getCompetition());
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($matchBarrage[0]->getWinner()->getParticipant());
+            //Ajouter le gagnant du barrage aux participations
+            array_push($participations, $participation);
         }
-
 
         foreach ($participations as $participation){
             $em->persist($participation);
@@ -2484,6 +2494,9 @@ class AdminController extends AbstractController
         }elseif($roundName == "5ème place" ||$roundName == "11ème place" ){
             //Récupérer les 3 emes des poules
             $participations = RencontreUtils::participations3emeChaquePoule($participationsPoule, $event1);
+        }elseif($roundName == "7ème place"){
+            //Récupérer les derniers de chaque poule
+            $participations = RencontreUtils::participationsDerniersChaquePoule($participationsPoule, $event1);
         }
 
         foreach ($participations as $participation){

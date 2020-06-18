@@ -94,6 +94,25 @@
                                 Créer 1/2 finale
                             </button>
                         </form>
+                    {% elseif participations|length == 8 %}
+                        <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="1/2 finale">
+                            <button class="btn btn-secondary">
+                                Créer 1/2 finale
+                            </button>
+                        </form>
+                        <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="5ème place">
+                            <button class="btn btn-secondary">
+                                Créer 5ème place
+                            </button>
+                        </form>
+                        <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="7ème place">
+                            <button class="btn btn-secondary">
+                                Créer 7ème place
+                            </button>
+                        </form>
                 {% endif %}
             {% else %}
             <form method="post" action="{{ path('admin_tournoi_principal_3phases', {"idEvent": event.id}) }}">

@@ -926,4 +926,32 @@ class RencontreUtils
 
         return $participations;
     }
+
+    public static function participationsTournoiprincipal3et2premiers($participationsPoule, $event){
+        $participations = [];
+        //Récupère les 3 premiers de la permiere poule puis les deux premiers des poules suivantes
+        for($j=0; $j<sizeof($participationsPoule);$j++){
+            for($i=0; $j === 0? $i<3 : $i<2; $i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$j][$i]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
+
+    public static function participationsDerniersChaquePoule($participationsPoule, $event){
+        $participations = [];
+        //Récupère les derniers de chaque poule
+        for($j=0; $j<sizeof($participationsPoule);$j++){
+            for($i=0; $i<1; $i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$j][sizeof($participationsPoule[$j])-1]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
 }
