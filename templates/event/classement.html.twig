@@ -37,7 +37,20 @@
         {% endif %}
         {% if event.poule %}
             {% if event.phase == 3 %}
-                {% if event.round.name is same as ('Tournoi consolante') %}
+            {% if participations|length == 15%}
+                <form method="post" action="{{ path('admin_creation_quart_a_partir_15', {"idEvent": event.id}) }}">
+                    <input type="hidden" name="round" value="Tournoi principal">
+                    <button type="submit" class="btn btn-secondary">
+                        Créer tournoi principal
+                    </button>
+                </form>
+                <form method="post" action="{{ path('admin_tournoi_consolante_3phases', {"idEvent": event.id}) }}">
+                    <input type="hidden" name="round" value="1/4 finale consolante">
+                    <button type="submit" class="btn btn-secondary">
+                        Créer 1/4 finale consolante
+                    </button>
+                </form>
+                {% elseif event.round.name is same as ('Tournoi consolante') %}
                     {% if participations|length == 3 %}
 
                     {% elseif  participations|length == 4 %}
@@ -121,6 +134,14 @@
                             </button>
                         </form>
                     {% elseif participations|length == 8 %}
+                        {% if participationsDebut|length == 15 %}
+                            <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="1/2 finale">
+                                <button class="btn btn-secondary">
+                                    Créer 1/2 finale
+                                </button>
+                            </form>
+                            {% else %}
                         <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
                             <input type="hidden" name="round" value="1/2 finale">
                             <button class="btn btn-secondary">
@@ -139,6 +160,7 @@
                                 Créer 7ème place
                             </button>
                         </form>
+                            {% endif %}
                     {% endif %}
                 {% else %}
                     <form method="post" action="{{ path('admin_tournoi_principal_3phases', {"idEvent": event.id}) }}">

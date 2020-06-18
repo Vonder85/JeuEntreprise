@@ -759,21 +759,15 @@ class RencontreUtils
     {
         $matchs = [];
         $j = 0;
-        //Récupère les deux première rencontres
-        for ($i = 0; $i < 2; $i++) {
+
+        for ($i = 0; $i < sizeof($participations)/2; $i++) {
             $match = new Match();
             $match->setEvent($event);
             $match->setParticipation1($participations[$j]);
             $match->setParticipation2($participations[$j+3]);
-            $j = 2;
+            $j++;
             $matchs[] = $match;
         }
-        //Puis le dernier match
-        $match= new Match();
-        $match->setEvent($event);
-        $match->setParticipation1($participations[4]);
-        $match->setParticipation2($participations[1]);
-        $matchs[] = $match;
 
         return $matchs;
     }
@@ -984,6 +978,18 @@ class RencontreUtils
     }
 
     public static function participationsTournoiPrincipal14($participationsPoule, $event){
+        for($i=0; $i<sizeof($participationsPoule);$i++){
+            for($j=0; $i < 2 ? $j<3 : $j<2;$j++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
+
+    public static function participationsQuartsConsolante3phases($participationsPoule, $event){
         for($i=0; $i<sizeof($participationsPoule);$i++){
             for($j=0; $i < 2 ? $j<3 : $j<2;$j++){
                 $participation = new Participation();

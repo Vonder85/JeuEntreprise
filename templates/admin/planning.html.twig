@@ -162,6 +162,7 @@
                     </button>
                 </form>
             {% elseif event.round.name is same as ("1/4 finale consolante") %}
+                {% if event.phase == 2 %}
                 {% if totalParticipationsDebut is same as (16) or (17) or (19) %}
                     <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
                         <input type="hidden" name="round" value="1/2 finale consolante">
@@ -183,7 +184,21 @@
                             Créer poule de classement
                         </button>
                     </form>
+                {% endif %}
+                    {% else %}
+                        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="1/2 finale consolante">
+                            <button type="submit" class="btn btn-secondary mt-4">
+                                Créer 1/2 finale consolante
+                            </button>
+                        </form>
 
+                        <form method="post" action="{{ path('admin_poule_classement_15', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="Poule de classement">
+                            <button type="submit" class="btn btn-secondary mt-4">
+                                Créer poule de classement
+                            </button>
+                        </form>
                 {% endif %}
             {% elseif event.round.name is same as ("1/8 finale") %}
                 <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
