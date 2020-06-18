@@ -114,6 +114,27 @@
                                 Créer 1/2 finale
                             </button>
                         </form>
+                        {% elseif participations|length == 9 %}
+                            <form method="post"
+                                  action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="1/2 finale consolante">
+                                <button class="btn btn-secondary">
+                                    Créer 1/2 finale
+                                </button>
+                            </form>
+                            <form method="post"
+                                  action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="13ème place">
+                                <button class="btn btn-secondary">
+                                    Créer 13ème place
+                                </button>
+                            </form>
+                            <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="Poule de classement">
+                                <button class="btn btn-secondary">
+                                    Créer poule de classement
+                                </button>
+                            </form>
                     {% endif %}
                 {% elseif event.round.name is same as ('Tournoi principal') %}
                     {% if participations|length == 4 %}
@@ -143,7 +164,7 @@
                             </button>
                         </form>
                     {% elseif participations|length == 8 %}
-                        {% if participationsDebut|length == 15 or participationsDebut|length == 16%}
+                        {% if participationsDebut|length == 15 or participationsDebut|length == 16 or participationsDebut|length == 17%}
                             <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
                                 <input type="hidden" name="round" value="1/2 finale">
                                 <button class="btn btn-secondary">

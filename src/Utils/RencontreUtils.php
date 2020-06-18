@@ -411,7 +411,7 @@ class RencontreUtils
 
             for($j=0; $j<$count;$j++){
                 $poules[$i][] = array_slice($participations, $h, 1);
-                $h = $h+2;
+                $h = $h + $nbPoule;
             }
             $k++;
             $h=$k;
@@ -965,7 +965,7 @@ class RencontreUtils
 
     public static function participationsPremiersChaquePoule($participationsPoule, $event){
         $participations = [];
-        //Récupère les deuxièmes de chaque poule
+        //Récupère les premiers de chaque poule
         for($j=0; $j<sizeof($participationsPoule);$j++){
             for($i=0; $i<1; $i++){
                 $participation = new Participation();
@@ -989,15 +989,35 @@ class RencontreUtils
         return $participations;
     }
 
-    public static function participationsQuartsConsolante3phases($participationsPoule, $event){
+    public static function participationsTournoiConsolante17($participationsPoule, $event){
         for($i=0; $i<sizeof($participationsPoule);$i++){
-            for($j=0; $i < 2 ? $j<3 : $j<2;$j++){
+            for($j=1; $i ==0 ? $j<4 : $j<3;$j++){
                 $participation = new Participation();
                 $participation->setEvent($event);
-                $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
+                $participation->setParticipant($participationsPoule[$i][sizeof($participationsPoule[$i])-$j]->getParticipant());
                 $participations[] = $participation;
             }
         }
+        return $participations;
+    }
+
+    public static function participations2moinsBonsdesDeuxiemes($participationsPoule, $event){
+        for($i=0; $i<sizeof($participationsPoule);$i++){
+            for($j=1;  $j<2;$j++){
+                $deuxiemes[] = $participationsPoule[$i][$j];
+            }
+        }
+        //Classer les deuxiemes par ordre de points
+        $deuxiemes = EventUtils::classerParPoints($deuxiemes);
+
+        //Récupérer les deux moins bons
+        for($i=1; $i<sizeof($deuxiemes);$i++){
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($deuxiemes[$i]->getParticipant());
+            $participations[] = $participation;
+        }
+
         return $participations;
     }
 }

@@ -73,7 +73,7 @@
                 Créer match 9ème place
             </button>
         </form>
-        {% elseif totalParticipationsDebut == 15 %}
+        {% elseif totalParticipationsDebut == 15 or totalParticipationsDebut == 17%}
         <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
             <input type="hidden" name="round" value="11ème place">
             <button type="submit" class="btn btn-secondary mt-4">

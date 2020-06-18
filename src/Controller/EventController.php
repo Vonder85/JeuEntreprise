@@ -189,6 +189,8 @@ class EventController extends AbstractController
                 $j=9;
             }elseif (sizeof($participationsTotal) === 15){
                 $j=13;
+            }elseif (sizeof($participationsTotal) === 17){
+                $j=15;
             }elseif (sizeof($participationsTotal) === 19){
                 $j=17;
             }
