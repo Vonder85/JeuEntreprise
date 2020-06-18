@@ -954,4 +954,44 @@ class RencontreUtils
         }
         return $participations;
     }
+
+    public static function participationsDeuxiemesChaquePoule($participationsPoule, $event){
+        $participations = [];
+        //Récupère les deuxièmes de chaque poule
+        for($j=0; $j<sizeof($participationsPoule);$j++){
+            for($i=0; $i<1; $i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$j][1]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
+
+    public static function participationsPremiersChaquePoule($participationsPoule, $event){
+        $participations = [];
+        //Récupère les deuxièmes de chaque poule
+        for($j=0; $j<sizeof($participationsPoule);$j++){
+            for($i=0; $i<1; $i++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$j][$i]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
+
+    public static function participationsTournoiPrincipal14($participationsPoule, $event){
+        for($i=0; $i<sizeof($participationsPoule);$i++){
+            for($j=0; $i < 2 ? $j<3 : $j<2;$j++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        return $participations;
+    }
 }

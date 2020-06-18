@@ -231,7 +231,7 @@ class EventController extends AbstractController
 
         $em->flush();
         return $this->redirectToRoute('event_afficher_classement', [
-            "idEvent"=> $idEvent
+            "idEvent"=> $idEvent,
         ]);
     }
 
@@ -239,9 +239,12 @@ class EventController extends AbstractController
      * @Route("/afficherClassement/{idEvent}", name="afficher_classement", requirements={"idEvent": "\d+"})
      * fonction qui permet l'affichage du tableau
      */
-    public function afficherClassement($idEvent, ParticipationRepository $pr, EventRepository $er){
+    public function afficherClassement($idEvent, ParticipationRepository $pr, EventRepository $er, EntityManagerInterface $em){
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
         $event = $er->find($idEvent);
+        $roundPoules = $em->getRepository(Round::class)->findOneBy(['name' => 'Phase de poules 1']);
+        $participationsTotal = $em->getRepository(Participation::class)->findParticipationsWithAnEventAndRound($event->getName(), $roundPoules, $event->getCompetition());
+
         $participationsPoule = [];
         $poules =[];
 
@@ -260,7 +263,8 @@ class EventController extends AbstractController
             "participations" => $participations,
             "event"=>$event,
             "participationsPoule" => $participationsPoule,
-            "poules" => $poules
+            "poules" => $poules,
+            "participationsDebut" => $participationsTotal
         ]);
     }
 
