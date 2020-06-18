@@ -2356,7 +2356,7 @@ class AdminController extends AbstractController
                 $participation->setParticipant($participationsPoule[$i][2]->getParticipant());
                 $participations[] = $participation;
             }
-        }elseif($roundName == "1/4 finale consolante"){
+        }elseif($roundName == "1/4 finale consolante" || sizeof($participations) == 16){
             //Récupérer les 2 derniers de chaque poule
             $participations = RencontreUtils::participationsDeuxderniersPoule($poules,$participationsPoule,$event1);
         }elseif(sizeof($participations) == 7){
@@ -2414,7 +2414,7 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if(sizeof($participations) == 7 || sizeof($participations) == 8 || sizeof($participations) == 12){
+        if(sizeof($participations) == 7 || sizeof($participations) == 8 || sizeof($participations) == 12 || sizeof($participations) == 16){
             //Récupérer les 1er et 2eme de poule de phase 1
             $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
         }elseif(sizeof($participations) == 9){
@@ -2432,8 +2432,6 @@ class AdminController extends AbstractController
             array_push($participations, $participation);
         }elseif(sizeof($participations) == 14){
             $participations = RencontreUtils::participationsTournoiPrincipal14($participationsPoule, $event1);
-        }elseif(sizeof($participations) == 15){
-            return $this->redirectToRoute('admin_creation_quart_a_partir_15', ['idEvent' => $idEvent]);
         }
 
         foreach ($participations as $participation){
@@ -2521,8 +2519,7 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if($roundName == "1/2 finale"){
-            if(sizeof($participationsDebut) == 15){
+        if(($roundName == "1/2 finale" || $roundName == "1/2 finale consolante") &&(sizeof($participationsDebut) == 15 || sizeof($participationsDebut) == 16)){
                 //Récupérer le 1er et 2eme de poule
                 $participations1 = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
                 //Récupérer le 3eme et 4eme de poule
@@ -2530,19 +2527,17 @@ class AdminController extends AbstractController
                 $participations[] = $participations1;
                 $participations[] = $participations2;
 
-                foreach ($participations as $participation){
-                    for($i=0; $i< sizeof($participation);$i++){
+                foreach ($participations as $participation) {
+                    for ($i = 0; $i < sizeof($participation); $i++) {
                         $em->persist($participation[$i]);
                     }
+                    $em->flush();
                 }
-                $em->flush();
-
                 return $this->redirectToRoute('admin_edit_event', ['id'=>$event1->getId()]);
-            }else{
+            }
+        elseif($roundName == "1/2 finale"){
                 //Récupérer le 1er et 2eme de poule
                 $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
-            }
-
         }elseif($roundName == "1/2 finale consolante"){
             //Récupérer les deux derniers de la poule
             $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);

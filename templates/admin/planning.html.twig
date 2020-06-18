@@ -47,7 +47,33 @@
         </form>
 
         {% elseif event.round.name is same as ("1/2 finale consolante") %}
-        {% if totalParticipationsDebut == 15 %}
+        {% if event.phase == 3 and totalParticipationsDebut == 16 %}
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="15ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 15ème place
+            </button>
+        </form>
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="13ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 13ème place
+            </button>
+        </form>
+
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="11ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 11ème place
+            </button>
+        </form>
+        <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
+            <input type="hidden" name="round" value="9ème place">
+            <button type="submit" class="btn btn-secondary mt-4">
+                Créer match 9ème place
+            </button>
+        </form>
+        {% elseif totalParticipationsDebut == 15 %}
         <form method="post" action="{{ path('admin_creation_phase_finale', {"idEvent": event.id}) }}">
             <input type="hidden" name="round" value="11ème place">
             <button type="submit" class="btn btn-secondary mt-4">
