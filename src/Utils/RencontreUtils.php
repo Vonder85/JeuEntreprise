@@ -904,6 +904,21 @@ class RencontreUtils
         return $participations;
     }
 
+    public static function participations4emeet5emePoule19($participationsPoule, $event){
+        $participations = [];
+        //Récupération des 4eme et 5eme de chaque poule
+        for($i=0; $i < sizeof($participationsPoule); $i++){
+            for($j=3; ($i=== sizeof($participationsPoule) -1) ? $j<4 : $j <5;$j++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+
+        return $participations;
+    }
+
     public static function participations3emeChaquePoule($participationsPoule, $event){
         $participations = [];
         //Récupération du dernier de chaque poule
@@ -1042,20 +1057,16 @@ class RencontreUtils
         return $participations;
     }
 
-    public static function rencontresDemiFinales3phases18($participations, $event){
+    public static function rencontresDemiFinales3phases18et19($participations, $event){
         $matchs = [];
         $j = 0;
         for ($i = 0; $i < sizeof($participations)/2; $i++) {
             $match = new Match();
             $match->setEvent($event);
             $match->setParticipation1($participations[$j]);
-            $match->setParticipation2($participations[$j+3]);
+            $match->setParticipation2($participations[$j+1]);
 
-            if($j === 2){
-                $j=6;
-            }else{
-                $j++;
-            }
+           $j = $j+2;
             $matchs[] = $match;
         }
         return $matchs;

@@ -112,7 +112,7 @@
                 </form>
                 {% if matchs|length == 2 %}
                     <form method="post"
-                          action="{{ path('creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                          action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                         <input type="hidden" name="round" value="3ème place">
                         <button class="btn btn-secondary mt-4">
                             Créer 3ème place
@@ -120,35 +120,35 @@
                     </form>
                 {% elseif totalParticipationsDebut is same as (15) or (16) or (17) or (18) %}
                     <form method="post"
-                          action="{{ path('creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                          action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                         <input type="hidden" name="round" value="3ème place">
                         <button class="btn btn-secondary mt-4">
                             Créer 3ème place
                         </button>
                     </form>
                     <form method="post"
-                          action="{{ path('creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                          action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                         <input type="hidden" name="round" value="5ème place">
                         <button class="btn btn-secondary mt-4">
                             Créer 5ème place
                         </button>
                     </form>
                     <form method="post"
-                          action="{{ path('creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                          action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                         <input type="hidden" name="round" value="7ème place">
                         <button class="btn btn-secondary mt-4">
                             Créer 7ème place
                         </button>
                     </form>
                     <form method="post"
-                          action="{{ path('creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                          action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                         <input type="hidden" name="round" value="9ème place">
                         <button type="submit" class="btn btn-secondary mt-4">
                             Créer match 9ème place
                         </button>
                     </form>
                     <form method="post"
-                          action="{{ path('creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                          action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                         <input type="hidden" name="round" value="11ème place">
                         <button type="submit" class="btn btn-secondary mt-4">
                             Créer match 11ème place
