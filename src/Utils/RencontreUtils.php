@@ -393,6 +393,12 @@ class RencontreUtils
                     $poules[] = array_slice($participations, 0, ($count + ($i===$nbPoule-1 ? 0 : 1)));
                     array_splice($participations, 0, ($count + ($i=== $nbPoule-1 ? 0 : 1)));
                 }
+        }elseif(sizeof($participations) === 18 && $nbPoule == 4) {
+            // Création des poules de 5 puis des poules de 4
+            for($i=0; $i < $nbPoule; $i++){
+                $poules[] = array_slice($participations, 0, ($count + ($i===0 || $i === 1 ? 1 : 0)));
+                array_splice($participations, 0, ($count + ($i===0 || $i === 1 ? 1 : 0)));
+            }
         }else {
             for ($i = 0; $i < $nbPoule; $i++) {
                 $poules[] = array_slice($participations, 0, $count);
@@ -1018,6 +1024,65 @@ class RencontreUtils
             $participations[] = $participation;
         }
 
+        return $participations;
+    }
+
+    public static function participations4emeet5emePoule18($participationsPoule, $event){
+        $participations = [];
+        //Récupération des 4eme et 5eme de chaque poule
+        for($i=0; $i < sizeof($participationsPoule); $i++){
+            for($j=3; ($i=== 2 || $i===3) ? $j<4 : $j <5;$j++){
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+
+        return $participations;
+    }
+
+    public static function rencontresDemiFinales3phases18($participations, $event){
+        $matchs = [];
+        $j = 0;
+        for ($i = 0; $i < sizeof($participations)/2; $i++) {
+            $match = new Match();
+            $match->setEvent($event);
+            $match->setParticipation1($participations[$j]);
+            $match->setParticipation2($participations[$j+3]);
+
+            if($j === 2){
+                $j=6;
+            }else{
+                $j++;
+            }
+            $matchs[] = $match;
+        }
+        return $matchs;
+    }
+
+    public static function rencontresPlacesFinales3phases18($matchs, $event, $roundName){
+        $participations = [];
+
+        if($roundName === "11ème place"){
+            for ($i = 0; $i < 2; $i++) {
+                //On garde juste les deux derniers matchs
+                array_splice($matchs, 0, 4);
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
+                $participations[] = $participation;
+            }
+        }elseif($roundName === "9ème place"){
+            for ($i = 0; $i < 2; $i++) {
+                //On garde juste les deux derniers matchs
+                array_splice($matchs, 0, 4);
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
+                $participations[] = $participation;
+            }
+        }
         return $participations;
     }
 }

@@ -89,6 +89,28 @@
                                     Créer 9ème place
                                 </button>
                             </form>
+                            {% elseif participationsDebut|length == 18%}
+                                <form method="post"
+                                      action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                    <input type="hidden" name="round" value="13ème place">
+                                    <button class="btn btn-secondary">
+                                        Créer 13ème place
+                                    </button>
+                                </form>
+                                <form method="post"
+                                      action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
+                                    <input type="hidden" name="round" value="15ème place">
+                                    <button class="btn btn-secondary">
+                                        Créer 15ème place
+                                    </button>
+                                </form>
+                                <form method="post"
+                                      action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                    <input type="hidden" name="round" value="17ème place">
+                                    <button class="btn btn-secondary">
+                                        Créer 17ème place
+                                    </button>
+                                </form>
                         {% else %}
                             <form method="post"
                                   action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
@@ -191,6 +213,13 @@
                             </button>
                         </form>
                             {% endif %}
+                        {% elseif participations|length == 12 %}
+                            <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="1/2 finale">
+                                <button class="btn btn-secondary">
+                                    Créer 1/2 finale
+                                </button>
+                            </form>
                     {% endif %}
                 {% else %}
                     <form method="post" action="{{ path('admin_tournoi_principal_3phases', {"idEvent": event.id}) }}">

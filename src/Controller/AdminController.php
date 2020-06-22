@@ -754,10 +754,10 @@ class AdminController extends AbstractController
         $participationAthletForm = $this->createForm(ParticipationAthletType::class, $participation);
         $participationAthletForm->handleRequest($request);
         if ($participationAthletForm->isSubmitted() && $participationAthletForm->isValid()) {
-            foreach($participations as $particip){
-                if($participation->getParticipant() == $particip->getParticipant()){
+            foreach ($participations as $particip) {
+                if ($participation->getParticipant() == $particip->getParticipant()) {
                     $this->addFlash('info', "Participant déjà ajouté.");
-                    return $this->redirectToRoute("admin_edit_event", ["id"=>$id]);
+                    return $this->redirectToRoute("admin_edit_event", ["id" => $id]);
                 }
             }
             $participation->setEvent($event);
@@ -992,9 +992,9 @@ class AdminController extends AbstractController
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
-        if(sizeof($matchs) === 0){
+        if (sizeof($matchs) === 0) {
             $this->addFlash("info", "Les rencontres ne sont pas encore créées, veuillez les créer.");
-            return $this->redirectToRoute('admin_edit_event',['id'=>$idEvent]);
+            return $this->redirectToRoute('admin_edit_event', ['id' => $idEvent]);
         }
 
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
@@ -1002,8 +1002,6 @@ class AdminController extends AbstractController
         $participationsDebut = $pr->findParticipationsWithAnEventAndRound($event->getName(), $roundPhase1, $event->getCompetition());
         $totalParticipationsDebut = sizeof($participationsDebut);
         $nbrPoules = $pr->nbrPoules($idEvent);
-
-
 
 
         //Tri les matchs par ordre chronologique
@@ -1176,7 +1174,7 @@ class AdminController extends AbstractController
         $count = sizeof($participations) / $nbPoule;
         $event = $em->getRepository(Event::class)->find($idEvent);
 
-        if (($event->getRound()->getName() === "Tournoi principal" || $event->getRound()->getName() === "Tournoi consolante") && $event->getPhase() ===3 && (sizeof($participations) == 6 || sizeof($participations) == 8 || sizeof($participations) == 9)){
+        if (($event->getRound()->getName() === "Tournoi principal" || $event->getRound()->getName() === "Tournoi consolante") && $event->getPhase() === 3 && (sizeof($participations) == 6 || sizeof($participations) == 8 || sizeof($participations) == 9)) {
             $poules = RencontreUtils::affectationPoulesConsolante($nbPoule, $participations, $count);
 
             $k = 'A';
@@ -1188,8 +1186,7 @@ class AdminController extends AbstractController
 
                 $k++;
             }
-        }
-        elseif ($event->getRound()->getName() === "Tournoi consolante" && $event->getPhase() ===2) {
+        } elseif ($event->getRound()->getName() === "Tournoi consolante" && $event->getPhase() === 2) {
             $poules = RencontreUtils::affectationPoulesConsolante($nbPoule, $participations, $count);
 
             $k = 'A';
@@ -1290,14 +1287,19 @@ class AdminController extends AbstractController
         $aPartir = $request->request->get('aPartir');
         $nbTerrains = RencontreUtils::nbrTerrains($nbTerrains, $participations);
 
-        if(sizeof($participations) === 8 && ($event->getRound()->getName() == "1/4 finale consolante" ||$event->getRound()->getName() == "1/4 finale") && (sizeof($participationsDebut) === 16 || sizeof($participationsDebut) === 18 || sizeof($participationsDebut) === 19 || sizeof($participationsDebut) === 20 || sizeof($participationsDebut) === 21)){
+        if (sizeof($participations) === 8 && ($event->getRound()->getName() == "1/4 finale consolante" || $event->getRound()->getName() == "1/4 finale") && (sizeof($participationsDebut) === 16 || sizeof($participationsDebut) === 18 || sizeof($participationsDebut) === 19 || sizeof($participationsDebut) === 20 || sizeof($participationsDebut) === 21)) {
             $matchs = RencontreUtils::creerDemiFinale($participations, $event);
             foreach ($matchs as $match) {
                 $em->persist($match);
             }
             RencontreUtils::affectationTerrains($matchs, $nbTerrains, $event, $aPartir);
-        }
-        elseif (sizeof($participations) === 8 || sizeof($participations) === 12) {
+        } elseif(sizeof($participations) === 12 && sizeof($participationsDebut) == 18 && $event->getPhase() == 3){
+            $matchs = RencontreUtils::rencontresDemiFinales3phases18($participations, $event);
+            foreach ($matchs as $match) {
+                $em->persist($match);
+            }
+            RencontreUtils::affectationTerrains($matchs, $nbTerrains, $event, $aPartir);
+        }elseif (sizeof($participations) === 8 || sizeof($participations) === 12) {
             $parts = array_chunk($participations, 4);
             foreach ($parts as $part) {
                 $matchs[] = RencontreUtils::creerDemiFinale($part, $event);
@@ -1311,13 +1313,13 @@ class AdminController extends AbstractController
             for ($k = 0; $k < sizeof($parts); $k++) {
                 RencontreUtils::affectationTerrains($matchs[$k], $nbTerrains, $event, $aPartir);
             }
-        } elseif($event->getRound()->getName() == "1/4 finale consolante") {
+        } elseif ($event->getRound()->getName() == "1/4 finale consolante") {
             $matchs = RencontreUtils::creerQuartFinale3Poules($participations, $event);
-            foreach ($matchs as $match){
+            foreach ($matchs as $match) {
                 $em->persist($match);
             }
-            RencontreUtils::affectationTerrains($matchs, $nbTerrains,$event, $aPartir);
-        }elseif(sizeof($participations) === 16){
+            RencontreUtils::affectationTerrains($matchs, $nbTerrains, $event, $aPartir);
+        } elseif (sizeof($participations) === 16) {
             $parts = array_chunk($participations, 8);
             foreach ($parts as $part) {
                 $matchs[] = RencontreUtils::creerDemiFinale($part, $event);
@@ -1331,7 +1333,7 @@ class AdminController extends AbstractController
             for ($k = 0; $k < sizeof($parts); $k++) {
                 RencontreUtils::affectationTerrains($matchs[$k], $nbTerrains, $event, $aPartir);
             }
-        }else {
+        } else {
             $matchs = RencontreUtils::creerDemiFinale($participations, $event);
             foreach ($matchs as $match) {
                 $em->persist($match);
@@ -1364,42 +1366,41 @@ class AdminController extends AbstractController
         $event1 = EventUtils::creationPhase($event, $round);
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
-        if($totalParticipationsDebut == 15 && $event->getRound()->getName() == "1/4 finale consolante"){
+        if ($totalParticipationsDebut == 15 && $event->getRound()->getName() == "1/4 finale consolante") {
             $participations = RencontreUtils::creerMatchsPhaseFinale($matchs, $event1, $roundName);
 
 
             $eventPhase1 = $em->getRepository(Event::class)->findEventWithEventNameRoundNameAndCompetition($event->getName(), $roundPhase1->getName(), $event->getCompetition());
-                $poules = $em->getRepository(Participation::class)->nbrPoules($eventPhase1[0]->getId());
-                //Récupération des participations par poules de la phase1
-                for ($i = 0; $i < sizeof($poules); $i++) {
-                    $participationsPoule[] = $em->getRepository(Participation::class)->getParPoules($eventPhase1[0]->getId(), $poules[$i]->getPoule());
-                }
-                //Classer les participants dans poules par ordre de points
-                $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
-                //Récupérer tous le 3ème de chaque poule
-                $les3emes = [];
-                for($i=0; $i < sizeof($participationsPoule); $i++){
-                    $les3emes[] = $participationsPoule[$i][2];
-                }
-                //Classer les 3emes par points
-                $les3emes = EventUtils::classerParPoints($les3emes);
-                dump($participationsPoule);
+            $poules = $em->getRepository(Participation::class)->nbrPoules($eventPhase1[0]->getId());
+            //Récupération des participations par poules de la phase1
+            for ($i = 0; $i < sizeof($poules); $i++) {
+                $participationsPoule[] = $em->getRepository(Participation::class)->getParPoules($eventPhase1[0]->getId(), $poules[$i]->getPoule());
+            }
+            //Classer les participants dans poules par ordre de points
+            $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+            //Récupérer tous le 3ème de chaque poule
+            $les3emes = [];
+            for ($i = 0; $i < sizeof($participationsPoule); $i++) {
+                $les3emes[] = $participationsPoule[$i][2];
+            }
+            //Classer les 3emes par points
+            $les3emes = EventUtils::classerParPoints($les3emes);
+            dump($participationsPoule);
 
-                $participation = new Participation();
-                $participation->setEvent($event1);
-                $participation->setParticipant($les3emes[sizeof($les3emes)-1]->getParticipant());
-                array_push($participations, $participation);
+            $participation = new Participation();
+            $participation->setEvent($event1);
+            $participation->setParticipant($les3emes[sizeof($les3emes) - 1]->getParticipant());
+            array_push($participations, $participation);
 
             foreach ($participations as $participation) {
                 $em->persist($participation);
             }
-        }
-       elseif(($totalParticipationsDebut === 16 || $totalParticipationsDebut === 17 || $totalParticipationsDebut === 15 || $totalParticipationsDebut === 18 || $totalParticipationsDebut === 19 || $totalParticipationsDebut === 20 || $totalParticipationsDebut === 21) && ($event->getRound()->getName() == "1/4 finale consolante" || $event->getRound()->getName() == "1/2 finale consolante")) {
+        } elseif (($totalParticipationsDebut === 16 || $totalParticipationsDebut === 17 || $totalParticipationsDebut === 15 || $totalParticipationsDebut === 18 || $totalParticipationsDebut === 19 || $totalParticipationsDebut === 20 || $totalParticipationsDebut === 21) && ($event->getRound()->getName() == "1/4 finale consolante" || $event->getRound()->getName() == "1/2 finale consolante")) {
             $participations = RencontreUtils::creerMatchsPhaseFinaleConsolanteAPartir15Equipes($matchs, $event1, $roundName);
-           foreach ($participations as $participation) {
-               $em->persist($participation);
-           }
-        }else {
+            foreach ($participations as $participation) {
+                $em->persist($participation);
+            }
+        } else {
             $participations = RencontreUtils::creerMatchsPhaseFinale($matchs, $event1, $roundName);
 
             foreach ($participations as $participation) {
@@ -1435,8 +1436,8 @@ class AdminController extends AbstractController
     }
 
     /**
-     * fonction qui crée les participations 3/5/7 emeplace a partir de 15equipes
-     * @Route("/rencontre357emeplace/{idEvent}", name="creation_rencontres_357emeplace", requirements={"idEvent": "\d+"})
+     * fonction qui crée les participations places classement a partir de 15equipes
+     * @Route("/rencontreplaceclassement/{idEvent}", name="creation_rencontres_places_classment", requirements={"idEvent": "\d+"})
      */
     public function creerRencontres357emeplace($idEvent, EntityManagerInterface $em, Request $request)
     {
@@ -1449,16 +1450,24 @@ class AdminController extends AbstractController
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
 
-        if($roundName === "7ème place"){
-                array_splice($matchs, 0,2);
-                $participations = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
-        }elseif($roundName === "5ème place"){
-            array_splice($matchs, 0,2);
+        if ($roundName === "7ème place") {
+            array_splice($matchs, 0, 2);
+            $participations = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
+        } elseif ($roundName === "5ème place") {
+            array_splice($matchs, 0, 2);
             $participations = RencontreUtils::recupParticipationsAvecWinnersde2Matchs($matchs, $event1);
-        }elseif($roundName === "3ème place"){
+        } elseif ($roundName === "3ème place") {
+            $participations = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
+        }elseif($roundName === "9ème place"){
+            //On garde juste les deux derniers matchs
+            array_splice($matchs, 0, 4);
+            $participations = RencontreUtils::recupParticipationsAvecWinnersde2Matchs($matchs, $event1);
+        }elseif($roundName === "11ème place"){
+            //On garde juste les deux derniers matchs
+            array_splice($matchs, 0, 4);
             $participations = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
         }
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
@@ -1572,8 +1581,8 @@ class AdminController extends AbstractController
         $participationsDebut = $em->getRepository(Participation::class)->findParticipationsWithAnEventAndRound($event->getName(), $roundDebut, $event->getCompetition());
         $roundName = $request->request->get('round');
 
-        if(sizeof($participationsDebut) ===5){
-            return $this->redirectToRoute('admin_creation_poule_3eme_place', ["idEvent"=> $event->getId()]);
+        if (sizeof($participationsDebut) === 5) {
+            return $this->redirectToRoute('admin_creation_poule_3eme_place', ["idEvent" => $event->getId()]);
         }
 
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
@@ -1583,12 +1592,12 @@ class AdminController extends AbstractController
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
 
-        if($roundName == '3ème place' || $roundName == '9ème place'){
+        if ($roundName == '3ème place' || $roundName == '9ème place') {
             $participations = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
-        }elseif($roundName == '7ème place'){
+        } elseif ($roundName == '7ème place') {
             $participations = RencontreUtils::recupParticipationsAvecWinnersde2Matchs($matchs, $event1);
         }
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
         $em->flush();
@@ -1616,8 +1625,8 @@ class AdminController extends AbstractController
 
         $participationsDebut = EventUtils::classerParPoints($participationsDebut);
 
-        $participations = RencontreUtils::creerPoule3emePlace($event1, $participationsDebut,$matchs);
-        foreach($participations as $participation){
+        $participations = RencontreUtils::creerPoule3emePlace($event1, $participationsDebut, $matchs);
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
         $em->flush();
@@ -1633,12 +1642,12 @@ class AdminController extends AbstractController
     function creerPoule5emePlace($idEvent, EntityManagerInterface $em, Request $request)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
-        $roundName= $request->request->get('round');
+        $roundName = $request->request->get('round');
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
 
         $event1 = EventUtils::creationPhase($event, $round);
-        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $event1->setPhaseIn($event->getPhaseIn() + 1);
         $em->persist($event1);
 
         $participations = EventUtils::classerParPoints($participations);
@@ -1646,7 +1655,7 @@ class AdminController extends AbstractController
         //Récupération des derniers de la phase de poule
         $participations = RencontreUtils::creerPoule5emePlace($participations);
 
-        foreach ($participations as $particip){
+        foreach ($participations as $particip) {
             $participation = new Participation();
             $participation->setEvent($event1);
             $participation->setParticipant($particip->getParticipant());
@@ -1677,7 +1686,7 @@ class AdminController extends AbstractController
         $participations = EventUtils::classerParPoints($participations);
 
         $participations = RencontreUtils::creer3et5EmePlace($roundName, $event1, $participations);
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
         $em->flush();
@@ -1710,12 +1719,12 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
         $participations = [];
-        if($roundName === "1/4 finale consolante") {
-        $participations = RencontreUtils::participationsQuartFinaleConsolante18equipes($participationsPoule, $event1);
-        }else{
+        if ($roundName === "1/4 finale consolante") {
+            $participations = RencontreUtils::participationsQuartFinaleConsolante18equipes($participationsPoule, $event1);
+        } else {
 
         }
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
@@ -1750,21 +1759,21 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if(sizeof($participations) !== 14){
+        if (sizeof($participations) !== 14) {
             $participationsDemi = RencontreUtils::creerPhasesDemiFinale($participationsPoule, $event1, $poules, $participations);
 
-            foreach ($participationsDemi as $particip){
+            foreach ($participationsDemi as $particip) {
                 $em->persist($particip);
             }
-        }elseif (sizeof($poules) == 3 && sizeof($participations) === 14){
-                $participationsQuart = RencontreUtils::creerTournoiPrincipal($poules, $participationsPoule);
+        } elseif (sizeof($poules) == 3 && sizeof($participations) === 14) {
+            $participationsQuart = RencontreUtils::creerTournoiPrincipal($poules, $participationsPoule);
 
-                foreach ($participationsQuart as $particip) {
-                    $participation = new Participation();
-                    $participation->setEvent($event1);
-                    $participation->setParticipant($particip->getParticipant());
-                    $em->persist($participation);
-                }
+            foreach ($participationsQuart as $particip) {
+                $participation = new Participation();
+                $participation->setEvent($event1);
+                $participation->setParticipant($particip->getParticipant());
+                $em->persist($participation);
+            }
         }
 
         $em->flush();
@@ -1797,22 +1806,22 @@ class AdminController extends AbstractController
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
         //Attribution 17eme place pour le dernier de la poule de 5
-        if(sizeof($participations) === 17){
-            $dernier = array_splice($participationsPoule[0],sizeof($participationsPoule[0])-1,1);
+        if (sizeof($participations) === 17) {
+            $dernier = array_splice($participationsPoule[0], sizeof($participationsPoule[0]) - 1, 1);
             $dernier[0]->setPositionClassement(17);
-        }elseif(sizeof($participations) === 21){
-            $dernier = array_splice($participationsPoule[0],sizeof($participationsPoule[0])-1,1);
+        } elseif (sizeof($participations) === 21) {
+            $dernier = array_splice($participationsPoule[0], sizeof($participationsPoule[0]) - 1, 1);
             $dernier[0]->setPositionClassement(21);
         }
-        if(sizeof($participations) == 19 || sizeof($participations) == 20 || sizeof($participations) == 21){
+        if (sizeof($participations) == 19 || sizeof($participations) == 20 || sizeof($participations) == 21) {
             //Récupère les 3eme et 4eme
-            $participations = RencontreUtils::participations3emeet4eme($participationsPoule,$event1);
-        }else{
+            $participations = RencontreUtils::participations3emeet4eme($participationsPoule, $event1);
+        } else {
             //Récupérer les deux derniers de chaque poule
-            $participations = RencontreUtils::participationsDeuxderniersPoule($poules,$participationsPoule, $event1);
+            $participations = RencontreUtils::participationsDeuxderniersPoule($poules, $participationsPoule, $event1);
         }
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
@@ -1829,7 +1838,7 @@ class AdminController extends AbstractController
     function creer5et7et9et11emePlace($idEvent, EntityManagerInterface $em, Request $request)
     {
         $event = $em->getRepository(Event::class)->find($idEvent);
-        $roundName =  $request->request->get('round');
+        $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
 
@@ -1838,21 +1847,21 @@ class AdminController extends AbstractController
         $event1->setPhaseIn($event->getPhaseIn());
         $em->persist($event1);
         $participations = [];
-        if($roundName == "5ème place"){
+        if ($roundName == "5ème place") {
             array_splice($matchs, 0, 2);
             $participations[] = RencontreUtils::recupParticipationsAvecWinnersde2Matchs($matchs, $event1);
-        }elseif($roundName == "7ème place"){
+        } elseif ($roundName == "7ème place") {
             array_splice($matchs, 0, 2);
             $participations[] = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
-        }elseif ($roundName == "9ème place"){
+        } elseif ($roundName == "9ème place") {
             array_splice($matchs, 0, 4);
             $participations[] = RencontreUtils::recupParticipationsAvecWinnersde2Matchs($matchs, $event1);
-        }elseif($roundName == "11ème place"){
+        } elseif ($roundName == "11ème place") {
             array_splice($matchs, 0, 4);
             $participations[] = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
         }
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
@@ -1914,7 +1923,7 @@ class AdminController extends AbstractController
         $em->persist($event1);
 
         $participations = RencontreUtils::recupParticipationsAvecLoosersde2Matchs($matchs, $event1);
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
@@ -1957,7 +1966,7 @@ class AdminController extends AbstractController
             }
         }
         $participations = RencontreUtils::recupParticipationsAvecWinnersde2Matchs($matchs, $event1);
-        foreach($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
@@ -1986,8 +1995,8 @@ class AdminController extends AbstractController
             $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
         }
 
-            //Etabli le classement par nbr de points
-            $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+        //Etabli le classement par nbr de points
+        $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
         $m = 0;
         $k = 1;
@@ -2080,7 +2089,7 @@ class AdminController extends AbstractController
 
 
         $event1 = EventUtils::creationPhase($event, $round);
-        if($event->getPhaseIn() == 1){
+        if ($event->getPhaseIn() == 1) {
             $event1->setPhaseIn(2);
         }
         $event1->setPoule(false);
@@ -2096,9 +2105,9 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if(sizeof($participationsDebut) == 18){
+        if (sizeof($participationsDebut) == 18) {
             $participations = RencontreUtils::participations17emeplace($participationsPoule);
-        }else{
+        } else {
             $k = 0;
             if ($roundName === "11ème place") {
                 $k = 1;
@@ -2128,7 +2137,8 @@ class AdminController extends AbstractController
      * Fonction qui créé une poule de classement pour places 13-14-15
      * @Route("/creerPouleClassement15Equipes/{idEvent}", name="poule_classement_15", requirements={"idEvent": "\d+"})
      */
-    public function pouleClassement15Equipes($idEvent, EntityManagerInterface $em, Request $request){
+    public function pouleClassement15Equipes($idEvent, EntityManagerInterface $em, Request $request)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
@@ -2140,26 +2150,27 @@ class AdminController extends AbstractController
 
         $participations = RencontreUtils::recupParticipationsAvecLoosers($matchs, $event1);
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
         $em->flush();
 
-        return $this->redirectToRoute('admin_edit_event', ['id'=>$event1->getId()]);
+        return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
     }
 
     /**
      * Fonction qui créé une poule de classement pour places 17-18-19
      * @Route("/creerPouleClassement19Equipes/{idEvent}", name="poule_classement_19", requirements={"idEvent": "\d+"})
      */
-    public function pouleClassement19Equipes($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr){
+    public function pouleClassement19Equipes($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
 
         $event1 = EventUtils::creationPhase($event, $round);
-        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $event1->setPhaseIn($event->getPhaseIn() + 1);
         $event1->setPoule(false);
         $em->persist($event1);
 
@@ -2174,13 +2185,13 @@ class AdminController extends AbstractController
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
         //Récupérer les 5ème de poule
-        for($i=0;$i< sizeof($participationsPoule);$i++){
-            if(sizeof($participationsPoule[$i]) == 5){
-                $participations[] = $participationsPoule[$i][sizeof($participationsPoule[$i])-1];
+        for ($i = 0; $i < sizeof($participationsPoule); $i++) {
+            if (sizeof($participationsPoule[$i]) == 5) {
+                $participations[] = $participationsPoule[$i][sizeof($participationsPoule[$i]) - 1];
             }
         }
 
-        foreach ($participations as $particip){
+        foreach ($participations as $particip) {
             $participation = new Participation();
             $participation->setEvent($event1);
             $participation->setParticipant($particip->getParticipant());
@@ -2189,7 +2200,7 @@ class AdminController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('admin_edit_event', ['id'=>$event1->getId()]);
+        return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
     }
 
     /**
@@ -2205,8 +2216,8 @@ class AdminController extends AbstractController
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
 
         $event1 = EventUtils::creationPhase($event, $round);
-        $event1->setPhaseIn($event->getPhaseIn()+1);
-        if($event->getPhase() == 3){
+        $event1->setPhaseIn($event->getPhaseIn() + 1);
+        if ($event->getPhase() == 3) {
             $event1->setPoule(true);
         }
         $em->persist($event1);
@@ -2219,52 +2230,52 @@ class AdminController extends AbstractController
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
         $participations = RencontreUtils::participations2premiersPoule($participationsPoule, $event1);
 
-        if(sizeof($participationsDebut) == 15 || sizeof($participationsDebut) == 18){
+        if (sizeof($participationsDebut) == 15 || sizeof($participationsDebut) == 18) {
             //Récupérer les 2 meilleurs troisièmes
             //Récupérer tous le 3ème de chaque poule
             $les3emes = [];
-            for($i=0; $i < sizeof($participationsPoule); $i++){
+            for ($i = 0; $i < sizeof($participationsPoule); $i++) {
                 $les3emes[] = $participationsPoule[$i][2];
             }
             //Classer les 3emes par points
             $les3emes = EventUtils::classerParPoints($les3emes);
 
-            if($les3emes[0]->getPoule() === 'A' && $les3emes[1]->getPoule() === 'B'){
-                for($i=0; $i<2; $i++){
+            if ($les3emes[0]->getPoule() === 'A' && $les3emes[1]->getPoule() === 'B') {
+                for ($i = 0; $i < 2; $i++) {
                     $participation = new Participation();
                     $participation->setEvent($event1);
                     $participation->setParticipant($les3emes[$i]->getParticipant());
                     array_push($participations, $participation);
                 }
-            }elseif($les3emes[0]->getPoule() === 'A' && $les3emes[1]->getPoule() === 'C'){
-                for($i=0; $i<2; $i++){
+            } elseif ($les3emes[0]->getPoule() === 'A' && $les3emes[1]->getPoule() === 'C') {
+                for ($i = 0; $i < 2; $i++) {
                     $participation = new Participation();
                     $participation->setEvent($event1);
                     $participation->setParticipant($les3emes[$i]->getParticipant());
                     array_push($participations, $participation);
                 }
-            }elseif($les3emes[0]->getPoule() === 'B' && $les3emes[1]->getPoule() === 'A'){
-                for($i=1; $i=0; $i--){
+            } elseif ($les3emes[0]->getPoule() === 'B' && $les3emes[1]->getPoule() === 'A') {
+                for ($i = 1; $i = 0; $i--) {
                     $participation = new Participation();
                     $participation->setEvent($event1);
                     $participation->setParticipant($les3emes[$i]->getParticipant());
                     array_push($participations, $participation);
                 }
-            }elseif($les3emes[0]->getPoule() === 'B' && $les3emes[1]->getPoule() === 'C'){
-                for($i=1; $i=0; $i--){
+            } elseif ($les3emes[0]->getPoule() === 'B' && $les3emes[1]->getPoule() === 'C') {
+                for ($i = 1; $i = 0; $i--) {
                     $participation = new Participation();
                     $participation->setEvent($event1);
                     $participation->setParticipant($les3emes[$i]->getParticipant());
                     array_push($participations, $participation);
                 }
-            }elseif($les3emes[0]->getPoule() === 'C' && $les3emes[1]->getPoule() === 'A'){
-                for($i=1; $i=0; $i--){
+            } elseif ($les3emes[0]->getPoule() === 'C' && $les3emes[1]->getPoule() === 'A') {
+                for ($i = 1; $i = 0; $i--) {
                     $participation = new Participation();
                     $participation->setEvent($event1);
                     $participation->setParticipant($les3emes[$i]->getParticipant());
                     array_push($participations, $participation);
                 }
-            }elseif($les3emes[0]->getPoule() === 'C' && $les3emes[1]->getPoule() === 'B') {
+            } elseif ($les3emes[0]->getPoule() === 'C' && $les3emes[1]->getPoule() === 'B') {
                 for ($i = 0; $i < 2; $i++) {
                     $participation = new Participation();
                     $participation->setEvent($event1);
@@ -2274,7 +2285,7 @@ class AdminController extends AbstractController
             }
         }
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
         $em->flush();
@@ -2294,7 +2305,7 @@ class AdminController extends AbstractController
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
 
         $event1 = EventUtils::creationPhase($event, $round);
-        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $event1->setPhaseIn($event->getPhaseIn() + 1);
         $em->persist($event1);
 
         $poules = $em->getRepository(Participation::class)->nbrPoules($idEvent);
@@ -2305,7 +2316,7 @@ class AdminController extends AbstractController
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
         $participations = RencontreUtils::creerParticipationsHuitemeFinale16Equipes($participationsPoule, $event1);
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
         $em->flush();
@@ -2318,21 +2329,22 @@ class AdminController extends AbstractController
      * Fonction qui créé tournoi consolante 3 phases
      * @Route("/creerTournoiConsolante3Phases/{idEvent}", name="tournoi_consolante_3phases", requirements={"idEvent": "\d+"})
      */
-    public function tournoiConsolante3phases($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr){
+    public function tournoiConsolante3phases($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
 
         $event1 = EventUtils::creationPhase($event, $round);
-        if($roundName == "Barrage"){
+        if ($roundName == "Barrage") {
             $event1->setPhaseIn($event->getPhaseIn());
             $event1->setPoule(false);
             $event1->setPoule(false);
-        }elseif($roundName == "1/4 finale consolante"){
-            $event1->setPhaseIn($event->getPhaseIn()+1);
-        }else{
-            $event1->setPhaseIn($event->getPhaseIn()+1);
+        } elseif ($roundName == "1/4 finale consolante") {
+            $event1->setPhaseIn($event->getPhaseIn() + 1);
+        } else {
+            $event1->setPhaseIn($event->getPhaseIn() + 1);
             $event1->setPoule(true);
         }
         $em->persist($event1);
@@ -2347,60 +2359,64 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if($roundName == "Barrage"){
+        if ($roundName == "Barrage") {
             //Récupérer les 3emes des poules de 4
-            for($i=1; $i<sizeof($participationsPoule);$i++){
+            for ($i = 1; $i < sizeof($participationsPoule); $i++) {
                 $participation = new Participation();
                 $participation->setEvent($event1);
                 $participation->setParticipant($participationsPoule[$i][2]->getParticipant());
                 $participations[] = $participation;
             }
-        }elseif($roundName == "1/4 finale consolante" || sizeof($participations) == 16 || sizeof($participations) == 14){
+        } elseif ($roundName == "1/4 finale consolante" || sizeof($participations) == 16 || sizeof($participations) == 14) {
             //Récupérer les 2 derniers de chaque poule
-            $participations = RencontreUtils::participationsDeuxderniersPoule($poules,$participationsPoule,$event1);
-        }elseif(sizeof($participations) == 7){
+            $participations = RencontreUtils::participationsDeuxderniersPoule($poules, $participationsPoule, $event1);
+        } elseif (sizeof($participations) == 7) {
             //Récupérer les 3ème et 4eme de poule de phase 1
-            $participations = RencontreUtils::participations3emeet4emePoule7($participationsPoule,$event1);
-        }elseif(sizeof($participations) == 8 || sizeof($participations) == 12){
-            $participations = RencontreUtils::participations3emeet4eme($participationsPoule,$event1);
-        }elseif(sizeof($participations) ==9){
-            $participations = RencontreUtils::participations4emeet5emePoule9($participationsPoule,$event1);
-        }elseif(sizeof($participations) == 13){
+            $participations = RencontreUtils::participations3emeet4emePoule7($participationsPoule, $event1);
+        } elseif (sizeof($participations) == 8 || sizeof($participations) == 12) {
+            $participations = RencontreUtils::participations3emeet4eme($participationsPoule, $event1);
+        } elseif (sizeof($participations) == 9) {
+            $participations = RencontreUtils::participations4emeet5emePoule9($participationsPoule, $event1);
+        } elseif (sizeof($participations) == 13) {
             //Récupération des 4et5emes
-            $participations = RencontreUtils::participations4emeet5emePoule9($participationsPoule,$event1);
+            $participations = RencontreUtils::participations4emeet5emePoule9($participationsPoule, $event1);
             //Récupération du perdant du barrage
             $roundBarrage = $em->getRepository(Round::class)->findOneBy(['name' => "Barrage"]);
-            $matchBarrage = $em->getRepository(Match::class)->findMatchesWithAnEventAndRound($event->getName(),$roundBarrage, $event->getCompetition());
+            $matchBarrage = $em->getRepository(Match::class)->findMatchesWithAnEventAndRound($event->getName(), $roundBarrage, $event->getCompetition());
             $participation = new Participation();
             $participation->setEvent($event1);
             $participation->setParticipant($matchBarrage[0]->getLooser()->getParticipant());
             //Ajouter le perdant du barrage aux participations
             array_push($participations, $participation);
-        }elseif (sizeof($participations) ==17){
+        } elseif (sizeof($participations) == 17) {
             $participations = RencontreUtils::participationsTournoiConsolante17($participationsPoule, $event1);
+        } elseif (sizeof($participations) == 18) {
+            //Récupération des 4eme et 5eme des poules
+            $participations = RencontreUtils::participations4emeet5emePoule18($participationsPoule, $event1);
         }
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
         $em->flush();
 
-        return $this->redirectToRoute('admin_edit_event', ['id'=>$event1->getId()]);
+        return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
     }
 
     /**
      * Fonction qui créé tournoi principal 3 phases
      * @Route("/creerTournoiPrincipal3Phases/{idEvent}", name="tournoi_principal_3phases", requirements={"idEvent": "\d+"})
      */
-    public function tournoiPrincipal3phases($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr){
+    public function tournoiPrincipal3phases($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
 
         $event1 = EventUtils::creationPhase($event, $round);
-        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $event1->setPhaseIn($event->getPhaseIn() + 1);
         $event1->setPoule(true);
         $em->persist($event1);
 
@@ -2413,46 +2429,47 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if(sizeof($participations) == 7 || sizeof($participations) == 8 || sizeof($participations) == 12 || sizeof($participations) == 16 || sizeof($participations) == 17){
+        if (sizeof($participations) == 7 || sizeof($participations) == 8 || sizeof($participations) == 12 || sizeof($participations) == 16 || sizeof($participations) == 17) {
             //Récupérer les 1er et 2eme de poule de phase 1
-            $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
-        }elseif(sizeof($participations) == 9){
-            $participations = RencontreUtils::participations3premiersPoule($participationsPoule,$event1);
-        }elseif(sizeof($participations) == 13){
+            $participations = RencontreUtils::participations2premiersPoule($participationsPoule, $event1);
+        } elseif (sizeof($participations) == 9 || sizeof($participations) == 18) {
+            $participations = RencontreUtils::participations3premiersPoule($participationsPoule, $event1);
+        } elseif (sizeof($participations) == 13) {
             //Récupération des trois premiers de la poule de 5 puis 2 premiers des poules suivantes
             $participations = RencontreUtils::participationsTournoiprincipal3et2premiers($participationsPoule, $event1);
             //Récupération du gagnant du barrage
             $roundBarrage = $em->getRepository(Round::class)->findOneBy(['name' => "Barrage"]);
-            $matchBarrage = $em->getRepository(Match::class)->findMatchesWithAnEventAndRound($event->getName(),$roundBarrage, $event->getCompetition());
+            $matchBarrage = $em->getRepository(Match::class)->findMatchesWithAnEventAndRound($event->getName(), $roundBarrage, $event->getCompetition());
             $participation = new Participation();
             $participation->setEvent($event1);
             $participation->setParticipant($matchBarrage[0]->getWinner()->getParticipant());
             //Ajouter le gagnant du barrage aux participations
             array_push($participations, $participation);
-        }elseif(sizeof($participations) == 14){
+        } elseif (sizeof($participations) == 14) {
             $participations = RencontreUtils::participationsTournoiPrincipal14($participationsPoule, $event1);
         }
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
         $em->flush();
 
-        return $this->redirectToRoute('admin_edit_event', ['id'=>$event1->getId()]);
+        return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
     }
 
     /**
      * Fonction qui créé places 3-5-7-finale phase3
      * @Route("/creerPlacesFinalePhase3/{idEvent}", name="places_finale_phase3", requirements={"idEvent": "\d+"})
      */
-    public function placesfinalePhase3($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr){
+    public function placesfinalePhase3($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
 
         $event1 = EventUtils::creationPhase($event, $round);
-        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $event1->setPhaseIn($event->getPhaseIn() + 1);
         $event1->setPoule(false);
         $em->persist($event1);
 
@@ -2466,30 +2483,30 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if($roundName == "Finale"){
+        if ($roundName == "Finale") {
             //Récupérer le 1er et 2eme de poule
-            $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
-        }elseif($roundName == "3ème place"){
+            $participations = RencontreUtils::participations2premiersPoule($participationsPoule, $event1);
+        } elseif ($roundName == "3ème place") {
             //Récupérer les deux derniers de la poule
             $participations = RencontreUtils::participationsDeuxderniersPoule($poules, $participationsPoule, $event1);
-        }elseif($roundName == "5ème place"){
+        } elseif ($roundName == "5ème place") {
             //Récupérer les deux derniers de la poule
             $participations = RencontreUtils::participations2premiersPoule($participationsPoule, $event1);
-        }elseif($roundName == "7ème place"){
+        } elseif ($roundName == "7ème place") {
             //Récupérer les deux derniers de la poule
             $participations = RencontreUtils::participationsDeuxderniersPoule($poules, $participationsPoule, $event1);
-        }elseif($roundName == "11ème place"){
+        } elseif ($roundName == "11ème place" || $roundName == "15ème place") {
             //Récupérer les deuxièmes des poules
             $participations = RencontreUtils::participationsDeuxiemesChaquePoule($participationsPoule, $event1);
-        }elseif($roundName == "13ème place"){
+        } elseif ($roundName == "13ème place") {
             //Récupérer les 2 moins bons deuxièmes des poules
             $participations = RencontreUtils::participations2moinsBonsdesDeuxiemes($participationsPoule, $event1);
-        }elseif ($roundName = "1/2 finale consolante"){
+        } elseif ($roundName = "1/2 finale consolante") {
             //Récupérer les 1er des poules
             $participations = RencontreUtils::participationsPremiersChaquePoule($participationsPoule, $event1);
             //Récupérer le meilleur deuxieme
-            for($i=0; $i<sizeof($participationsPoule);$i++){
-                for($j=1;  $j<2;$j++){
+            for ($i = 0; $i < sizeof($participationsPoule); $i++) {
+                for ($j = 1; $j < 2; $j++) {
                     $deuxiemes[] = $participationsPoule[$i][$j];
                 }
             }
@@ -2502,20 +2519,21 @@ class AdminController extends AbstractController
             array_push($participations, $participation);
         }
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
         $em->flush();
 
-        return $this->redirectToRoute('admin_edit_event', ['id'=>$event1->getId()]);
+        return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
     }
 
     /**
      * Fonction qui créé places honneur phase3
      * @Route("/creerPlaceHonneurPhase3/{idEvent}", name="places_honneur_phase3", requirements={"idEvent": "\d+"})
      */
-    public function placesHonneurPhase3($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr){
+    public function placesHonneurPhase3($idEvent, EntityManagerInterface $em, Request $request, ParticipationRepository $pr)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
         $roundName = $request->request->get('round');
         $round = $em->getRepository(Round::class)->findOneBy(["name" => $roundName]);
@@ -2523,7 +2541,7 @@ class AdminController extends AbstractController
         $participationsDebut = $pr->findParticipationsWithAnEventAndRound($event->getName(), $roundPhase1, $event->getCompetition());
 
         $event1 = EventUtils::creationPhase($event, $round);
-        $event1->setPhaseIn($event->getPhaseIn()+1);
+        $event1->setPhaseIn($event->getPhaseIn() + 1);
         $event1->setPoule(false);
         $em->persist($event1);
 
@@ -2537,54 +2555,66 @@ class AdminController extends AbstractController
         //Etabli le classement par nbr de points
         $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
 
-        if(($roundName == "1/2 finale" || $roundName == "1/2 finale consolante") &&(sizeof($participationsDebut) == 15 || sizeof($participationsDebut) == 16 || sizeof($participationsDebut) == 17)){
-                //Récupérer le 1er et 2eme de poule
-                $participations1 = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
-                //Récupérer le 3eme et 4eme de poule
-                $participations2 = RencontreUtils::participations3emeet4eme($participationsPoule, $event1);
-                $participations[] = $participations1;
-                $participations[] = $participations2;
+        if (($roundName == "1/2 finale" || $roundName == "1/2 finale consolante") && (sizeof($participationsDebut) == 15 || sizeof($participationsDebut) == 16 || sizeof($participationsDebut) == 17)) {
+            //Récupérer le 1er et 2eme de poule
+            $participations1 = RencontreUtils::participations2premiersPoule($participationsPoule, $event1);
+            //Récupérer le 3eme et 4eme de poule
+            $participations2 = RencontreUtils::participations3emeet4eme($participationsPoule, $event1);
+            $participations[] = $participations1;
+            $participations[] = $participations2;
 
-                foreach ($participations as $participation) {
-                    for ($i = 0; $i < sizeof($participation); $i++) {
-                        $em->persist($participation[$i]);
-                    }
-                    $em->flush();
+            foreach ($participations as $participation) {
+                for ($i = 0; $i < sizeof($participation); $i++) {
+                    $em->persist($participation[$i]);
                 }
-                return $this->redirectToRoute('admin_edit_event', ['id'=>$event1->getId()]);
+                $em->flush();
             }
-        elseif($roundName == "1/2 finale"){
-                //Récupérer le 1er et 2eme de poule
-                $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
-        }elseif($roundName == "1/2 finale consolante"){
-            //Récupérer les deux derniers de la poule
-            $participations = RencontreUtils::participations2premiersPoule($participationsPoule,$event1);
-        }elseif($roundName == "5ème place" ||$roundName == "11ème place" || $roundName == "13ème place" ){
+            return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
+        } elseif ($roundName == "1/2 finale" && sizeof($participationsDebut) == 18) {
+            for ($i = 0; $i < sizeof($participationsPoule); $i++) {
+                for ($j = 0; $j < sizeof($participationsPoule[$i]); $j++) {
+                    $participation = new Participation();
+                    $participation->setEvent($event1);
+                    $participation->setParticipant($participationsPoule[$i][$j]->getParticipant());
+                    $participations[] = $participation;
+                }
+            }
+        } elseif ($roundName == "1/2 finale") {
+            //Récupérer le 1er et 2eme de poule
+            $participations = RencontreUtils::participations2premiersPoule($participationsPoule, $event1);
+        } elseif ($roundName == "1/2 finale consolante") {
+            //Récupérer les deux premiers de la poule
+            $participations = RencontreUtils::participations2premiersPoule($participationsPoule, $event1);
+        } elseif ($roundName == "13ème place" && sizeof($participationsDebut) == 18) {
+            //Récupérer les deux premiers de la poule
+            $participations = RencontreUtils::participationsPremiersChaquePoule($participationsPoule, $event1);
+        } elseif ($roundName == "5ème place" || $roundName == "11ème place" || $roundName == "13ème place") {
             //Récupérer les 3 emes des poules
             $participations = RencontreUtils::participations3emeChaquePoule($participationsPoule, $event1);
-        }elseif($roundName == "7ème place" || $roundName == "Poule de classement"){
+        } elseif ($roundName == "7ème place" || $roundName == "Poule de classement" || $roundName == "17ème place") {
             //Récupérer les derniers de chaque poule
             $participations = RencontreUtils::participationsDerniersChaquePoule($participationsPoule, $event1);
-        }elseif($roundName == "9ème place"){
+        } elseif ($roundName == "9ème place") {
             //Récupérer les premiers de chaque poule
             $participations = RencontreUtils::participationsPremiersChaquePoule($participationsPoule, $event1);
         }
 
-        foreach ($participations as $participation){
+        foreach ($participations as $participation) {
             $em->persist($participation);
         }
 
         $em->flush();
 
-        return $this->redirectToRoute('admin_edit_event', ['id'=>$event1->getId()]);
+        return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
     }
 
     /**
      * @Route("/genererResultats/{idEvent}", name="generer_resultats", requirements={"idEvent": "\d+"})
      */
-    public function genererResultats($idEvent, EntityManagerInterface $em){
+    public function genererResultats($idEvent, EntityManagerInterface $em)
+    {
         $event = $em->getRepository(Event::class)->find($idEvent);
-        $matchs= $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
+        $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
 
         EventUtils::genererResultatsMatchsAleatoire($matchs);
 
@@ -2592,7 +2622,6 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_see_planning_meets', ["idEvent" => $idEvent]);
     }
-
 
 
 }
