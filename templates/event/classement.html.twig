@@ -66,7 +66,7 @@
                                 Créer 7ème place
                             </button>
                         </form>
-                    {% elseif participationsDebut|length == 19 or participationsDebut|length == 20%}
+                    {% elseif participationsDebut|length >= 19 %}
                         <form method="post"
                               action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
                             <input type="hidden" name="round" value="13ème place">
@@ -91,6 +91,15 @@
                         {% if participationsDebut|length == 20 %}
                             <form method="post"
                                   action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="19ème place">
+                                <button class="btn btn-secondary">
+                                    Créer 19ème place
+                                </button>
+                            </form>
+                        {% endif %}
+                        {% if participationsDebut|length == 21 %}
+                            <form method="post"
+                                  action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
                                 <input type="hidden" name="round" value="19ème place">
                                 <button class="btn btn-secondary">
                                     Créer 19ème place
@@ -168,7 +177,7 @@
                                 Créer 1/2 finale
                             </button>
                         </form>
-                        {% elseif participations|length == 9 %}
+                        {% elseif participations|length == 9 and not participationsDebut|length == 21 %}
                             <form method="post"
                                   action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
                                 <input type="hidden" name="round" value="1/2 finale consolante">

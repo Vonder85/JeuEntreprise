@@ -399,6 +399,12 @@ class RencontreUtils
                 $poules[] = array_slice($participations, 0, ($count + ($i===0 || $i === 1 ? 1 : 0)));
                 array_splice($participations, 0, ($count + ($i===0 || $i === 1 ? 1 : 0)));
             }
+        }elseif(sizeof($participations) === 21 && $nbPoule == 5) {
+            // Création de la poule de 5 puis des poules de 4
+            for($i=0; $i < $nbPoule; $i++){
+                $poules[] = array_slice($participations, 0, ($count + ($i===0 ? 1 : 0)));
+                array_splice($participations, 0, ($count + ($i===0? 1 : 0)));
+            }
         }else {
             for ($i = 0; $i < $nbPoule; $i++) {
                 $poules[] = array_slice($participations, 0, $count);
@@ -422,6 +428,25 @@ class RencontreUtils
             $k++;
             $h=$k;
         }
+        dump($poules);
+        return $poules;
+    }
+
+    public static function affectationPoulesConsolante9phase3($nbPoule, $participations, $count){
+        $poules = [];
+        $h = 0;
+        $k = 0;
+        for ($i = 0; $i < $nbPoule; $i++) {
+
+            for($j=0; $j<floor($count);$j++){
+                $poules[$i][] = array_slice($participations, $h, 1);
+                $h = $h + $nbPoule;
+            }
+            $k++;
+            $h=$k;
+        }
+        $poules[0][] = array_splice($participations, sizeof($participations)-1, 1);
+        dump($poules);
         return $poules;
     }
 
@@ -932,6 +957,19 @@ class RencontreUtils
         return $participations;
     }
 
+    public static function participations4emeChaquePoule($participationsPoule, $event){
+        $participations = [];
+        //Récupération du 4eme de chaque poule
+        for($i=0; $i < sizeof($participationsPoule); $i++){
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($participationsPoule[$i][3]->getParticipant());
+            $participations[] = $participation;
+        }
+
+        return $participations;
+    }
+
     public static function participations5emeChaquePoule($participationsPoule){
         $participations = [];
         //Récupération du dernier de chaque poule
@@ -1022,6 +1060,31 @@ class RencontreUtils
         return $participations;
     }
 
+    public static function participationsTournoiConsolante21($participationsPoule, $event){
+        for($i=0; $i<sizeof($participationsPoule);$i++){
+            for($j=1; $i ==0 ? $j<3 : $j<2;$j++){
+                //Récupération 4eme et 5eme chaque poule
+                $participation = new Participation();
+                $participation->setEvent($event);
+                $participation->setParticipant($participationsPoule[$i][sizeof($participationsPoule[$i])-$j]->getParticipant());
+                $participations[] = $participation;
+            }
+        }
+        //Récupérer les 3 moins bons 3eme
+        //Recupere tous les troisiemes
+        $troisiemes = RencontreUtils::participations3emeChaquePoule($participationsPoule, $event);
+        //Classer les troisiemes
+        $troisiemes = EventUtils::classerParPoints($troisiemes);
+        //Récupérer les 3 moins bons
+        for($i = 2; $i < sizeof($troisiemes); $i++){
+            $participation = new Participation();
+            $participation->setEvent($event);
+            $participation->setParticipant($troisiemes[$i]->getParticipant());
+            array_push($participations, $participation);
+        }
+        return $participations;
+    }
+
     public static function participations2moinsBonsdesDeuxiemes($participationsPoule, $event){
         for($i=0; $i<sizeof($participationsPoule);$i++){
             for($j=1;  $j<2;$j++){
@@ -1072,28 +1135,4 @@ class RencontreUtils
         return $matchs;
     }
 
-    public static function rencontresPlacesFinales3phases18($matchs, $event, $roundName){
-        $participations = [];
-
-        if($roundName === "11ème place"){
-            for ($i = 0; $i < 2; $i++) {
-                //On garde juste les deux derniers matchs
-                array_splice($matchs, 0, 4);
-                $participation = new Participation();
-                $participation->setEvent($event);
-                $participation->setParticipant($matchs[$i]->getLooser()->getParticipant());
-                $participations[] = $participation;
-            }
-        }elseif($roundName === "9ème place"){
-            for ($i = 0; $i < 2; $i++) {
-                //On garde juste les deux derniers matchs
-                array_splice($matchs, 0, 4);
-                $participation = new Participation();
-                $participation->setEvent($event);
-                $participation->setParticipant($matchs[$i]->getWinner()->getParticipant());
-                $participations[] = $participation;
-            }
-        }
-        return $participations;
-    }
 }
