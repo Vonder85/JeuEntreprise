@@ -23,6 +23,11 @@ class Discipline
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $sets;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -38,6 +43,22 @@ class Discipline
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSets()
+    {
+        return $this->sets;
+    }
+
+    /**
+     * @param mixed $sets
+     */
+    public function setSets($sets): void
+    {
+        $this->sets = $sets;
     }
 
     public function __construct()

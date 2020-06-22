@@ -57,6 +57,19 @@ class MatchRepository extends ServiceEntityRepository
         $qb->leftJoin('m.participation1', 'p1');
         return $qb->getQuery()->execute();
     }
+
+    /**
+     * Fonction qui permet de récuperer une discipline avec l'id d'un match
+     */
+    public function getDisicplineWithMatch($idMatch){
+        $qb = $this->createQueryBuilder('m');
+        $qb->andWhere("m.id = :idMatch")
+            ->setParameter("idMatch", $idMatch);
+        $qb->leftJoin("m.event", 'e');
+        $qb->leftJoin("e.discipline", "d");
+        $qb->select("m.id, d.name, d.sets");
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Match[] Returns an array of Match objects
     //  */

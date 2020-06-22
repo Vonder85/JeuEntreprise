@@ -5,10 +5,11 @@ use App\Entity\Event;
 
 class EventUtils
 {
-    public static function setResult($match, $score1, $score2)
+    public static function setResult($match, $score1, $score2, $detail)
     {
         $match->setScoreTeam1($score1);
         $match->setScoreTeam2($score2);
+        $match->setDetail($detail);
         $match->getParticipation1()->setPointsMarques($match->getParticipation1()->getPointsMarques()+$score1);
         $match->getParticipation1()->setPointsEncaisses($match->getParticipation1()->getPointsEncaisses()+$score2);
         $match->getParticipation2()->setPointsMarques($match->getParticipation2()->getPointsMarques()+$score2);
@@ -16,7 +17,42 @@ class EventUtils
 
         $match->setWinner(self::getWinner($match, $score1, $score2));
         $match->setLooser(self::getLooser($match, $score1, $score2));
+    }
 
+    public static function setResultSportsSets($match, $score1, $score2, $detail)
+    {
+        $match->setScoreTeam1($score1);
+        $match->setScoreTeam2($score2);
+        $match->setDetail($detail);
+        $scoreDetail = self::recupererDetailEquipeSportsSets($detail);
+
+        $pointsEquipe1 = array_sum($scoreDetail[0]);
+        $pointsEquipe2 = array_sum($scoreDetail[1]);
+
+        $match->getParticipation1()->setPointsMarques($match->getParticipation1()->getPointsMarques()+$pointsEquipe1);
+        $match->getParticipation1()->setPointsEncaisses($match->getParticipation1()->getPointsEncaisses()+$pointsEquipe2);
+        $match->getParticipation2()->setPointsMarques($match->getParticipation2()->getPointsMarques()+$pointsEquipe2);
+        $match->getParticipation2()->setPointsEncaisses($match->getParticipation1()->getPointsEncaisses()+$pointsEquipe1);
+
+        $match->setWinner(self::getWinner($match, $score1, $score2));
+        $match->setLooser(self::getLooser($match, $score1, $score2));
+    }
+
+    public static function recupererDetailEquipeSportsSets($detail){
+        $detailExplode = [];
+        $details = explode(" ", $detail);
+        foreach ($details as $detail){
+            $detailExplode[] = explode("/", $detail);
+        }
+
+        for($i=0; $i<sizeof($detailExplode); $i++){
+            $scoresDetail1[] = $detailExplode[$i][0];
+            $scoresDetail2[] = $detailExplode[$i][1];
+        }
+
+        $scoreDetails[] = $scoresDetail1;
+        $scoreDetails[] = $scoresDetail2;
+        return $scoreDetails;
     }
 
     public static function getWinner($match, $score1, $score2)

@@ -13,6 +13,9 @@
             <th>Score équipe 1</th>
             <th>Equipe 2</th>
             <th>Score équipe 2</th>
+            {% if match.event.discipline.sets == true %}
+                <th scope="col">Détail</th>
+            {% endif %}
         </thead>
         <tbody>
 
@@ -20,6 +23,9 @@
         <td><input type="number" name="score1"></td>
         <td>{{ match.participation2.participant.name }}</td>
         <td><input type="number" name="score2"></td>
+        {% if match.event.discipline.sets == true %}
+            <td><input type="text" name="detail"></td>
+        {% endif %}
         </tbody>
     </table>
     <button type="submit" class="btn btn-secondary">Valider</button>

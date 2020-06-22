@@ -40,7 +40,7 @@ class Match
     private $field;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $detail;
 

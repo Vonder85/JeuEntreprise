@@ -297,6 +297,9 @@
                                 <th scope="col">Terrain</th>
                                 <th scope="col">Heure</th>
                                 <th scope="col">Score</th>
+                                {% if event.discipline.sets == true %}
+                                    <th scope="col">Détail</th>
+                                    {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -308,6 +311,9 @@
                                         <td>{{ match.field }}</td>
                                         <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                         <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        {% if event.discipline.sets == true %}
+                                            <td>{{match.detail  }}</td>
+                                        {% endif %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -323,6 +329,9 @@
                                 <th scope="col">Terrain</th>
                                 <th scope="col">Heure</th>
                                 <th scope="col">Score</th>
+                                {% if event.discipline.sets == true %}
+                                    <th scope="col">Détail</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -334,6 +343,9 @@
                                         <td>{{ match.field }}</td>
                                         <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                         <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        {% if event.discipline.sets == true %}
+                                            <td>{{match.detail  }}</td>
+                                        {% endif %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -349,6 +361,9 @@
                                 <th scope="col">Terrain</th>
                                 <th scope="col">Heure</th>
                                 <th scope="col">Score</th>
+                                {% if event.discipline.sets == true %}
+                                    <th scope="col">Détail</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -360,6 +375,9 @@
                                         <td>{{ match.field }}</td>
                                         <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                         <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        {% if event.discipline.sets == true %}
+                                            <td>{{match.detail  }}</td>
+                                        {% endif %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -375,6 +393,9 @@
                                 <th scope="col">Terrain</th>
                                 <th scope="col">Heure</th>
                                 <th scope="col">Score</th>
+                                {% if event.discipline.sets == true %}
+                                    <th scope="col">Détail</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -386,6 +407,9 @@
                                         <td>{{ match.field }}</td>
                                         <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                         <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        {% if event.discipline.sets == true %}
+                                            <td>{{match.detail  }}</td>
+                                        {% endif %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -401,6 +425,9 @@
                                 <th scope="col">Terrain</th>
                                 <th scope="col">Heure</th>
                                 <th scope="col">Score</th>
+                                {% if event.discipline.sets == true %}
+                                    <th scope="col">Détail</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -412,6 +439,9 @@
                                         <td>{{ match.field }}</td>
                                         <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                         <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        {% if event.discipline.sets == true %}
+                                            <td>{{match.detail  }}</td>
+                                        {% endif %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -427,6 +457,9 @@
                                 <th scope="col">Terrain</th>
                                 <th scope="col">Heure</th>
                                 <th scope="col">Score</th>
+                                {% if event.discipline.sets == true %}
+                                    <th scope="col">Détail</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -438,6 +471,9 @@
                                         <td>{{ match.field }}</td>
                                         <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                         <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                        {% if event.discipline.sets == true %}
+                                            <td>{{match.detail  }}</td>
+                                        {% endif %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -456,6 +492,9 @@
                             <th scope="col">Terrain</th>
                             <th scope="col">Heure</th>
                             <th scope="col">Score</th>
+                            {% if event.discipline.sets == true %}
+                                <th scope="col">Détail</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -466,6 +505,9 @@
                                 <td>{{ match.field }}</td>
                                 <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                 <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                {% if event.discipline.sets == true %}
+                                    <td>{{match.detail  }}</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -480,6 +522,9 @@
                             <th scope="col">Terrain</th>
                             <th scope="col">Heure</th>
                             <th scope="col">Score</th>
+                            {% if event.discipline.sets == true%}
+                                <th scope="col">Détail</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -490,6 +535,9 @@
                                 <td>{{ match.field }}</td>
                                 <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                 <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                {% if event.discipline.sets == true %}
+                                    <td>{{ match.detail }}</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

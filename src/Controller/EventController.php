@@ -86,9 +86,16 @@ class EventController extends AbstractController
         $match = $mr->find($idMatch);
         $score1 = $request->request->get('score1');
         $score2 = $request->request->get('score2');
+        $detail = $request->request->get('detail');
+        $discipline = $mr->getDisicplineWithMatch($idMatch);
 
-        //Enregistre les résultats
-        EventUtils::setResult($match, $score1, $score2);
+        if($discipline[0]['sets'] === true){
+            EventUtils::setResultSportsSets($match,$score2,$score2,$detail);
+        }else{
+            //Enregistre les résultats
+            EventUtils::setResult($match, $score1, $score2, $detail);
+        }
+
 
         switch ($match->getEvent()->getRound()->getName()){
             case "Finale": $match->getWinner()->setPositionClassement(1);
