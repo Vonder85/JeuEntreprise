@@ -1057,7 +1057,7 @@ class RencontreUtils
         return $participations;
     }
 
-    public static function rencontresDemiFinales3phases18et19($participations, $event){
+    public static function rencontresDemiFinales3phases1819et20($participations, $event){
         $matchs = [];
         $j = 0;
         for ($i = 0; $i < sizeof($participations)/2; $i++) {
