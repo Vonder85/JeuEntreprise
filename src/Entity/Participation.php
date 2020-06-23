@@ -78,6 +78,16 @@ class Participation
      */
     private $pointsEncaisses;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $setsMarques;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $setsEncaisses;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -285,6 +295,38 @@ class Participation
     public function setPointsEncaisses($pointsEncaisses): void
     {
         $this->pointsEncaisses = $pointsEncaisses;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSetsMarques()
+    {
+        return $this->setsMarques;
+    }
+
+    /**
+     * @param mixed $setsMarques
+     */
+    public function setSetsMarques($setsMarques): void
+    {
+        $this->setsMarques = $setsMarques;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSetsEncaisses()
+    {
+        return $this->setsEncaisses;
+    }
+
+    /**
+     * @param mixed $setsEncaisses
+     */
+    public function setSetsEncaisses($setsEncaisses): void
+    {
+        $this->setsEncaisses = $setsEncaisses;
     }
 
     /**

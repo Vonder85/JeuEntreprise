@@ -7,7 +7,7 @@
     <h2>{{ event.name }}</h2>
     <div class="row">
         <div class="col-6">
-            {% if not event.poule %}
+            {% if not event.poule and event.phase > 1 %}
                 {% if event.round.name is same as ("Phase de poules 1") %}
                     <form method="post" action="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
                         <label for="terrains">A partir du terrain</label><br>
@@ -97,7 +97,7 @@
                             </button>
                         </form>
                     {% elseif participations|length > 2 %}
-                        {% if event.round.name is same as ('1/2 finale') or ('1/2 finale consolante') %}
+                        {% if event.round.name is same as ('1/2 finale') or ('1/2 finale consolante') and event.phase > 1%}
 
                             <form method="post"
                                   action="{{ path('admin_creation_rencontres_demi_finale', {"idEvent": event.id}) }}">

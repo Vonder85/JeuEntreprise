@@ -5,11 +5,10 @@ use App\Entity\Event;
 
 class EventUtils
 {
-    public static function setResult($match, $score1, $score2, $detail)
+    public static function setResult($match, $score1, $score2)
     {
         $match->setScoreTeam1($score1);
         $match->setScoreTeam2($score2);
-        $match->setDetail($detail);
         $match->getParticipation1()->setPointsMarques($match->getParticipation1()->getPointsMarques()+$score1);
         $match->getParticipation1()->setPointsEncaisses($match->getParticipation1()->getPointsEncaisses()+$score2);
         $match->getParticipation2()->setPointsMarques($match->getParticipation2()->getPointsMarques()+$score2);
@@ -24,6 +23,18 @@ class EventUtils
         $match->setScoreTeam1($score1);
         $match->setScoreTeam2($score2);
         $match->setDetail($detail);
+
+        $detailExplode = self::recupererPointsSetsEquipeSportsSets($detail);
+        for($i=0; $i<sizeof($detailExplode); $i++){
+            if($detailExplode[$i][0] > $detailExplode[$i][1]){
+                $match->getParticipation1()->setSetsMarques($match->getParticipation1()->getSetsMarques()+1);
+                $match->getParticipation2()->setSetsEncaisses($match->getParticipation2()->getSetsEncaisses()+1);
+            }elseif($detailExplode[$i][0] < $detailExplode[$i][1]){
+                $match->getParticipation2()->setSetsMarques($match->getParticipation2()->getSetsMarques()+1);
+                $match->getParticipation1()->setSetsEncaisses($match->getParticipation1()->getSetsEncaisses()+1);
+            }
+        }
+
         $scoreDetail = self::recupererDetailEquipeSportsSets($detail);
 
         $pointsEquipe1 = array_sum($scoreDetail[0]);
@@ -38,12 +49,47 @@ class EventUtils
         $match->setLooser(self::getLooser($match, $score1, $score2));
     }
 
+    public static function setResultRencontre($rencontre, $score1, $score2, $detail)
+    {
+        $rencontre->setScoreTeam1($score1);
+        $rencontre->setScoreTeam2($score2);
+        $rencontre->setDetail($detail);
+
+
+                $rencontre->getMatch()->setSetsTeam1($rencontre->getMatch()->getSetsTeam1()+ $score1);
+                $rencontre->getMatch()->setSetsTeam2($rencontre->getMatch()->getSetsTeam2()+ $score2);
+                $rencontre->getMatch()->getParticipation1()->setSetsMarques($rencontre->getMatch()->getParticipation1()->getSetsMarques() + $score1 );
+                $rencontre->getMatch()->getParticipation2()->setSetsEncaisses($rencontre->getMatch()->getParticipation2()->getSetsEncaisses() + $score1);
+
+                $rencontre->getMatch()->getParticipation2()->setSetsMarques($rencontre->getMatch()->getParticipation2()->getSetsMarques() + $score2);
+                $rencontre->getMatch()->getParticipation1()->setSetsEncaisses($rencontre->getMatch()->getParticipation1()->getSetsEncaisses() + $score2);
+
+
+
+        $scoreDetail = self::recupererDetailEquipeSportsSets($detail);
+
+        $pointsEquipe1 = array_sum($scoreDetail[0]);
+        $pointsEquipe2 = array_sum($scoreDetail[1]);
+
+        $rencontre->getMatch()->getParticipation1()->setPointsMarques( $rencontre->getMatch()->getParticipation1()->getPointsMarques()+$pointsEquipe1);
+        $rencontre->getMatch()->getParticipation1()->setPointsEncaisses( $rencontre->getMatch()->getParticipation1()->getPointsEncaisses()+$pointsEquipe2);
+        $rencontre->getMatch()->getParticipation2()->setPointsMarques( $rencontre->getMatch()->getParticipation2()->getPointsMarques()+$pointsEquipe2);
+        $rencontre->getMatch()->getParticipation2()->setPointsEncaisses( $rencontre->getMatch()->getParticipation1()->getPointsEncaisses()+$pointsEquipe1);
+
+        if($score1 > $score2){
+            $rencontre->getMatch()->setScoreTeam1($rencontre->getMatch()->getScoreTeam1()+1);
+        }elseif($score1 < $score2){
+            $rencontre->getMatch()->setScoreTeam2($rencontre->getMatch()->getScoreTeam2()+1);
+        }
+    }
+
     public static function recupererDetailEquipeSportsSets($detail){
         $detailExplode = [];
         $details = explode(" ", $detail);
         foreach ($details as $detail){
             $detailExplode[] = explode("/", $detail);
         }
+
 
         for($i=0; $i<sizeof($detailExplode); $i++){
             $scoresDetail1[] = $detailExplode[$i][0];
@@ -53,6 +99,16 @@ class EventUtils
         $scoreDetails[] = $scoresDetail1;
         $scoreDetails[] = $scoresDetail2;
         return $scoreDetails;
+    }
+
+    public static function recupererPointsSetsEquipeSportsSets($detail){
+        $detailExplode = [];
+        $details = explode(" ", $detail);
+        foreach ($details as $detail){
+            $detailExplode[] = explode("/", $detail);
+        }
+
+        return $detailExplode;
     }
 
     public static function getWinner($match, $score1, $score2)
@@ -70,6 +126,24 @@ class EventUtils
             return $match->getParticipation2();
         } elseif ($score1 < $score2) {
             return $match->getParticipation1();
+        }
+    }
+
+    public static function getWinnerRencontre($rencontre, $score1, $score2)
+    {
+        if ($score1 > $score2) {
+            return $rencontre->getMatch()->getParticipation1();
+        } elseif ($score1 < $score2) {
+            return $rencontre->getMatch()->getParticipation2();
+        }
+    }
+
+    public static function getLooserRencontre($rencontre, $score1, $score2)
+    {
+        if ($score1 > $score2) {
+            return $rencontre->getMatch()->getParticipation2();
+        } elseif ($score1 < $score2) {
+            return $rencontre->getMatch()->getParticipation1();
         }
     }
 

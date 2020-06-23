@@ -529,14 +529,14 @@
                         </thead>
                         <tbody>
                         {% for match in matchs %}
-                            <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                            <tr onclick="window.location='{% if event.discipline.name is same as ("Badminton")%}{{ path('admin_afficher_match_badminton',{"idMatch": match.id}) }}{% else %}{{ path('event_detail_match', {"id": match.id}) }}{% endif %}'">
                                 <td>{{ match.participation1.participant.name }}</td>
                                 <td>{{ match.participation2.participant.name }}</td>
                                 <td>{{ match.field }}</td>
                                 <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                                 <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
                                 {% if event.discipline.sets == true %}
-                                    <td>{{ match.detail }}</td>
+                                    <td>{% if event.discipline.name is same as ("Badminton")%}{{ match.setsTeam1 }} - {{ match.setsTeam2 }}{% else %}{{ match.detail }}{% endif %}</td>
                                 {% endif %}
                             </tr>
                         {% endfor %}

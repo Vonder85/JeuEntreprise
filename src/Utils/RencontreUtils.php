@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use App\Entity\Match;
 use App\Entity\Participation;
+use App\Entity\Rencontre;
 
 class RencontreUtils
 {
@@ -1135,4 +1136,15 @@ class RencontreUtils
         return $matchs;
     }
 
+    public static function matchsBadminton($match){
+        $matchs = [];
+
+        for($i=0; $i < 4; $i++){
+            $match1 = new Rencontre();
+            $match1->setField($match->getField());
+            $match1->setMatch($match);
+            $matchs[] = $match1;
+        }
+        return $matchs;
+    }
 }

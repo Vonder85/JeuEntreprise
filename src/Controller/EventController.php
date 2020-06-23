@@ -8,6 +8,7 @@ use App\Entity\Discipline;
 use App\Entity\Event;
 use App\Entity\Match;
 use App\Entity\Participation;
+use App\Entity\Rencontre;
 use App\Entity\Round;
 use App\Repository\EventRepository;
 use App\Repository\MatchRepository;
@@ -35,6 +36,17 @@ class EventController extends AbstractController
 
         return $this->render('event/match.html.twig', [
             "match" => $match
+        ]);
+    }
+
+    /**
+     * @Route("/rencontre/{id}", name="detail_rencontre", requirements={"id": "\d+"})
+     */
+    public function voirRencontre($id, EntityManagerInterface $em){
+        $rencontre = $em->getRepository(Rencontre::class)->find($id);
+
+        return $this->render('event/resultatRencontre.html.twig', [
+            "rencontre" => $rencontre
         ]);
     }
 
@@ -90,10 +102,10 @@ class EventController extends AbstractController
         $discipline = $mr->getDisicplineWithMatch($idMatch);
 
         if($discipline[0]['sets'] === true){
-            EventUtils::setResultSportsSets($match,$score2,$score2,$detail);
+            EventUtils::setResultSportsSets($match,$score1,$score2,$detail);
         }else{
             //Enregistre les résultats
-            EventUtils::setResult($match, $score1, $score2, $detail);
+            EventUtils::setResult($match, $score1, $score2);
         }
 
 
@@ -135,6 +147,25 @@ class EventController extends AbstractController
             return $this->redirectToRoute('admin_see_planning_meets', ["idEvent" => $match->getEvent()->getId()]);
         }
         return $this->redirectToRoute('event_voir_rencontres', ['idEvent' => $match->getEvent()->getId()]);
+    }
+
+    /**
+     * @Route("/EnregistrerResultatsRencontre/{idRencontre}", name="enregistrer_resultats_rencontre", requirements={"idRencontre": "\d+"})
+     */
+    public function enregistrerResultatsRencontre($idRencontre, EntityManagerInterface $em, Request $request){
+        $rencontre = $em->getRepository(Rencontre::class)->find($idRencontre);
+        $score1 = $request->request->get('score1');
+        $score2 = $request->request->get('score2');
+        $detail = $request->request->get('detail');
+
+            EventUtils::setResultRencontre($rencontre,$score1,$score2,$detail);
+
+        $em->flush();
+        $this->addFlash('success', 'Résultat modifié');
+        if($this->isGranted("ROLE_ADMIN")){
+            return $this->redirectToRoute('admin_see_planning_meets', ["idEvent" => $rencontre->getMatch()->getEvent()->getId()]);
+        }
+        return $this->redirectToRoute('event_voir_rencontres', ['idEvent' => $rencontre->getMatch()->getEvent()->getId()]);
     }
 
     /**

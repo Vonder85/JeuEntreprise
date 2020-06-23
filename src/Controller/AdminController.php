@@ -13,6 +13,7 @@ use App\Entity\Event;
 use App\Entity\Match;
 use App\Entity\Participant;
 use App\Entity\Participation;
+use App\Entity\Rencontre;
 use App\Entity\Round;
 use App\Entity\Team;
 use App\Entity\TeamCreated;
@@ -2651,6 +2652,40 @@ class AdminController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
+    }
+
+    /**
+     * @Route("/genererMatchsBadminton/{idMatch}", name="generer_matchs_badminton", requirements={"idMatch": "\d+"})
+     */
+    public function genererMatchsBadminton($idMatch, EntityManagerInterface $em)
+    {
+        $match = $em->getRepository(Match::class)->find($idMatch);
+
+        $matchs = RencontreUtils::matchsBadminton($match);
+
+        foreach ($matchs as $match){
+            $em->persist($match);
+        }
+        $em->flush();
+
+        return $this->redirectToRoute('admin_afficher_match_badminton', ["idMatch" => $idMatch]);
+    }
+
+    /**
+     * @Route("/afficherMatchBadminton/{idMatch}", name="afficher_match_badminton", requirements={"idMatch": "\d+"})
+     */
+    public function afficherMatchsBadminton($idMatch, EntityManagerInterface $em)
+    {
+        $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
+        if(empty($rencontres)){
+            $this->genererMatchsBadminton($idMatch, $em);
+            $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
+        }
+        $rencontre = $rencontres[0];
+        return $this->render('admin/rencontres.html.twig', [
+            "rencontres" => $rencontres,
+            "rencontre" => $rencontre
+        ]);
     }
 
     /**

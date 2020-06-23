@@ -6,26 +6,22 @@
 
 
 <div class="container">
-    <form method="post" id="monForm" action="{{ path('event_enregistrer_resultats', {"idMatch": match.id}) }}">
+    <form method="post" id="monForm" action="{{ path('event_enregistrer_resultats_rencontre', {"idRencontre": rencontre.id}) }}">
     <table class="table table-striped table-dark mb-4 mt-4">
         <thead>
             <th>Equipe 1</th>
             <th>Score équipe 1</th>
             <th>Equipe 2</th>
             <th>Score équipe 2</th>
-            {% if match.event.discipline.sets == true %}
-                <th scope="col">Détail</th>
-            {% endif %}
+            <th scope="col">Détail</th>
         </thead>
         <tbody>
 
-        <td>{{ match.participation1.participant.name }}</td>
+        <td>{{ rencontre.match.participation1.participant.name }}</td>
         <td><input type="number" name="score1"></td>
-        <td>{{ match.participation2.participant.name }}</td>
+        <td>{{ rencontre.match.participation2.participant.name }}</td>
         <td><input type="number" name="score2"></td>
-        {% if match.event.discipline.sets == true %}
-            <td><input type="text" id="detail" name="detail"></td>
-        {% endif %}
+        <td><input type="text" id="detail" name="detail"></td>
         </tbody>
     </table>
     <button type="submit" class="btn btn-secondary">Valider</button>

@@ -49,6 +49,16 @@ class Match
         return $this->id;
     }
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $setsTeam1;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $setsTeam2;
+
     public function getScoreTeam1(): ?int
     {
         return $this->scoreTeam1;
@@ -121,8 +131,44 @@ class Match
     public function setDetail($detail): void
     {
         $this->detail = $detail;
-    }
-
+    }/**
+ * @return mixed
+ */
+public function getSetsTeam1()
+{
+    return $this->setsTeam1;
+}/**
+ * @param mixed $setsTeam1
+ */
+public function setSetsTeam1($setsTeam1): void
+{
+    $this->setsTeam1 = $setsTeam1;
+}/**
+ * @return mixed
+ */
+public function getSetsTeam2()
+{
+    return $this->setsTeam2;
+}/**
+ * @param mixed $setsTeam2
+ */
+public function setSetsTeam2($setsTeam2): void
+{
+    $this->setsTeam2 = $setsTeam2;
+}/**
+ * @return mixed
+ */
+public function getRencontres()
+{
+    return $this->rencontres;
+}
+/**
+ * @param mixed $rencontres
+ */
+public function setRencontres($rencontres): void
+{
+    $this->rencontres = $rencontres;
+}
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event")
@@ -148,6 +194,11 @@ class Match
      * @ORM\ManyToOne(targetEntity="App\Entity\Participation", cascade={"remove"})
      */
     private $participation2;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Rencontre", mappedBy="match", cascade={"remove"})
+     */
+    private $rencontres;
 
     /**
      * @return mixed
