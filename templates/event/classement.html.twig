@@ -37,30 +37,32 @@
         {% endif %}
         {% if event.poule %}
             {% if event.phase == 3 %}
-            {% if participations|length == 15%}
-                <form method="post" action="{{ path('admin_creation_quart_a_partir_15', {"idEvent": event.id}) }}">
-                    <input type="hidden" name="round" value="Tournoi principal">
-                    <button type="submit" class="btn btn-secondary">
-                        Créer tournoi principal
-                    </button>
-                </form>
-                <form method="post" action="{{ path('admin_tournoi_consolante_3phases', {"idEvent": event.id}) }}">
-                    <input type="hidden" name="round" value="1/4 finale consolante">
-                    <button type="submit" class="btn btn-secondary">
-                        Créer 1/4 finale consolante
-                    </button>
-                </form>
+                {% if participations|length == 15 %}
+                    <form method="post" action="{{ path('admin_creation_quart_a_partir_15', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="Tournoi principal">
+                        <button type="submit" class="btn btn-secondary">
+                            Créer tournoi principal
+                        </button>
+                    </form>
+                    <form method="post" action="{{ path('admin_tournoi_consolante_3phases', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="1/4 finale consolante">
+                        <button type="submit" class="btn btn-secondary">
+                            Créer 1/4 finale consolante
+                        </button>
+                    </form>
                 {% elseif event.round.name is same as ('Tournoi consolante') %}
                     {% if participations|length == 3 %}
 
                     {% elseif  participations|length == 4 %}
-                        <form method="post" action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                        <form method="post"
+                              action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                             <input type="hidden" name="round" value="5ème place">
                             <button class="btn btn-secondary">
                                 Créer 5ème place
                             </button>
                         </form>
-                        <form method="post" action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                        <form method="post"
+                              action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                             <input type="hidden" name="round" value="7ème place">
                             <button class="btn btn-secondary">
                                 Créer 7ème place
@@ -129,28 +131,28 @@
                                     Créer 9ème place
                                 </button>
                             </form>
-                            {% elseif participationsDebut|length == 18%}
-                                <form method="post"
-                                      action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
-                                    <input type="hidden" name="round" value="13ème place">
-                                    <button class="btn btn-secondary">
-                                        Créer 13ème place
-                                    </button>
-                                </form>
-                                <form method="post"
-                                      action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
-                                    <input type="hidden" name="round" value="15ème place">
-                                    <button class="btn btn-secondary">
-                                        Créer 15ème place
-                                    </button>
-                                </form>
-                                <form method="post"
-                                      action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
-                                    <input type="hidden" name="round" value="17ème place">
-                                    <button class="btn btn-secondary">
-                                        Créer 17ème place
-                                    </button>
-                                </form>
+                        {% elseif participationsDebut|length == 18 %}
+                            <form method="post"
+                                  action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="13ème place">
+                                <button class="btn btn-secondary">
+                                    Créer 13ème place
+                                </button>
+                            </form>
+                            <form method="post"
+                                  action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="15ème place">
+                                <button class="btn btn-secondary">
+                                    Créer 15ème place
+                                </button>
+                            </form>
+                            <form method="post"
+                                  action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="17ème place">
+                                <button class="btn btn-secondary">
+                                    Créer 17ème place
+                                </button>
+                            </form>
 
                         {% else %}
                             <form method="post"
@@ -177,27 +179,27 @@
                                 Créer 1/2 finale
                             </button>
                         </form>
-                        {% elseif participations|length == 9 and not participationsDebut|length == 21 %}
-                            <form method="post"
-                                  action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
-                                <input type="hidden" name="round" value="1/2 finale consolante">
-                                <button class="btn btn-secondary">
-                                    Créer 1/2 finale
-                                </button>
-                            </form>
-                            <form method="post"
-                                  action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
-                                <input type="hidden" name="round" value="13ème place">
-                                <button class="btn btn-secondary">
-                                    Créer 13ème place
-                                </button>
-                            </form>
-                            <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
-                                <input type="hidden" name="round" value="Poule de classement">
-                                <button class="btn btn-secondary">
-                                    Créer poule de classement
-                                </button>
-                            </form>
+                    {% elseif participations|length == 9 and not participationsDebut|length == 21 %}
+                        <form method="post"
+                              action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="1/2 finale consolante">
+                            <button class="btn btn-secondary">
+                                Créer 1/2 finale
+                            </button>
+                        </form>
+                        <form method="post"
+                              action="{{ path('admin_places_finale_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="13ème place">
+                            <button class="btn btn-secondary">
+                                Créer 13ème place
+                            </button>
+                        </form>
+                        <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                            <input type="hidden" name="round" value="Poule de classement">
+                            <button class="btn btn-secondary">
+                                Créer poule de classement
+                            </button>
+                        </form>
                     {% endif %}
                 {% elseif event.round.name is same as ('Tournoi principal') %}
                     {% if participations|length == 4 %}
@@ -207,7 +209,8 @@
                                 Créer Finale
                             </button>
                         </form>
-                        <form method="post" action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
+                        <form method="post"
+                              action="{{ path('admin_creation_rencontres_places_classment', {"idEvent": event.id}) }}">
                             <input type="hidden" name="round" value="3ème place">
                             <button class="btn btn-secondary">
                                 Créer 3ème place
@@ -227,40 +230,44 @@
                             </button>
                         </form>
                     {% elseif participations|length == 8 %}
-                        {% if participationsDebut|length == 15 or participationsDebut|length == 16 or participationsDebut|length == 17%}
-                            <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                        {% if participationsDebut|length == 15 or participationsDebut|length == 16 or participationsDebut|length == 17 %}
+                            <form method="post"
+                                  action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
                                 <input type="hidden" name="round" value="1/2 finale">
                                 <button class="btn btn-secondary">
                                     Créer 1/2 finale
                                 </button>
                             </form>
-                            {% else %}
+                        {% else %}
+                            <form method="post"
+                                  action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="1/2 finale">
+                                <button class="btn btn-secondary">
+                                    Créer 1/2 finale
+                                </button>
+                            </form>
+                            <form method="post"
+                                  action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="5ème place">
+                                <button class="btn btn-secondary">
+                                    Créer 5ème place
+                                </button>
+                            </form>
+                            <form method="post"
+                                  action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
+                                <input type="hidden" name="round" value="7ème place">
+                                <button class="btn btn-secondary">
+                                    Créer 7ème place
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% elseif participations|length == 12 %}
                         <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
                             <input type="hidden" name="round" value="1/2 finale">
                             <button class="btn btn-secondary">
                                 Créer 1/2 finale
                             </button>
                         </form>
-                        <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
-                            <input type="hidden" name="round" value="5ème place">
-                            <button class="btn btn-secondary">
-                                Créer 5ème place
-                            </button>
-                        </form>
-                        <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
-                            <input type="hidden" name="round" value="7ème place">
-                            <button class="btn btn-secondary">
-                                Créer 7ème place
-                            </button>
-                        </form>
-                            {% endif %}
-                        {% elseif participations|length == 12 %}
-                            <form method="post" action="{{ path('admin_places_honneur_phase3', {"idEvent": event.id}) }}">
-                                <input type="hidden" name="round" value="1/2 finale">
-                                <button class="btn btn-secondary">
-                                    Créer 1/2 finale
-                                </button>
-                            </form>
                     {% endif %}
                 {% else %}
                     <form method="post" action="{{ path('admin_tournoi_principal_3phases', {"idEvent": event.id}) }}">
@@ -311,7 +318,7 @@
                         Créer 1/4 finale
                     </button>
                 </form>
-            {% elseif participations|length is same as (15) or (17) or (19) or (20) or (21) %}
+            {% elseif participations|length is same as (15 or 17 or 19 or 20 or 21) %}
                 <form method="post" action="{{ path('admin_creation_demifinale_consolante', {"idEvent": event.id}) }}">
                     <input type="hidden" name="round" value="1/4 finale consolante">
                     <button class="btn btn-secondary">
@@ -375,7 +382,7 @@
                         </button>
                     </form>
                 {% endif %}
-            {% elseif participations|length is same as (12) or (13) %}
+            {% elseif participations|length is same as (12 or 13) %}
 
                 <form method="post" action="{{ path('admin_creation_demifinales', {"idEvent": event.id}) }}">
                     <input type="hidden" name="round" value="1/2 finale">
@@ -431,12 +438,25 @@
                         <th scope="col">Victoires</th>
                         <th scope="col">Défaites</th>
                         <th scope="col">Nul</th>
-                        <th scope="col">Points</th>
+                        <th scope="col">Diff. matchs</th>
+                        {% if event.discipline.sets %}
+                            <th scope="col">Sets Gagnés</th>
+                            <th scope="col">Sets Perdus</th>
+                            <th scope="col">Diff. sets</th>
+                            {% if event.type.name is same as ("Tournoi par équipes") %}
+                                <th scope="col">Echanges gagnés</th>
+                                <th scope="col">Echanges perdus</th>
+                                <th scope="col">Diff. échanges</th>
+                            {% endif %}
+                        {% else %}
+                            <th scope="col">{% if event.discipline.name is same as ("Handball" or "Football 7" or "Football 11"or "Football 5")%}Buts{% elseif event.discipline.name is same as ("Rugby 5" or "Rugby 7") %}Essais {% else%}Points{% endif%} Marqués</th>
+                            <th scope="col">{% if event.discipline.name is same as ("Handball" or "Football 7" or "Football 11"or "Football 5")%}Buts{% elseif event.discipline.name is same as ("Rugby 5" or "Rugby 7") %}Essais {% else%}Points{% endif%} Encaissés</th>
+                            <th scope="col">Diff. {% if event.discipline.name is same as ("Handball" or "Football 7" or "Football 11"or "Football 5")%}Buts{% elseif event.discipline.name is same as ("Rugby 5" or "Rugby 7") %}Essais {% else%}Points{% endif%}</th>
+                        {% endif %}
+                        <th scope="col">Points Classement</th>
                     </tr>
                     </thead>
                     <tbody>
-
-
                     {% set i = 1 %}
                     {% for k in 0..participationsPoule[l]|length-1 %}
                         <tr>
@@ -445,6 +465,21 @@
                             <td>{{ participationsPoule[l][k].victory }}</td>
                             <td>{{ participationsPoule[l][k].defeat }}</td>
                             <td>{{ participationsPoule[l][k].nul }}</td>
+                            <td>{{ participationsPoule[l][k].victory - participationsPoule[l][k].defeat }}</td>
+                            {% if event.discipline.sets %}
+                                <td>{{ participationsPoule[l][k].setsMarques }}</td>
+                                <td>{{ participationsPoule[l][k].setsEncaisses }}</td>
+                                <td>{{ participationsPoule[l][k].setsMarques - participationsPoule[l][k].setsEncaisses }}</td>
+                                {% if event.type.name is same as ("Tournoi par équipes") %}
+                                    <td>{{ participationsPoule[l][k].pointsMarques }}</td>
+                                    <td>{{ participationsPoule[l][k].pointsEncaisses }}</td>
+                                    <td>{{ participationsPoule[l][k].pointsMarques - participationsPoule[l][k].pointsEncaisses }}</td>
+                                {% endif %}
+                            {% else %}
+                                <td>{{ participationsPoule[l][k].pointsMarques }}</td>
+                                <td>{{ participationsPoule[l][k].pointsEncaisses }}</td>
+                                <td>{{ participationsPoule[l][k].pointsMarques - participationsPoule[l][k].pointsEncaisses }}</td>
+                            {% endif %}
                             <td>{{ participationsPoule[l][k].pointsClassement }}</td>
                         </tr>
 
@@ -464,7 +499,22 @@
                     <th scope="col">Victoires</th>
                     <th scope="col">Défaites</th>
                     <th scope="col">Nul</th>
-                    <th scope="col">Points</th>
+                    <th scope="col">Diff. matchs</th>
+                    {% if event.discipline.sets %}
+                        <th scope="col">Sets Gagnés</th>
+                        <th scope="col">Sets Perdus</th>
+                        <th scope="col">Diff. sets</th>
+                        {% if event.type.name is same as ("Tournoi par équipes") %}
+                            <th scope="col">Echanges gagnés</th>
+                            <th scope="col">Echanges perdus</th>
+                            <th scope="col">Diff. échanges</th>
+                        {% endif %}
+                        {% else %}
+                            <th scope="col">{% if event.discipline.name is same as ("Handball" or "Football 7" or "Football 11"or "Football 5")%}Buts{% elseif event.discipline.name is same as ("Rugby 5" or "Rugby 7") %}Essais {% else%}Points{% endif%} Marqués</th>
+                            <th scope="col">{% if event.discipline.name is same as ("Handball" or "Football 7" or "Football 11"or "Football 5")%}Buts{% elseif event.discipline.name is same as ("Rugby 5" or "Rugby 7") %}Essais {% else%}Points{% endif%} Encaissés</th>
+                            <th scope="col">Diff. {% if event.discipline.name is same as ("Handball" or "Football 7" or "Football 11"or "Football 5")%}Buts{% elseif event.discipline.name is same as ("Rugby 5" or "Rugby 7") %}Essais {% else%}Points{% endif%}</th>
+                    {% endif %}
+                    <th scope="col">Points Classement</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -476,6 +526,21 @@
                         <td>{{ participation.victory }}</td>
                         <td>{{ participation.defeat }}</td>
                         <td>{{ participation.nul }}</td>
+                        <td>{{ participation.victory - participation.defeat }}</td>
+                        {% if event.discipline.sets %}
+                            <td>{{ participation.setsMarques }}</td>
+                            <td>{{ participation.setsEncaisses }}</td>
+                            <td>{{ participation.setsMarques - participationsPoule[l][k].setsEncaisses }}</td>
+                            {% if event.type.name is same as ("Tournoi par équipes") %}
+                                <td>{{ participation.pointsMarques }}</td>
+                                <td>{{ participation.pointsEncaisses }}</td>
+                                <td>{{ participation.pointsMarques - participationsPoule[l][k].pointsEncaisses }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td>{{ participation.pointsMarques }}</td>
+                            <td>{{ participation.pointsEncaisses }}</td>
+                            <td>{{ participation.pointsMarques - participationsPoule[l][k].pointsEncaisses }}</td>
+                        {% endif %}
                         <td>{{ participation.pointsClassement }}</td>
                     </tr>
 

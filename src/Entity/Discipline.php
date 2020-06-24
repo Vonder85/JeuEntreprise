@@ -28,6 +28,11 @@ class Discipline
      */
     private $sets;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $multiMatchs;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +64,22 @@ class Discipline
     public function setSets($sets): void
     {
         $this->sets = $sets;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMultiMatchs()
+    {
+        return $this->multiMatchs;
+    }
+
+    /**
+     * @param mixed $multiMatchs
+     */
+    public function setMultiMatchs($multiMatchs): void
+    {
+        $this->multiMatchs = $multiMatchs;
     }
 
     public function __construct()

@@ -70,6 +70,20 @@ class MatchRepository extends ServiceEntityRepository
         $qb->select("m.id, d.name, d.sets");
         return $qb->getQuery()->execute();
     }
+
+    /**
+     * fonction qui permet de retourner un match avec 2 participations et un evenement
+     */
+    public function findMatchWithAnEventand2Participations($event, $part1, $part2){
+        $qb = $this->createQueryBuilder('m');
+        $qb->andWhere('m.event = :event')
+            ->setParameter('event', $event)
+            ->andWhere('m.participation1 = :part1')
+            ->setParameter("part1", $part1)
+            ->andWhere('m.participation2 = :part2')
+            ->setParameter('part2', $part2);
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Match[] Returns an array of Match objects
     //  */

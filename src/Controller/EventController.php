@@ -193,28 +193,81 @@ class EventController extends AbstractController
             $participation->setNul(0);
             $participation->setPointsClassement(0);
         }
-        /**
-         * @var $match Match
-         */
-        foreach ($matchs as $match){
-            if($match->getScoreTeam1() === 0 || $match->getScoreTeam1() > 0){
-                if($match->getScoreTeam1() > $match->getScoreTeam2()){
-                    $match->getParticipation1()->setVictory($match->getParticipation1()->getVictory() +1);
-                    $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +3);
-                    $match->getParticipation2()->setDefeat($match->getParticipation2()->getDefeat() +1);
-                }elseif ($match->getScoreTeam1() < $match->getScoreTeam2()){
-                    $match->getParticipation2()->setVictory($match->getParticipation2()->getVictory() +1);
-                    $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +3);
-                    $match->getParticipation1()->setDefeat($match->getParticipation1()->getDefeat() +1);
-                }else{
-                    $match->getParticipation1()->setNul($match->getParticipation1()->getNul() +1);
-                    $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +1);
-                    $match->getParticipation2()->setNul($match->getParticipation2()->getNul() +1);
-                    $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +1);
+
+        if($event->getDiscipline()->getName() === "Badminton" || $event->getDiscipline()->getName() === "Squash" || $event->getDiscipline()->getName() === "Tennis" || $event->getDiscipline()->getName() === "Tennis de table" || $event->getDiscipline()->getName() === "Fléchettes"){
+                /**
+                 * @var $match Match
+                 */
+                foreach ($matchs as $match){
+                    if($match->getScoreTeam1() === 0 || $match->getScoreTeam1() > 0){
+                        if($match->getScoreTeam1() > $match->getScoreTeam2()){
+                            $match->getParticipation1()->setVictory($match->getParticipation1()->getVictory() +1);
+                            $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +2);
+                            $match->getParticipation2()->setDefeat($match->getParticipation2()->getDefeat() +1);
+                        }elseif ($match->getScoreTeam1() < $match->getScoreTeam2()){
+                            $match->getParticipation2()->setVictory($match->getParticipation2()->getVictory() +1);
+                            $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +2);
+                            $match->getParticipation1()->setDefeat($match->getParticipation1()->getDefeat() +1);
+                        }else{
+                            $match->getParticipation1()->setNul($match->getParticipation1()->getNul() +1);
+                            $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +1);
+                            $match->getParticipation2()->setNul($match->getParticipation2()->getNul() +1);
+                            $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +1);
+                        }
+                    }
+            }
+        }elseif($event->getDiscipline()->getName() === "Volley" || $event->getDiscipline()->getName() === "Beach Volley"){
+            /**
+             * @var $match Match
+             */
+            foreach ($matchs as $match){
+                if($match->getScoreTeam1() === 0 || $match->getScoreTeam1() > 0){
+                    if($match->getScoreTeam1() ===2 && $match->getScoreTeam2() === 0){
+                        $match->getParticipation1()->setVictory($match->getParticipation1()->getVictory() +1);
+                        $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +3);
+                        $match->getParticipation2()->setDefeat($match->getParticipation2()->getDefeat() +1);
+                    }elseif ($match->getScoreTeam1() === 2 && $match->getScoreTeam2() ===1){
+                        $match->getParticipation1()->setVictory($match->getParticipation1()->getVictory() +1);
+                        $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +2);
+                        $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +1);
+                        $match->getParticipation2()->setDefeat($match->getParticipation2()->getDefeat() +1);
+                    }elseif($match->getScoreTeam2() ===2 && $match->getScoreTeam1() === 0){
+                        $match->getParticipation2()->setVictory($match->getParticipation2()->getVictory() +1);
+                        $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +3);
+                        $match->getParticipation1()->setDefeat($match->getParticipation1()->getDefeat() +1);
+                    }elseif ($match->getScoreTeam2() === 2 && $match->getScoreTeam1() ===1){
+                        $match->getParticipation2()->setVictory($match->getParticipation2()->getVictory() +1);
+                        $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +2);
+                        $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +1);
+                        $match->getParticipation1()->setDefeat($match->getParticipation1()->getDefeat() +1);
+                    }
                 }
             }
+            }else{
+            /**
+             * @var $match Match
+             */
+            foreach ($matchs as $match){
+                if($match->getScoreTeam1() === 0 || $match->getScoreTeam1() > 0){
+                    if($match->getScoreTeam1() > $match->getScoreTeam2()){
+                        $match->getParticipation1()->setVictory($match->getParticipation1()->getVictory() +1);
+                        $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +3);
+                        $match->getParticipation2()->setDefeat($match->getParticipation2()->getDefeat() +1);
+                    }elseif ($match->getScoreTeam1() < $match->getScoreTeam2()){
+                        $match->getParticipation2()->setVictory($match->getParticipation2()->getVictory() +1);
+                        $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +3);
+                        $match->getParticipation1()->setDefeat($match->getParticipation1()->getDefeat() +1);
+                    }else{
+                        $match->getParticipation1()->setNul($match->getParticipation1()->getNul() +1);
+                        $match->getParticipation1()->setPointsClassement( $match->getParticipation1()->getPointsClassement() +1);
+                        $match->getParticipation2()->setNul($match->getParticipation2()->getNul() +1);
+                        $match->getParticipation2()->setPointsClassement( $match->getParticipation2()->getPointsClassement() +1);
+                    }
+                }
 
+            }
         }
+
         if($event->getRound()->getName() === "Poule de classement"){
             $j= 0;
             if(sizeof($participationsTotal) === 5){
@@ -233,7 +286,7 @@ class EventController extends AbstractController
                 $j=17;
             }
 
-            $participations = EventUtils::classerParPoints($participations);
+            $participations = (new \App\Utils\EventUtils($mr))->classerParPoints($participations);
             foreach ($participations as $participation){
                 $participation->setPositionClassement($j);
                 $j++;
@@ -245,7 +298,7 @@ class EventController extends AbstractController
             if(sizeof($participationsTotal) == 7){
                 if($event->getRound()->getName() == "Tournoi consolante"){
                     $j= 5;
-                    $participations = EventUtils::classerParPoints($participations);
+                    $participations = (new \App\Utils\EventUtils($mr))->classerParPoints($participations);
                     foreach ($participations as $participation){
                         $participation->setPositionClassement($j);
                         $j++;
@@ -254,7 +307,7 @@ class EventController extends AbstractController
             }elseif(sizeof($participationsTotal) == 9){
                 if($event->getRound()->getName() == "Tournoi consolante"){
                     $j= 7;
-                    $participations = EventUtils::classerParPoints($participations);
+                    $participations = (new \App\Utils\EventUtils($mr))->classerParPoints($participations);
                     foreach ($participations as $participation){
                         $participation->setPositionClassement($j);
                         $j++;
@@ -263,7 +316,7 @@ class EventController extends AbstractController
             }elseif(sizeof($participationsTotal) == 13){
                 if($event->getRound()->getName() == "Tournoi consolante"){
                     $j= 9;
-                    $participations = EventUtils::classerParPoints($participations);
+                    $participations = (new \App\Utils\EventUtils($mr))->classerParPoints($participations);
                     foreach ($participations as $participation){
                         $participation->setPositionClassement($j);
                         $j++;
@@ -282,7 +335,7 @@ class EventController extends AbstractController
      * @Route("/afficherClassement/{idEvent}", name="afficher_classement", requirements={"idEvent": "\d+"})
      * fonction qui permet l'affichage du tableau
      */
-    public function afficherClassement($idEvent, ParticipationRepository $pr, EventRepository $er, EntityManagerInterface $em){
+    public function afficherClassement($idEvent, ParticipationRepository $pr, MatchRepository $mr, EventRepository $er, EntityManagerInterface $em){
         $participations = $pr->findParticipationInAnEventSimple($idEvent);
         $event = $er->find($idEvent);
         $roundPoules = $em->getRepository(Round::class)->findOneBy(['name' => 'Phase de poules 1']);
@@ -296,11 +349,11 @@ class EventController extends AbstractController
             for ($i = 0; $i < sizeof($poules); $i++) {
                 $participationsPoule[] = $pr->getParPoules($idEvent, $poules[$i]->getPoule());
             }
-            $participationsPoule = EventUtils::classerParPointsPoules($participationsPoule, $poules);
+            $participationsPoule = (new \App\Utils\EventUtils($mr))->classerParPointsPoules($participationsPoule, $poules);
 
         }else{
             //Etabli le classement par nbr de points
-           $participations = EventUtils::classerParPoints($participations);
+           $participations = (new \App\Utils\EventUtils($mr))->classerParPoints($participations);
         }
         return $this->render('event/classement.html.twig', [
             "participations" => $participations,
@@ -337,4 +390,5 @@ class EventController extends AbstractController
             "classement" => $classement
         ]);
     }
+
 }

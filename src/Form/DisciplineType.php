@@ -13,7 +13,8 @@ class DisciplineType extends AbstractType
     {
         $builder
             ->add('name', null, ['label' => 'Nom'])
-            ->add('sets', null, ['label' => 'Manches ?'])
+            ->add('sets', null, ['label' => 'Sets ?'])
+            ->add('multiMatchs', null, ['label' => 'Multi matchs ?'])
         ;
     }
 
