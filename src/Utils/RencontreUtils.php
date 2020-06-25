@@ -1136,10 +1136,10 @@ class RencontreUtils
         return $matchs;
     }
 
-    public static function matchsBadminton($match){
+    public static function multiMatchs($match, $event){
         $matchs = [];
 
-        for($i=0; $i < 4; $i++){
+        for($i=0; $i < $event->getNbMatchsMulti(); $i++){
             $match1 = new Rencontre();
             $match1->setField($match->getField());
             $match1->setMatch($match);

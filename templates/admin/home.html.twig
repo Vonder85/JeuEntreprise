@@ -231,6 +231,10 @@
                         <h1>Ajouter un évènement</h1>
                         {{ form_start(eventForm) }}
                         {{ form_widget(eventForm) }}
+                        <div id="nbMatch">
+                        <label for="nbMatch">Nombre de matchs</label>
+                        <input class="form-control mt-0 mb-4" type="number" name="nbMatchs">
+                        </div>
                         <button type="submit" class="btn btn-secondary">Ajouter</button>
                         {{ form_end(eventForm) }}
                     </div>
@@ -267,6 +271,9 @@
                 $('.table').hide();
                 $('.bouton').show();
             })
+            $('#event_discipline').on('change', function(){
+                verifMultiMatchs();
+            })
             $('#discipline').on('click', function () {
                 showDisciplineForm();
             })
@@ -298,6 +305,7 @@
                 showRoundForm();
             })
         })
+
 
         /**
          * functions show differents forms
@@ -350,6 +358,27 @@
         function showRoundForm() {
             $('.bouton').hide();
             $('#doForm').append(roundForm.show());
+        }
+
+        function verifMultiMatchs(){
+            var idDiscipline = $('#event_discipline option:selected').val();
+            var input = $('#nbMatch');
+             $.ajax({
+                url: '{{ path('search_discipline_ajax')}}/' + idDiscipline,
+                method:"post",
+
+                async: true,
+            }).done(function (msg) {
+                console.log(msg['multiMatchs']);
+            if(!msg['multiMatchs']){
+                input.hide();
+            }else{
+                input.show();
+            };
+
+            }).fail(function (){
+                alert("Ce participant n'existe pas");
+            });
         }
 
     </script>

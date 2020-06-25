@@ -78,6 +78,11 @@ class Event
      */
     private $phaseIn;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nbMatchsMulti;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -249,6 +254,22 @@ class Event
     public function setPhaseIn($phaseIn): void
     {
         $this->phaseIn = $phaseIn;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNbMatchsMulti()
+    {
+        return $this->nbMatchsMulti;
+    }
+
+    /**
+     * @param mixed $nbMatchsMulti
+     */
+    public function setNbMatchsMulti($nbMatchsMulti): void
+    {
+        $this->nbMatchsMulti = $nbMatchsMulti;
     }
 
     /**

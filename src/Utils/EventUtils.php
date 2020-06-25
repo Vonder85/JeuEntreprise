@@ -189,15 +189,12 @@ class EventUtils
     public function classerParPointsPoules($participations, $poules)
     {
         for ($j = 0; $j < sizeof($poules); $j++) {
-            usort($participations[$j], function ($a, $b)  {
+            dump($j);
+            usort($participations[$j], function($a, $b){
                 $ad = $a->getPointsClassement();
                 $bd = $b->getPointsClassement();
-
                 if ($ad == $bd) {
-                    $match = $this->mr->findMatchWithAnEventand2Participations($a->getEvent(), $b, $a);
-                    $match1 = $this->mr->findMatchWithAnEventand2Participations($a->getEvent(), $a, $b);
-                    dump($match);
-                    dump($match1);
+                    $match = $this->mr->findMatchWithAnEventand2Participations($a->getEvent(), $a, $b);
                     if ($match[0]->getWinner() === $a) {
                         return -1;
                     } elseif ($match[0]->getWinner() === $b) {
@@ -226,6 +223,7 @@ class EventUtils
                 } else {
                     return $ad > $bd ? -1 : 1;
                 }
+
             });
         }
         return $participations;

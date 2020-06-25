@@ -274,6 +274,10 @@ class AdminController extends AbstractController
             $name = $event->getDiscipline()->getName() . ' ' . $event->getName() . ' ' . $event->getGender() . ' ' . $event->getCategory()->getName() . ' ' . $event->getType()->getName();
             $event->setName($name);
             $event->setPhaseIn(1);
+            $nbMatchs = $request->request->get('nbMatchs');
+            if($nbMatchs){
+                $event->setNbMatchsMulti($nbMatchs);
+            }
             $em->persist($event);
             $em->flush();
             $this->addFlash('success', 'Evènement ajouté');
@@ -2654,31 +2658,20 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_edit_event', ['id' => $event1->getId()]);
     }
 
-    /**
-     * @Route("/genererMatchsBadminton/{idMatch}", name="generer_matchs_badminton", requirements={"idMatch": "\d+"})
-     */
-    public function genererMatchsBadminton($idMatch, EntityManagerInterface $em)
-    {
-        $match = $em->getRepository(Match::class)->find($idMatch);
-
-        $matchs = RencontreUtils::matchsBadminton($match);
-
-        foreach ($matchs as $match){
-            $em->persist($match);
-        }
-        $em->flush();
-
-        return $this->redirectToRoute('admin_afficher_match_badminton', ["idMatch" => $idMatch]);
-    }
 
     /**
-     * @Route("/afficherMatchBadminton/{idMatch}", name="afficher_match_badminton", requirements={"idMatch": "\d+"})
+     * @Route("/afficherMultiMatchs/{idMatch}", name="afficher_multiMatchs", requirements={"idMatch": "\d+"})
      */
     public function afficherMatchsBadminton($idMatch, EntityManagerInterface $em)
     {
         $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
         if(empty($rencontres)){
-            $this->genererMatchsBadminton($idMatch, $em);
+            $match = $em->getRepository(Match::class)->find($idMatch);
+            $matchs = RencontreUtils::multiMatchs($match, $match->getEvent());
+            foreach ($matchs as $match){
+                $em->persist($match);
+            }
+            $em->flush();
             $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
         }
         $rencontre = $rencontres[0];
