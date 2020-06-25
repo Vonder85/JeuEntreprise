@@ -81,11 +81,7 @@ class MatchRepository extends ServiceEntityRepository
             ->andWhere('m.participation1 = :part1')
             ->setParameter("part1", $part1)
             ->andWhere('m.participation2 = :part2')
-            ->setParameter('part2', $part2)
-            ->orWhere('m.participation1 = :part1')
-            ->setParameter("part1", $part2)
-            ->orWhere('m.participation2 = :part2')
-            ->setParameter("part2", $part1);
+            ->setParameter('part2', $part2);
         return $qb->getQuery()->execute();
     }
     // /**
