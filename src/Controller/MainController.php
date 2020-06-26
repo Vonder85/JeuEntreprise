@@ -8,6 +8,8 @@ use App\Entity\Discipline;
 use App\Entity\Event;
 use App\Entity\Round;
 use App\Entity\Type;
+use App\Repository\CompetitionRepository;
+use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,5 +46,19 @@ class MainController extends AbstractController
     }
 
 
+    /**
+     * @Route("/classementPays", name="classement_pays")
+     * Retourne le classement des pays
+     */
+    public function classementDesPays(Request $request, CompetitionRepository $cr, EventRepository $er){
+        $idCompetition = $request->query->get('competitionClassement');
+        $competition = $cr->find($idCompetition);
+
+        $pays = $er->recuperermedaillesPays($competition, 'Tournoi individuel');
+
+        return $this->render('competition/classementPays.html.twig', [
+            'pays'=>$pays
+        ]);
+    }
 
 }

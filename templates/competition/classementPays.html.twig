@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classement Pays | {{ parent() }}{% endblock %}
+{% block body %}
+<div class="container">
+    <h2>Classement Pays</h2>
+        <table class="table table-striped table-dark mb-4 mt-4">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Médaille d'or</th>
+                <th scope="col">Médaille d'argent</th>
+                <th scope="col">Médaille de bronze</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set i = 1 %}
+            {% for pay in pays %}
+                <tr>
+                    <td>{{ i }}</td>
+                    <td>{{ pay.country }}</td>
+                    <td>{{ pay.goldMedal }}</td>
+                    <td>{{ pay.silverMedal }}</td>
+                    <td>{{ pay.bronzeMedal }}</td>
+                </tr>
+                {% set i = i+1 %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <button class="btn btn-secondary" onclick="window.location='{{ path('main')}}'">
+            Retour
+        </button>
+
+</div>
+{% endblock %}

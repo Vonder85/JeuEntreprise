@@ -118,6 +118,20 @@ class Athlet
         return $this->country;
     }
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $goldMedal;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $silverMedal;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $bronzeMedal;
 
     public function setCountry(?string $country): self
     {
@@ -155,6 +169,54 @@ class Athlet
     public function setLicense($license): void
     {
         $this->license = $license;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoldMedal()
+    {
+        return $this->goldMedal;
+    }
+
+    /**
+     * @param mixed $goldMedal
+     */
+    public function setGoldMedal($goldMedal): void
+    {
+        $this->goldMedal = $goldMedal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSilverMedal()
+    {
+        return $this->silverMedal;
+    }
+
+    /**
+     * @param mixed $silverMedal
+     */
+    public function setSilverMedal($silverMedal): void
+    {
+        $this->silverMedal = $silverMedal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBronzeMedal()
+    {
+        return $this->bronzeMedal;
+    }
+
+    /**
+     * @param mixed $bronzeMedal
+     */
+    public function setBronzeMedal($bronzeMedal): void
+    {
+        $this->bronzeMedal = $bronzeMedal;
     }
 
     public function __construct()

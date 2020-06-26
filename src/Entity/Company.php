@@ -28,6 +28,21 @@ class Company
      */
     private $country;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $goldMedal;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $silverMedal;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $bronzeMedal;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +75,54 @@ class Company
     public function __construct()
     {
         $this->athlets = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoldMedal()
+    {
+        return $this->goldMedal;
+    }
+
+    /**
+     * @param mixed $goldMedal
+     */
+    public function setGoldMedal($goldMedal): void
+    {
+        $this->goldMedal = $goldMedal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSilverMedal()
+    {
+        return $this->silverMedal;
+    }
+
+    /**
+     * @param mixed $silverMedal
+     */
+    public function setSilverMedal($silverMedal): void
+    {
+        $this->silverMedal = $silverMedal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBronzeMedal()
+    {
+        return $this->bronzeMedal;
+    }
+
+    /**
+     * @param mixed $bronzeMedal
+     */
+    public function setBronzeMedal($bronzeMedal): void
+    {
+        $this->bronzeMedal = $bronzeMedal;
     }
 
     /**

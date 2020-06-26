@@ -78,6 +78,27 @@ class EventRepository extends ServiceEntityRepository
         $qb->leftJoin('e.round', 'r');
         return $qb->getQuery()->execute();
     }
+
+    /**
+     * Fonction qui réucpère les mdeialles pour un pays
+     */
+    public function recuperermedaillesPays($competition, $eventType){
+        $qb = $this->createQueryBuilder('e');
+        $qb->andWhere('e.competition = :competition')
+            ->setParameter('competition', $competition)
+            ->andWhere('t.name = :eventType')
+            ->setParameter('eventType', $eventType);
+        $qb->leftJoin('e.participation', "pa");
+        $qb->leftJoin('e.type', 't');
+        $qb->leftJoin('pa.participant', 'p');
+        $qb->leftJoin('p.athlet', 'a');
+        $qb->select('a.country, COUNT(pa.goldMedal) as goldMedal, COUNT(pa.silverMedal) as silverMedal, COUNT(pa.bronzeMedal) as bronzeMedal');
+        $qb->orderBy('COUNT(pa.goldMedal)', 'desc');
+        $qb->addOrderBy('COUNT(pa.silverMedal)', 'desc');
+        $qb->addOrderBy('COUNT(pa.bronzeMedal)', 'desc');
+        $qb->groupBy('a.country');
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return Event[] Returns an array of Event objects
     //  */

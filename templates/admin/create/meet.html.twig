@@ -7,23 +7,6 @@
     <h2>{{ event.name }}</h2>
     <div class="row">
         <div class="col-6">
-            {% if not event.poule and event.phase > 1 %}
-                {% if event.round.name is same as ("Phase de poules 1") %}
-                    <form method="post" action="{{ path('admin_creer_rencontre', {"idEvent": event.id}) }}">
-                        <label for="terrains">A partir du terrain</label><br>
-                        <select name="aPartir" class="form-control">
-                            {% for i in 0..20 %}
-                                <option value="{{ i }}">{{ i }}</option>
-                            {% endfor %}
-                        </select><br>
-                        <button type="submit" class="btn btn-secondary mt-4">Créer rencontres</button>
-
-                    </form>
-                    <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
-                        <button class="btn btn-secondary mt-4">Voir rencontres</button>
-                    </a>
-                {% endif %}
-            {% endif %}
                 {% if event.round.name is same as ('Tournoi consolante') or event.poule %}
                     <form method="post" action="{{ path('admin_creer_matchs_poules', {"idEvent": event.id}) }}">
                         {% for i in 1..nbrPoules|length %}
@@ -36,7 +19,7 @@
                             <br>
                             <label for="terrains">A partir du terrain</label><br>
                             <select name="aPartir{{ i }}" class="form-control">
-                                {% for i in 0..20 %}
+                                {% for i in 1..event.nbrFields %}
                                     <option value="{{ i }}">{{ i }}</option>
                                 {% endfor %}
                             </select><br>
@@ -97,7 +80,7 @@
                             </button>
                         </form>
                     {% elseif participations|length > 2 %}
-                        {% if event.round.name is same as ('1/2 finale') or ('1/2 finale consolante') and event.phase > 1%}
+                        {% if event.round.name is same as ('1/2 finale') or ('1/2 finale consolante') and event.phase > 1 and participations|length > 4%}
 
                             <form method="post"
                                   action="{{ path('admin_creation_rencontres_demi_finale', {"idEvent": event.id}) }}">

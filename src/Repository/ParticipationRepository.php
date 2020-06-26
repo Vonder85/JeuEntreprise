@@ -176,6 +176,8 @@ class ParticipationRepository extends ServiceEntityRepository
         $qb->leftJoin('p.event', 'e');
         return $qb->getQuery()->execute();
     }
+
+
     // /**
     //  * @return Participation[] Returns an array of Participation objects
     //  */

@@ -112,8 +112,20 @@ class EventController extends AbstractController
         switch ($match->getEvent()->getRound()->getName()){
             case "Finale": $match->getWinner()->setPositionClassement(1);
                             $match->getLooser()->setPositionClassement(2);
+                            if($match->getEvent()->getType()->getName() === 'Tournoi individuel'){
+                                $match->getWinner()->setGoldMedal(1);
+                                $match->getWinner()->getParticipant()->getAthlet()->setGoldMedal($match->getWinner()->getParticipant()->getAthlet()->getGoldMedal() + 1);
+                                $match->getWinner()->getParticipant()->getAthlet()->getCompany()->setGoldMedal($match->getWinner()->getParticipant()->getAthlet()->getCompany()->getGoldMedal() + 1);
+                                $match->getLooser()->setSilverMedal(1);
+                                $match->getLooser()->getParticipant()->getAthlet()->setSilverMedal($match->getLooser()->getParticipant()->getAthlet()->getSilverMedal() + 1);
+                                $match->getLooser()->getParticipant()->getAthlet()->getCompany()->setSilverMedal($match->getLooser()->getParticipant()->getAthlet()->getCompany()->getSilverMedal() + 1);
+                            }
+
                             break;
             case "3ème place": $match->getWinner()->setPositionClassement(3);
+                                $match->getWinner()->setBronzeMedal(1);
+                                $match->getWinner()->getParticipant()->getAthlet()->setBronzeMedal($match->getWinner()->getParticipant()->getAthlet()->getBronzeMedal() + 1);
+                                 $match->getWinner()->getParticipant()->getAthlet()->getCompany()->setBronzeMedal($match->getWinner()->getParticipant()->getAthlet()->getCompany()->getBronzeMedal() + 1);
                                 $match->getLooser()->setPositionClassement(4);
                                 break;
             case "5ème place": $match->getWinner()->setPositionClassement(5);
@@ -172,7 +184,7 @@ class EventController extends AbstractController
      * Fonction qui crée le classement pour sports co
      * @Route("/creationClassement/{idEvent}", name="creation_classement", requirements={"idEvent": "\d+"})
      */
-    public function classementSportsCo($idEvent, EntityManagerInterface $em){
+    public function classementSportsCo($idEvent, EntityManagerInterface $em, MatchRepository $mr){
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
         $event = $em->getRepository(Event::class)->find($idEvent);
         $matchs = $em->getRepository(Match::class)->findMatchesWithAnEvent($event);
@@ -372,7 +384,6 @@ class EventController extends AbstractController
         $event = $em->getRepository(Event::class)->find($idEvent);
         $events = $em->getRepository(Event::class)->findBy(['name' => $event->getName()]);
         $participations = $em->getRepository(Participation::class)->getParticipationWithAnEventName($event->getName(), $event->getCompetition());
-        dump($participations);
 
         $classement = [];
         foreach ($events as $item){
@@ -383,6 +394,9 @@ class EventController extends AbstractController
                 $classement[] = $participation;
             }
         }
+
+        $test = $em->getRepository(Event::class)->recuperermedaillesPays($event->getCompetition(), 'Tournoi individuel');
+
         $em->flush();
 
             return $this->render('event/classementGeneral.html.twig',[
