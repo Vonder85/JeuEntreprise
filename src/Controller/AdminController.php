@@ -543,7 +543,16 @@ class AdminController extends AbstractController
             $em->persist($teamCreated);
             $em->flush();
         }
-        $athletsTeam = $em->getRepository(TeamCreated::class)->athletinTeam($id);
+        $teamForm = $this->createForm(TeamType::class, $team);
+
+        $teamForm->handleRequest($req);
+        if ($teamForm->isSubmitted() && $teamForm->isValid()) {
+
+            $em->persist($teamCreated);
+            $em->flush();
+            $this->addFlash('success', 'Equipe Modifiée');
+            return $this->redirectToRoute('admin_teams');
+        }
 
 
         return $this->redirectToRoute('admin_see_team', [
@@ -560,6 +569,7 @@ class AdminController extends AbstractController
         $team = $tr->find($id);
 
         $teamCreatedForm = $this->createForm(TeamCreatedType::class);
+        $teamForm = $this->createForm(TeamType::class, $team);
 
         $athletsTeam = $em->getRepository(TeamCreated::class)->athletinTeam($id);
 
@@ -567,7 +577,8 @@ class AdminController extends AbstractController
         return $this->render('admin/edit/team.html.twig', [
             "teamCreatedForm" => $teamCreatedForm->createView(),
             "team" => $team,
-            "athletsTeam" => $athletsTeam
+            "athletsTeam" => $athletsTeam,
+            'teamForm' => $teamForm->createView()
         ]);
     }
 

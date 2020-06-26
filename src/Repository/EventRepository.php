@@ -82,12 +82,10 @@ class EventRepository extends ServiceEntityRepository
     /**
      * Fonction qui réucpère les mdeialles pour un pays
      */
-    public function recuperermedaillesPays($competition, $eventType){
+    public function recuperermedaillesPays($competition){
         $qb = $this->createQueryBuilder('e');
         $qb->andWhere('e.competition = :competition')
-            ->setParameter('competition', $competition)
-            ->andWhere('t.name = :eventType')
-            ->setParameter('eventType', $eventType);
+            ->setParameter('competition', $competition);
         $qb->leftJoin('e.participation', "pa");
         $qb->leftJoin('e.type', 't');
         $qb->leftJoin('pa.participant', 'p');

@@ -112,20 +112,26 @@ class EventController extends AbstractController
         switch ($match->getEvent()->getRound()->getName()){
             case "Finale": $match->getWinner()->setPositionClassement(1);
                             $match->getLooser()->setPositionClassement(2);
+                            $match->getWinner()->setGoldMedal(1);
+                            $match->getLooser()->setSilverMedal(1);
                             if($match->getEvent()->getType()->getName() === 'Tournoi individuel'){
-                                $match->getWinner()->setGoldMedal(1);
                                 $match->getWinner()->getParticipant()->getAthlet()->setGoldMedal($match->getWinner()->getParticipant()->getAthlet()->getGoldMedal() + 1);
                                 $match->getWinner()->getParticipant()->getAthlet()->getCompany()->setGoldMedal($match->getWinner()->getParticipant()->getAthlet()->getCompany()->getGoldMedal() + 1);
-                                $match->getLooser()->setSilverMedal(1);
                                 $match->getLooser()->getParticipant()->getAthlet()->setSilverMedal($match->getLooser()->getParticipant()->getAthlet()->getSilverMedal() + 1);
                                 $match->getLooser()->getParticipant()->getAthlet()->getCompany()->setSilverMedal($match->getLooser()->getParticipant()->getAthlet()->getCompany()->getSilverMedal() + 1);
+                            }else{
+                                $match->getWinner()->getParticipant()->getTeam()->getCompany()->setGoldMedal($match->getWinner()->getParticipant()->getTeam()->getCompany()->getGoldMedal() + 1);
+                                $match->getLooser()->getParticipant()->getTeam()->getCompany()->setSilverMedal($match->getLooser()->getParticipant()->getTeam()->getCompany()->getSilverMedal() + 1);
                             }
-
                             break;
             case "3ème place": $match->getWinner()->setPositionClassement(3);
                                 $match->getWinner()->setBronzeMedal(1);
+                                if($match->getEvent()->getType()->getName() === 'Tournoi individuel'){
                                 $match->getWinner()->getParticipant()->getAthlet()->setBronzeMedal($match->getWinner()->getParticipant()->getAthlet()->getBronzeMedal() + 1);
                                  $match->getWinner()->getParticipant()->getAthlet()->getCompany()->setBronzeMedal($match->getWinner()->getParticipant()->getAthlet()->getCompany()->getBronzeMedal() + 1);
+                                } else{
+                                    $match->getWinner()->getParticipant()->getTeam()->getCompany()->setBronzeMedal($match->getWinner()->getParticipant()->getTeam()->getCompany()->getBronzeMedal() + 1);
+                                }
                                 $match->getLooser()->setPositionClassement(4);
                                 break;
             case "5ème place": $match->getWinner()->setPositionClassement(5);
@@ -394,8 +400,6 @@ class EventController extends AbstractController
                 $classement[] = $participation;
             }
         }
-
-        $test = $em->getRepository(Event::class)->recuperermedaillesPays($event->getCompetition(), 'Tournoi individuel');
 
         $em->flush();
 

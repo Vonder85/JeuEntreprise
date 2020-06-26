@@ -54,7 +54,7 @@ class MainController extends AbstractController
         $idCompetition = $request->query->get('competitionClassement');
         $competition = $cr->find($idCompetition);
 
-        $pays = $er->recuperermedaillesPays($competition, 'Tournoi individuel');
+        $pays = $er->recuperermedaillesPays($competition);
 
         return $this->render('competition/classementPays.html.twig', [
             'pays'=>$pays

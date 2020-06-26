@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Athlet;
+use App\Entity\Company;
 use App\Entity\Team;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -15,6 +15,12 @@ class TeamType extends AbstractType
     {
         $builder
             ->add('name', null, ['label' => 'Nom'])
+            ->add('company', EntityType::class, [
+                "class" => Company::class,
+                "choice_label" => "name",
+                "label" => 'Entreprise',
+                "required" => 'true'
+            ])
         ;
     }
 

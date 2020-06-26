@@ -47,6 +47,12 @@
 
             </div>
         </div>
+        <div>
+            {{ form_start(teamForm, {'action': path('admin_edit_team', {"id": team.id})}) }}
+            {{ form_widget(teamForm) }}
+            <button type="submit" id="btnSave" class="btn btn-secondary">Valider</button>
+            {{ form_end(teamForm) }}
+        </div>
         <a href="{{ path('admin_teams') }}"><button class="btn btn-secondary">Retour</button></a>
     </div>
 {% endblock %}

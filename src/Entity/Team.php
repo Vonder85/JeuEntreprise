@@ -64,6 +64,11 @@ class Team
     private $teamCreated;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company")
+     */
+    private $company;
+
+    /**
      * @return ArrayCollection
      */
     public function getParticipant(): ArrayCollection
@@ -95,5 +100,20 @@ class Team
         $this->teamCreated = $teamCreated;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param mixed $company
+     */
+    public function setCompany($company): void
+    {
+        $this->company = $company;
+    }
 
 }
