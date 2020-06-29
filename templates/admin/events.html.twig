@@ -4,6 +4,16 @@
 {% block body %}
     <div class="container">
         <form class="form-inline mt-4 row justify-content-center" action="{{ path('classement_pays') }}">
+            <label for="competitonClassmeent">Classement par pays :</label>
+            <select name="competitionClassement" class="custom-select custom-select-md mr-3">
+                {% for competition in competitions %}
+                    <option value="{{ competition.id }}" selected>{{ competition.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Valider</button>
+        </form>
+        <form class="form-inline mt-4 row justify-content-center" action="{{ path('classement_entreprises') }}">
+            <label for="competitonClassmeent">Classement par entreprises :</label>
             <select name="competitionClassement" class="custom-select custom-select-md mr-3">
                 {% for competition in competitions %}
                     <option value="{{ competition.id }}" selected>{{ competition.name }}</option>

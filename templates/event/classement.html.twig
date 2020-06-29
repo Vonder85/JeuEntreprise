@@ -4,8 +4,11 @@
 {% block body %}
     <div class="container">
         <h1>{{ event.round.name }}</h1>
+        {% if event.phase == 1 %}
+            <button class="btn btn-secondary" onclick="window.location='{{ path('admin_attribuer_medailles', {"idEvent": event.id}) }}'">Attribuer les médailles</button>
+        {% endif %}
         {% if not event.poule %}
-            {% if participations|length == 7 or (participations|length ==4 and participationsDebut|length == 4) %}
+            {% if participations|length == 7 or (participations|length == 4 and participationsDebut|length == 4) %}
                 {% if is_granted("ROLE_ADMIN") %}
                     <form method="post" action="{{ path('admin_creation_phase2', {"idEvent": event.id}) }}">
                         <input type="hidden" name="round" value="1/2 finale">
@@ -425,6 +428,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nom</th>
+                        <th scope="col">Points Classement</th>
                         <th scope="col">Victoires</th>
                         <th scope="col">Défaites</th>
                         <th scope="col">Nul</th>
@@ -448,7 +452,6 @@
                             <th scope="col">
                                 Diff. {% if event.discipline.name is same as ("Handball" or "Football 7" or "Football 11"or "Football 5") %}Buts{% elseif event.discipline.name is same as ("Rugby 5" or "Rugby 7") %}Essais {% else %}Points{% endif %}</th>
                         {% endif %}
-                        <th scope="col">Points Classement</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -457,6 +460,7 @@
                         <tr>
                             <th scope="row">{{ i }}</th>
                             <td>{{ participationsPoule[l][k].participant.name }}</td>
+                            <td>{{ participationsPoule[l][k].pointsClassement }}</td>
                             <td>{{ participationsPoule[l][k].victory }}</td>
                             <td>{{ participationsPoule[l][k].defeat }}</td>
                             <td>{{ participationsPoule[l][k].nul }}</td>
@@ -475,7 +479,6 @@
                                 <td>{{ participationsPoule[l][k].pointsEncaisses }}</td>
                                 <td>{{ participationsPoule[l][k].pointsMarques - participationsPoule[l][k].pointsEncaisses }}</td>
                             {% endif %}
-                            <td>{{ participationsPoule[l][k].pointsClassement }}</td>
                         </tr>
 
                         {% set i = i+1 %}
@@ -491,6 +494,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nom</th>
+                    <th scope="col">Points Classement</th>
                     <th scope="col">Victoires</th>
                     <th scope="col">Défaites</th>
                     <th scope="col">Nul</th>
@@ -514,7 +518,6 @@
                         <th scope="col">
                             Diff. {% if event.discipline.name is same as ("Handball" or "Football 7" or "Football 11"or "Football 5") %}Buts{% elseif event.discipline.name is same as ("Rugby 5" or "Rugby 7") %}Essais {% else %}Points{% endif %}</th>
                     {% endif %}
-                    <th scope="col">Points Classement</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -523,6 +526,7 @@
                     <tr>
                         <th scope="row">{{ i }}</th>
                         <td>{{ participation.participant.name }}</td>
+                        <td>{{ participation.pointsClassement }}</td>
                         <td>{{ participation.victory }}</td>
                         <td>{{ participation.defeat }}</td>
                         <td>{{ participation.nul }}</td>
@@ -530,7 +534,7 @@
                         {% if event.discipline.sets %}
                             <td>{{ participation.setsMarques }}</td>
                             <td>{{ participation.setsEncaisses }}</td>
-                            <td>{{ participation.setsMarques - participationsPoule[l][k].setsEncaisses }}</td>
+                            <td>{{ participation.setsMarques - participation.setsEncaisses }}</td>
                             {% if event.type.name is same as ("Tournoi par équipes") %}
                                 <td>{{ participation.pointsMarques }}</td>
                                 <td>{{ participation.pointsEncaisses }}</td>
@@ -541,7 +545,6 @@
                             <td>{{ participation.pointsEncaisses }}</td>
                             <td>{{ participation.pointsMarques - participation.pointsEncaisses }}</td>
                         {% endif %}
-                        <td>{{ participation.pointsClassement }}</td>
                     </tr>
 
                     {% set i = i+1 %}

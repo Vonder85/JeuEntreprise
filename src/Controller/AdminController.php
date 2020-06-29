@@ -2764,5 +2764,36 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_see_planning_meets', ["idEvent" => $idEvent]);
     }
 
+    /**
+     * @Route("/attribuerMedailles/{idEvent}", name="attribuer_medailles", requirements={"idEvent": "\d+"})
+     * Fonction qui attribue les medailles pour les event à 1 phase
+     */
+    public function attribuerMedailles($idEvent, EntityManagerInterface $em, MatchRepository $mr){
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
+        $participations =  (new \App\Utils\EventUtils($mr))->classerParPoints($participations);
+
+        $participations[0]->setGoldMedal($participations[0]->getGoldMedal() + 1);
+        $participations[1]->setSilverMedal($participations[1]->getSilverMedal() + 1);
+        $participations[2]->setBronzeMedal($participations[2]->getBronzeMedal() + 1);
+
+        if($participations[0]->getEvent()->getType()->getName() === 'Tournoi individuel'){
+            $participations[0]->getParticipant()->getAthlet()->setGoldMedal($participations[0]->getParticipant()->getAthlet()->getGoldMedal() + 1);
+            $participations[0]->getParticipant()->getAthlet()->getCompany()->setGoldMedal($participations[0]->getParticipant()->getAthlet()->getCompany()->getGoldMedal() + 1);
+            $participations[1]->getParticipant()->getAthlet()->setSilverMedal($participations[1]->getParticipant()->getAthlet()->getSilverMedal() + 1);
+            $participations[1]->getParticipant()->getAthlet()->getCompany()->setSilverMedal($participations[1]->getParticipant()->getAthlet()->getCompany()->getSilverMedal() + 1);
+            $participations[2]->getParticipant()->getAthlet()->setBronzeMedal($participations[2]->getParticipant()->getAthlet()->getBronzeMedal() + 1);
+            $participations[2]->getParticipant()->getAthlet()->getCompany()->setBronzeMedal($participations[2]->getParticipant()->getAthlet()->getCompany()->getBronzeMedal() + 1);
+        }else{
+            $participations[0]->getParticipant()->getTeam()->getCompany()->setGoldMedal($participations[0]->getParticipant()->getTeam()->getCompany()->getGoldMedal() + 1);
+            $participations[1]->getParticipant()->getTeam()->getCompany()->setSilverMedal($participations[1]->getParticipant()->getTeam()->getCompany()->getSilverMedal() + 1);
+            $participations[2]->getParticipant()->getTeam()->getCompany()->setGoldMedal($participations[2]->getParticipant()->getTeam()->getCompany()->getGoldMedal() + 1);
+        }
+        $em->flush();
+
+        $this->addFlash('success', "Médailles attribuées");
+        return $this->redirectToRoute('event_afficher_classement', [
+            "idEvent" => $idEvent
+        ]);
+    }
 
 }

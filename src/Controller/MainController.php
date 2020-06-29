@@ -56,8 +56,29 @@ class MainController extends AbstractController
 
         $pays = $er->recuperermedaillesPays($competition);
 
+
+
         return $this->render('competition/classementPays.html.twig', [
-            'pays'=>$pays
+            'pays'=>$pays,
+            'competition' => $competition
+
+        ]);
+    }
+
+    /**
+     * @Route("/classementEntreprises", name="classement_entreprises")
+     * Retourne le classement des entreprises
+     */
+    public function classementDesEntreprises(Request $request, CompetitionRepository $cr, EventRepository $er){
+        $idCompetition = $request->query->get('competitionClassement');
+        $competition = $cr->find($idCompetition);
+
+        $entreprises = $er->recuperermedaillesEntreprises($competition);
+
+        return $this->render('competition/classementEntreprises.html.twig', [
+            'entreprises' => $entreprises,
+            'competition' => $competition
+
         ]);
     }
 
