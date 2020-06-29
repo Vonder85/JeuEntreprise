@@ -242,7 +242,7 @@
                     </thead>
                     <tbody>
                     {% for match in matchs %}
-                        {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
+                        {% if  (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
                         <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
                         {% else %}
                             <tr>
