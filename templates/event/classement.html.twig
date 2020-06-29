@@ -4,27 +4,29 @@
 {% block body %}
     <div class="container">
         <h1>{{ event.round.name }}</h1>
+        {% if is_granted("ROLE_ADMIN") %}
         {% if event.phase == 1 %}
-            <button class="btn btn-secondary" onclick="window.location='{{ path('admin_attribuer_medailles', {"idEvent": event.id}) }}'">Attribuer les médailles</button>
+            <button class="btn btn-secondary"
+                    onclick="window.location='{{ path('admin_attribuer_medailles', {"idEvent": event.id}) }}'">Attribuer
+                les médailles
+            </button>
         {% endif %}
         {% if not event.poule %}
             {% if participations|length == 7 or (participations|length == 4 and participationsDebut|length == 4) %}
-                {% if is_granted("ROLE_ADMIN") %}
-                    <form method="post" action="{{ path('admin_creation_phase2', {"idEvent": event.id}) }}">
-                        <input type="hidden" name="round" value="1/2 finale">
-                        <button type="submit" class="btn btn-secondary">
-                            Créer 1/2 finale
+                <form method="post" action="{{ path('admin_creation_phase2', {"idEvent": event.id}) }}">
+                    <input type="hidden" name="round" value="1/2 finale">
+                    <button type="submit" class="btn btn-secondary">
+                        Créer 1/2 finale
+                    </button>
+                </form>
+                {% if participations|length == 7 %}
+                    <form method="post"
+                          action="{{ path('admin_creation_poule_5eme_place', {"idEvent": event.id}) }}">
+                        <input type="hidden" name="round" value="Poule de classement">
+                        <button class="btn btn-secondary">
+                            Créer poule 5ème place
                         </button>
                     </form>
-                    {% if participations|length == 7 %}
-                        <form method="post"
-                              action="{{ path('admin_creation_poule_5eme_place', {"idEvent": event.id}) }}">
-                            <input type="hidden" name="round" value="Poule de classement">
-                            <button class="btn btn-secondary">
-                                Créer poule 5ème place
-                            </button>
-                        </form>
-                    {% endif %}
                 {% endif %}
             {% endif %}
         {% endif %}
@@ -420,6 +422,9 @@
                     </form>
                 {% endif %}
             {% endif %}
+        {%  endif %}
+        {%  endif %}
+        {% if event.poule %}
             {% set p = 1 %}
             {% for l in 0..poules|length-1 %}
                 <table class="table table-striped table-dark mb-4 mt-4">
@@ -559,7 +564,7 @@
             </button>
         {% else %}
             <button class="btn btn-secondary"
-                    onclick="window.location='{{ path('event_voir_rencontres', {"idEvent": event.id}) }}'">Retour
+                    onclick="window.location='{{ path('event_show_event', {"idEvent": event.id}) }}'">Retour
             </button>
         {% endif %}
     </div>

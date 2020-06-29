@@ -3,10 +3,17 @@
 {% block title %}Evènement | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
-        <h3>{{ event.name }}</h3>
-        <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
-            <button class="btn btn-secondary">Voir rencontres</button>
-        </a>
+        <h2>{{ event.name }}</h2>
+        <h3>{{ event.round.name }}</h3>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
+                <button class="btn btn-secondary">Voir rencontres</button>
+            </a>
+        {% else %}
+            <a href="{{ path('event_voir_rencontres', {"idEvent": event.id}) }}">
+                <button class="btn btn-secondary">Voir rencontres</button>
+            </a>
+        {% endif %}
         {% if event.poule %}
 
             <button class="btn btn-secondary"
@@ -21,9 +28,12 @@
                 Voir classement
             </button>
         {% endif %}
-        {% if event.round.name is same as ('Poule de classement')  %}
+        {% if event.round.name is same as ('Poule de classement') %}
 
-            <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
+            <button class="btn btn-secondary"
+                    onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir
+                classement
+            </button>
         {% endif %}
         {% if event.type.name is same as ("Tournoi par équipes") %}
             <table class="table mb-0 mt-4">
@@ -33,7 +43,9 @@
                     <th scope="col">Nom</th>
                     <th scope="col">Entreprise</th>
                     <th scope="col">Pays</th>
-                    <th scope="col">Actions</th>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <th scope="col">Actions</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -45,13 +57,15 @@
                         <td>{{ participant.teamName }} </td>
                         <td>{{ participant.companyName }} </td>
                         <td>{{ participant.countryName }} </td>
-                        <td>
 
-                            <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">
-                                <button class="btn btn-secondary">Désinscrire</button>
-                            </a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td>
+                                <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">
+                                    <button class="btn btn-secondary">Désinscrire</button>
+                                </a>
+                            </td>
+                        {% endif %}
 
-                        </td>
                     </tr>
                     {% set i = i+1 %}
                 {% endfor %}
@@ -65,7 +79,9 @@
                     <th scope="col">Nom et prénom</th>
                     <th scope="col">Entreprise</th>
                     <th scope="col">Pays</th>
-                    <th scope="col">Actions</th>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <th scope="col">Actions</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -77,11 +93,15 @@
                         <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
                         <td>{{ participant.athletCompany }} </td>
                         <td>{{ participant.athletCountry }} </td>
-                        <td>
-                            <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">
-                                <button class="btn btn-secondary">Désinscrire</button>
-                            </a>
-                        </td>
+
+                        {% if is_granted("ROLE_ADMIN") %}
+                            <td>
+                                <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">
+                                    <button class="btn btn-secondary">Désinscrire</button>
+                                </a>
+                            </td>
+                        {% endif %}
+
                     </tr>
                     {% set i = i+1 %}
                 {% endfor %}

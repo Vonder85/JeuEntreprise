@@ -3,6 +3,93 @@
 {% block title %}Evènements | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
+        <form class="form-inline mt-4 row justify-content-center" action="">
+            {% if criteria.search != '' %}
+                <input type="text" name="search" id="search" class="mr-3 form-control" placeholder="Recherche"
+                       value="{{ criteria.search }}">{% else %}
+                <input type="text" name="search" id="search" class="mr-3 form-control" placeholder="Recherche">
+            {% endif %}
+
+           <select name="competition" class="custom-select custom-select-md mr-3">
+                {% if criteria.competition == null %}
+                    <option value="{{ app.user.competition.id }}" selected >{{ app.user.competition.name }}</option>
+                {% else %}
+                    <option value="{{ app.user.competition.id }}" >{{ app.user.competition.name }}</option>
+                {% endif %}
+            </select>
+
+            <select name="discipline" class="custom-select custom-select-md mr-3">
+                {% if criteria.discipline == null %}
+                <option value="{{ app.user.discipline.id }}" selected
+                        >{{ app.user.discipline.name }}</option>
+                {% else %}
+                <option value="{{ app.user.discipline.id }}" readonly="true">{{ app.user.discipline.name }}</option>
+                {% endif %}
+            </select>
+
+            <select name="gender" class="custom-select custom-select-md mr-3" id="gender">
+                {% if criteria.gender == "" %}
+                    <option value="All" selected>Tous les genres</option>
+                    <option value="Femme">Femme</option>
+                    <option value="Homme">Homme</option>
+                    <option value="Mixte">Mixte</option>
+                {% else %}
+                    <option value="All">Tous les genres</option>
+                    <option value="Femme">Femme</option>
+                    <option value="Homme">Homme</option>
+                    <option value="Mixte">Mixte</option>
+                {% endif %}
+            </select>
+
+            <select name="category" class="custom-select custom-select-md mr-3">
+                {% if criteria.category == null %}
+                    <option value="All" selected>Toutes les Catégories</option>
+                {% else %}
+                    <option value="All">Toutes les Catégories</option>
+                {% endif %}
+                {% for category in categories %}
+                    {% if criteria.category != null and criteria.category.id == category.id %}
+                        <option value="{{ category.id }}" selected>{{ category.name }}</option>
+                    {% else %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <select name="type" class="custom-select custom-select-md mr-3">
+                {% if criteria.type == null %}
+                    <option value="All" selected>Tous les Types</option>
+                {% else %}
+                    <option value="All">Tous les Types</option>
+                {% endif %}
+                {% for type in types %}
+                    {% if criteria.type != null and criteria.type.id == type.id %}
+                        <option value="{{ type.id }}" selected>{{ type.name }}</option>
+                    {% else %}
+                        <option value="{{ type.id }}">{{ type.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <select name="round" class="custom-select custom-select-md mr-3">
+                {% if criteria.round == null %}
+                    <option value="All" selected>Tous les Tours</option>
+                {% else %}
+                    <option value="All">Tous les Tours</option>
+                {% endif %}
+                {% for round in rounds %}
+                    {% if criteria.round != null and criteria.round.id == round.id %}
+                        <option value="{{ round.id }}" selected>{{ round.name }}</option>
+                    {% else %}
+                        <option value="{{ round.id }}">{{ round.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <div>
+                <button class="btn btn-secondary pull-right" type="submit" id="btnSearch">Rechercher</button>
+            </div>
+        </form>
         <table class="table table-striped table-dark mb-4 mt-4">
             <thead>
             <tr>
@@ -12,20 +99,39 @@
                 <th scope="col">Tour</th>
                 <th scope="col">Catégorie</th>
                 <th scope="col">Type</th>
-                <th scope="col">Autre</th>
-
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
             {% set i = 1 %}
-            {% for event  in events %}
-                <tr onclick="window.location='{{ path('event_voir_rencontres', {"idEvent": event.id}) }}'">
-                    <th scope="row">{{ i }}</th>
-                    <td>{{ event.discipline.name }}</td>
-                    <td>{{ event.name }}</td>
-                    <td>{{ event.round.name }}</td>
-                    <td>{{ event.category.name }}</td>
-                    <td>{{ event.type.name }}</td>
+            {% for event  in eventsFiltered %}
+                {% if is_granted('ROLE_ADMIN')  %}
+                <tr onclick="window.location='{{ path('admin_edit_event', {"id": event.eventId}) }}'">
+                {% elseif event.disciplineId != app.user.discipline.id  or event.competitionId != app.user.competition.id%}
+
+                {% elseif (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) %}
+                <tr onclick="window.location='{{ path('event_show_event', {"idEvent": event.eventId}) }}'">
+                    {% else %}
+                    <tr onclick="window.location='{{ path('event_show_event', {"idEvent": event.eventId}) }}'">
+                {% endif %}
+                <th scope="row">{{ i }}</th>
+                <td>{{ event.disciplineName }}</td>
+                <td>{{ event.eventName }}</td>
+                <td>{{ event.roundName }}</td>
+                <td>{{ event.categoryName }}</td>
+                <td>{{ event.typeName }}</td>
+                <td>
+                    {% if event.published %}
+                        <a href=" {{ path('event_classement_general',{"idEvent": event.eventId}) }}">
+                            <button class="btn btn-light btn-sm">Classement Final</button>
+                        </a>
+                    {% endif %}
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <a href="{{ path('admin_delete_event', {"id": event.eventId}) }}">
+                            <button class="btn btn-light btn-sm">Supprimer</button>
+                        </a>
+                    {% endif %}
+                </td>
 
                 </tr>
 
@@ -34,6 +140,17 @@
             </tbody>
         </table>
     </div>
+{% endblock %}
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
 
+    })
 
+    function submitForm(){
+        var evt = document.createEvent("MouseEvents");
+        evt.initMouseEvent("click", true, true, window,0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        document.getElementById("btnSearch").dispatchEvent(evt);
+    }
+</script>
 {% endblock %}

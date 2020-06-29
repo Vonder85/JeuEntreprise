@@ -529,7 +529,7 @@
                         </thead>
                         <tbody>
                         {% for match in matchs %}
-                            <tr onclick="window.location='{% if event.discipline.multiMatchs%}{{ path('admin_afficher_multiMatchs',{"idMatch": match.id}) }}{% else %}{{ path('event_detail_match', {"id": match.id}) }}{% endif %}'">
+                            <tr onclick="window.location='{% if event.discipline.multiMatchs%}{{ path('event_afficher_multiMatchs',{"idMatch": match.id, "idEvent": event.id}) }}{% else %}{{ path('event_detail_match', {"id": match.id}) }}{% endif %}'">
                                 <td>{{ match.participation1.participant.name }}</td>
                                 <td>{{ match.participation2.participant.name }}</td>
                                 <td>{{ match.field }}</td>

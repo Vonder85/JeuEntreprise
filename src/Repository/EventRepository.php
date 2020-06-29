@@ -59,7 +59,8 @@ class EventRepository extends ServiceEntityRepository
         $qb->join("e.category", 'ca');
         $qb->join("e.round", "r");
         $qb->join("e.type", "t");
-        $qb->Select("e.id as eventId, e.published,e.name as eventName, d.name as disciplineName, r.name as roundName, ca.name as categoryName, t.name as typeName");
+        $qb->join('e.competition', 'co');
+        $qb->Select("e.id as eventId, e.published,e.name as eventName, co.id as competitionId, d.name as disciplineName, d.id as disciplineId, r.name as roundName, ca.name as categoryName, t.name as typeName");
         return $qb->getQuery()->execute();
     }
 

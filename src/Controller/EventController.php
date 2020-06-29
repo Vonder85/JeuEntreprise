@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Category;
 use App\Entity\Competition;
 use App\Entity\Discipline;
 use App\Entity\Event;
@@ -10,10 +11,13 @@ use App\Entity\Match;
 use App\Entity\Participation;
 use App\Entity\Rencontre;
 use App\Entity\Round;
+use App\Entity\Type;
+use App\Form\EventType;
 use App\Repository\EventRepository;
 use App\Repository\MatchRepository;
 use App\Repository\ParticipationRepository;
 use App\Utils\EventUtils;
+use App\Utils\RencontreUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,15 +84,32 @@ class EventController extends AbstractController
      * @Route("/events/{idDiscipline}/{idCompetition}", name="events", requirements={"idDiscipline": "\d+", "idCompetition": "\d+"})
      * show all events of one discipline
      */
-    public function getEvents($idDiscipline, $idCompetition, EntityManagerInterface $em)
+    public function getEvents($idDiscipline, $idCompetition, EntityManagerInterface $em, Request $req)
     {
+        $criteria = AdminController::buildCriteria($req, $em);
+        $eventsFiltered = $em->getRepository(Event::class)->findEventsFiltered($criteria);
+        $events = $em->getRepository(Event::class)->findAll();
+        $competitions = $em->getRepository(Competition::class)->findAll();
+        $disciplines = $em->getRepository(Discipline::class)->findAll();
+        $categories = $em->getRepository(Category::class)->findAll();
+        $types = $em->getRepository(Type::class)->findAll();
+        $rounds = $em->getRepository(Round::class)->findAll();
         $discipline = $em->getRepository(Discipline::class)->find($idDiscipline);
         $competition = $em->getRepository(Competition::class)->find($idCompetition);
-        $events = $em->getRepository(Event::class)->findBy(["discipline" => $discipline, "competition" => $competition]);
+        $eventss = $em->getRepository(Event::class)->findBy(["discipline" => $discipline, "competition" => $competition]);
 
         return $this->render('event/events.html.twig', [
-            "events" => $events
+            "events" => $events,
+            "criteria" => $criteria,
+            "eventsFiltered" => $eventsFiltered,
+            "competitions" => $competitions,
+            "disciplines" => $disciplines,
+            "categories" => $categories,
+            "types" => $types,
+            "rounds" => $rounds,
+            "events" => $eventss
         ]);
+
     }
 
     /**
@@ -410,25 +431,76 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/event/{id}", name="show_event", requirements={"idEvent": "\d+"})
+     * @Route("/event/{idEvent}", name="show_event", requirements={"idEvent": "\d+"})
      * show an event
      */
     public function editEvent($idEvent, EntityManagerInterface $em, EventRepository $er, Request $request)
     {
         $event = $er->find($idEvent);
         $nbrPoules = $em->getRepository(Participation::class)->nbrPoules($idEvent);
-        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($id);
-        $eventForm = $this->createForm(EventType::class, $event);
-        $eventForm->handleRequest($request);
-        $participation = new Participation();
 
-        $participants = $em->getRepository(Participation::class)->findParticipationInAnEvent($id);
+        $participants = $em->getRepository(Participation::class)->findParticipationInAnEvent($idEvent);
 
-        return $this->render('admin/edit/event.html.twig', [
-            'eventForm' => $eventForm->createView(),
+        return $this->render('/event/event.html.twig', [
             'event' => $event,
             "participants" => $participants,
-            "nbrPoules" => $nbrPoules
+            "nbrPoules" => $nbrPoules,
         ]);
     }
+
+    /**
+     * @Route("/referentEvents/", name="referent_events")
+     */
+    public function main(Request $req, EntityManagerInterface $em)
+    {
+        $criteria = AdminController::buildCriteria($req, $em);
+        $eventsFiltered = $em->getRepository(Event::class)->findEventsFiltered($criteria);
+        $events = $em->getRepository(Event::class)->findAll();
+        $competitions = $em->getRepository(Competition::class)->findAll();
+        $disciplines = $em->getRepository(Discipline::class)->findAll();
+        $categories = $em->getRepository(Category::class)->findAll();
+        $types = $em->getRepository(Type::class)->findAll();
+        $rounds = $em->getRepository(Round::class)->findAll();
+
+        return $this->render('event/events.html.twig', [
+            "events" => $events,
+            "criteria" => $criteria,
+            "eventsFiltered" => $eventsFiltered,
+            "competitions" => $competitions,
+            "disciplines" => $disciplines,
+            "categories" => $categories,
+            "types" => $types,
+            "rounds" => $rounds
+        ]);
+    }
+
+    /**
+     * @Route("/afficherMultiMatchs/{idMatch}/{idEvent}", name="afficher_multiMatchs", requirements={"idMatch": "\d+", "idEvent": "\d+"})
+     */
+    public function afficherMultiMatchs($idMatch, $idEvent, EntityManagerInterface $em)
+    {
+        $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
+        if (empty($rencontres)) {
+            $match = $em->getRepository(Match::class)->find($idMatch);
+            $matchs = RencontreUtils::multiMatchs($match, $match->getEvent());
+            foreach ($matchs as $match) {
+                $em->persist($match);
+            }
+            $em->flush();
+            $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
+        }
+        $event = $em->getRepository(Event::class)->find($idEvent);
+        $discipline = $event->getDiscipline()->getId();
+        $competition = $event->getCompetition()->getId();
+        dump($discipline);
+        dump($competition);
+        $rencontre = $rencontres[0];
+        return $this->render('admin/rencontres.html.twig', [
+            "rencontres" => $rencontres,
+            "rencontre" => $rencontre,
+            "discipline" => $discipline,
+            "competition" => $competition
+        ]);
+    }
+
 }

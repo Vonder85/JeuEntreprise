@@ -2726,27 +2726,7 @@ class AdminController extends AbstractController
     }
 
 
-    /**
-     * @Route("/afficherMultiMatchs/{idMatch}", name="afficher_multiMatchs", requirements={"idMatch": "\d+"})
-     */
-    public function afficherMultiMatchs($idMatch, EntityManagerInterface $em)
-    {
-        $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
-        if (empty($rencontres)) {
-            $match = $em->getRepository(Match::class)->find($idMatch);
-            $matchs = RencontreUtils::multiMatchs($match, $match->getEvent());
-            foreach ($matchs as $match) {
-                $em->persist($match);
-            }
-            $em->flush();
-            $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
-        }
-        $rencontre = $rencontres[0];
-        return $this->render('admin/rencontres.html.twig', [
-            "rencontres" => $rencontres,
-            "rencontre" => $rencontre
-        ]);
-    }
+
 
     /**
      * @Route("/genererResultats/{idEvent}", name="generer_resultats", requirements={"idEvent": "\d+"})

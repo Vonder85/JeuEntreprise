@@ -64,11 +64,11 @@
                     <option value="Femme">Femme</option>
                     <option value="Homme">Homme</option>
                     <option value="Mixte">Mixte</option>
-                    {% else %}
-                        <option value="All">Tous les genres</option>
-                        <option value="Femme">Femme</option>
-                        <option value="Homme">Homme</option>
-                        <option value="Mixte">Mixte</option>
+                {% else %}
+                    <option value="All">Tous les genres</option>
+                    <option value="Femme">Femme</option>
+                    <option value="Homme">Homme</option>
+                    <option value="Mixte">Mixte</option>
                 {% endif %}
             </select>
 
@@ -136,23 +136,29 @@
             <tbody>
             {% set i = 1 %}
             {% for event  in eventsFiltered %}
+                {% if is_granted('ROLE_ADMIN') %}
                 <tr onclick="window.location='{{ path('admin_edit_event', {"id": event.eventId}) }}'">
-                    <th scope="row">{{ i }}</th>
-                    <td>{{ event.disciplineName }}</td>
-                    <td>{{ event.eventName }}</td>
-                    <td>{{ event.roundName }}</td>
-                    <td>{{ event.categoryName }}</td>
-                    <td>{{ event.typeName }}</td>
-                    <td>
-                        {% if event.published %}
-                    <a href=" {{ path('event_classement_general',{"idEvent": event.eventId})}}"><button class="btn btn-light btn-sm">Classement Final</button></a>
+                {% else %}
+                    <tr onclick="window.location='{{ path('event_show_event', {"idEvent": event.eventId}) }}'">
+                {% endif %}
+                <th scope="row">{{ i }}</th>
+                <td>{{ event.disciplineName }}</td>
+                <td>{{ event.eventName }}</td>
+                <td>{{ event.roundName }}</td>
+                <td>{{ event.categoryName }}</td>
+                <td>{{ event.typeName }}</td>
+                <td>
+                    {% if event.published %}
+                        <a href=" {{ path('event_classement_general',{"idEvent": event.eventId}) }}">
+                            <button class="btn btn-light btn-sm">Classement Final</button>
+                        </a>
                     {% endif %}
-                        {% if is_granted("ROLE_ADMIN") %}
+                    {% if is_granted("ROLE_ADMIN") %}
                         <a href="{{ path('admin_delete_event', {"id": event.eventId}) }}">
                             <button class="btn btn-light btn-sm">Supprimer</button>
                         </a>
-                        {% endif %}
-                    </td>
+                    {% endif %}
+                </td>
 
                 </tr>
 

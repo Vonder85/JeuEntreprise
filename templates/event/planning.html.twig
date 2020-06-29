@@ -5,219 +5,301 @@
     <div class="container">
         {% if event.poule %}
             {% for k in 1..nbrPoules|length %}
-                {% if event.type.name is same as ("Tournoi par équipes") %}
-                    {% if k == 1 %}
-                        <table class="table table-striped table-dark mb-4 mt-4">
-                            <h2>Poule A</h2>
-                            <thead>
-                            <tr>
-                                <th scope="col">Equipe 1</th>
-                                <th scope="col">Equipe 2</th>
-                                <th scope="col">Terrain</th>
-                                <th scope="col">Heure</th>
-                                <th scope="col">Score</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for match in matchs%}
-                                {% if match.participation1.poule == 'A' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                        <td>{{ match.participation1.participant.name }}</td>
-                                        <td>{{ match.participation2.participant.name }}</td>
-                                        <td>{{ match.field }}</td>
-                                        <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                        <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                    </tr>
+
+                {% if k == 1 %}
+                    <table class="table table-striped table-dark mb-4 mt-4">
+                        <h2>Poule A</h2>
+                        <thead>
+                        <tr>
+                            <th scope="col">Equipe 1</th>
+                            <th scope="col">Equipe 2</th>
+                            <th scope="col">Terrain</th>
+                            <th scope="col">Heure</th>
+                            <th scope="col">Score</th>
+                            {% if event.discipline.sets == true %}
+                                <th scope="col">Détail</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for match in matchs %}
+                            {% if match.participation1.poule == 'A' %}
+                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% else %}
+                                    <tr>
                                 {% endif %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% elseif k == 2 %}
-                        <table class="table table-striped table-dark mb-4 mt-4">
-                            <h2>Poule B</h2>
-                            <thead>
-                            <tr>
-                                <th scope="col">Equipe 1</th>
-                                <th scope="col">Equipe 2</th>
-                                <th scope="col">Terrain</th>
-                                <th scope="col">Heure</th>
-                                <th scope="col">Score</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for match in matchs %}
-                                {% if match.participation1.poule == 'B' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                        <td>{{ match.participation1.participant.name }}</td>
-                                        <td>{{ match.participation2.participant.name }}</td>
-                                        <td>{{ match.field }}</td>
-                                        <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                        <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                    </tr>
+                                <td>{{ match.participation1.participant.name }}</td>
+                                <td>{{ match.participation2.participant.name }}</td>
+                                <td>{{ match.field }}</td>
+                                <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                {% if event.discipline.sets == true %}
+                                    <td>{{ match.detail }}</td>
                                 {% endif %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% elseif k == 3 %}
-                        <table class="table table-striped table-dark mb-4 mt-4">
-                            <h2>Poule C</h2>
-                            <thead>
-                            <tr>
-                                <th scope="col">Equipe 1</th>
-                                <th scope="col">Equipe 2</th>
-                                <th scope="col">Terrain</th>
-                                <th scope="col">Heure</th>
-                                <th scope="col">Score</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for match in matchs %}
-                                {% if match.participation1.poule == 'C' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                        <td>{{ match.participation1.participant.name }}</td>
-                                        <td>{{ match.participation2.participant.name }}</td>
-                                        <td>{{ match.field }}</td>
-                                        <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                        <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                    </tr>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% elseif k == 2 %}
+                    <table class="table table-striped table-dark mb-4 mt-4">
+                        <h2>Poule B</h2>
+                        <thead>
+                        <tr>
+                            <th scope="col">Equipe 1</th>
+                            <th scope="col">Equipe 2</th>
+                            <th scope="col">Terrain</th>
+                            <th scope="col">Heure</th>
+                            <th scope="col">Score</th>
+                            {% if event.discipline.sets == true %}
+                                <th scope="col">Détail</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for match in matchs %}
+                            {% if match.participation1.poule == 'B' %}
+                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% else %}
+                                    <tr>
                                 {% endif %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% elseif k == 4 %}
-                        <table class="table table-striped table-dark mb-4 mt-4">
-                            <h2>Poule D</h2>
-                            <thead>
-                            <tr>
-                                <th scope="col">Equipe 1</th>
-                                <th scope="col">Equipe 2</th>
-                                <th scope="col">Terrain</th>
-                                <th scope="col">Heure</th>
-                                <th scope="col">Score</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for match in matchs %}
-                                {% if match.participation1.poule == 'D' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                        <td>{{ match.participation1.participant.name }}</td>
-                                        <td>{{ match.participation2.participant.name }}</td>
-                                        <td>{{ match.field }}</td>
-                                        <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                        <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                    </tr>
+                                <td>{{ match.participation1.participant.name }}</td>
+                                <td>{{ match.participation2.participant.name }}</td>
+                                <td>{{ match.field }}</td>
+                                <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                {% if event.discipline.sets == true %}
+                                    <td>{{ match.detail }}</td>
                                 {% endif %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% elseif k == 5 %}
-                        <table class="table table-striped table-dark mb-4 mt-4">
-                            <h2>Poule E</h2>
-                            <thead>
-                            <tr>
-                                <th scope="col">Equipe 1</th>
-                                <th scope="col">Equipe 2</th>
-                                <th scope="col">Terrain</th>
-                                <th scope="col">Heure</th>
-                                <th scope="col">Score</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for match in matchs %}
-                                {% if match.participation1.poule == 'E' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                        <td>{{ match.participation1.participant.name }}</td>
-                                        <td>{{ match.participation2.participant.name }}</td>
-                                        <td>{{ match.field }}</td>
-                                        <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                        <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                    </tr>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% elseif k == 3 %}
+                    <table class="table table-striped table-dark mb-4 mt-4">
+                        <h2>Poule C</h2>
+                        <thead>
+                        <tr>
+                            <th scope="col">Equipe 1</th>
+                            <th scope="col">Equipe 2</th>
+                            <th scope="col">Terrain</th>
+                            <th scope="col">Heure</th>
+                            <th scope="col">Score</th>
+                            {% if event.discipline.sets == true %}
+                                <th scope="col">Détail</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for match in matchs %}
+                            {% if match.participation1.poule == 'C' %}
+                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% else %}
+                                    <tr>
                                 {% endif %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% elseif k == 6 %}
-                        <table class="table table-striped table-dark mb-4 mt-4">
-                            <h2>Poule F</h2>
-                            <thead>
-                            <tr>
-                                <th scope="col">Equipe 1</th>
-                                <th scope="col">Equipe 2</th>
-                                <th scope="col">Terrain</th>
-                                <th scope="col">Heure</th>
-                                <th scope="col">Score</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for match in matchs %}
-                                {% if match.participation1.poule == 'F' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                                        <td>{{ match.participation1.participant.name }}</td>
-                                        <td>{{ match.participation2.participant.name }}</td>
-                                        <td>{{ match.field }}</td>
-                                        <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                                        <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                                    </tr>
+                                <td>{{ match.participation1.participant.name }}</td>
+                                <td>{{ match.participation2.participant.name }}</td>
+                                <td>{{ match.field }}</td>
+                                <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                {% if event.discipline.sets == true %}
+                                    <td>{{ match.detail }}</td>
                                 {% endif %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% elseif k == 4 %}
+                    <table class="table table-striped table-dark mb-4 mt-4">
+                        <h2>Poule D</h2>
+                        <thead>
+                        <tr>
+                            <th scope="col">Equipe 1</th>
+                            <th scope="col">Equipe 2</th>
+                            <th scope="col">Terrain</th>
+                            <th scope="col">Heure</th>
+                            <th scope="col">Score</th>
+                            {% if event.discipline.sets == true %}
+                                <th scope="col">Détail</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for match in matchs %}
+                            {% if match.participation1.poule == 'D' %}
+                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% else %}
+                                    <tr>
+                                {% endif %}
+                                <td>{{ match.participation1.participant.name }}</td>
+                                <td>{{ match.participation2.participant.name }}</td>
+                                <td>{{ match.field }}</td>
+                                <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                {% if event.discipline.sets == true %}
+                                    <td>{{ match.detail }}</td>
+                                {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% elseif k == 5 %}
+                    <table class="table table-striped table-dark mb-4 mt-4">
+                        <h2>Poule E</h2>
+                        <thead>
+                        <tr>
+                            <th scope="col">Equipe 1</th>
+                            <th scope="col">Equipe 2</th>
+                            <th scope="col">Terrain</th>
+                            <th scope="col">Heure</th>
+                            <th scope="col">Score</th>
+                            {% if event.discipline.sets == true %}
+                                <th scope="col">Détail</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for match in matchs %}
+                            {% if match.participation1.poule == 'E' %}
+                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% else %}
+                                    <tr>
+                                {% endif %}
+                                <td>{{ match.participation1.participant.name }}</td>
+                                <td>{{ match.participation2.participant.name }}</td>
+                                <td>{{ match.field }}</td>
+                                <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                {% if event.discipline.sets == true %}
+                                    <td>{{ match.detail }}</td>
+                                {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% elseif k == 6 %}
+                    <table class="table table-striped table-dark mb-4 mt-4">
+                        <h2>Poule F</h2>
+                        <thead>
+                        <tr>
+                            <th scope="col">Equipe 1</th>
+                            <th scope="col">Equipe 2</th>
+                            <th scope="col">Terrain</th>
+                            <th scope="col">Heure</th>
+                            <th scope="col">Score</th>
+                            {% if event.discipline.sets == true %}
+                                <th scope="col">Détail</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for match in matchs %}
+                            {% if match.participation1.poule == 'F' %}
+                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% else %}
+                                    <tr>
+                                {% endif %}
+                                <td>{{ match.participation1.participant.name }}</td>
+                                <td>{{ match.participation2.participant.name }}</td>
+                                <td>{{ match.field }}</td>
+                                <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                                <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                                {% if event.discipline.sets == true %}
+                                    <td>{{ match.detail }}</td>
+                                {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 {% endif %}
+
             {% endfor %}
-        {% endif %}
-        {% if event.type.name is same as ("Tournoi individuel") %}
-            <table class="table table-striped table-dark mb-4 mt-4">
-                <thead>
-                <tr>
-                    <th scope="col">Equipe 1</th>
-                    <th scope="col">Equipe 2</th>
-                    <th scope="col">Terrain</th>
-                    <th scope="col">Heure</th>
-                    <th scope="col">Score</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for match in matchs %}
-                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+        {% else %}
+            {% if event.type.name is same as ("Tournoi individuel") %}
+                <table class="table table-striped table-dark mb-4 mt-4">
+                    <thead>
+                    <tr>
+                        <th scope="col">Equipe 1</th>
+                        <th scope="col">Equipe 2</th>
+                        <th scope="col">Terrain</th>
+                        <th scope="col">Heure</th>
+                        <th scope="col">Score</th>
+                        {% if event.discipline.sets == true %}
+                            <th scope="col">Détail</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for match in matchs %}
+                        {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
+                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                        {% else %}
+                            <tr>
+                        {% endif %}
                         <td>{{ match.participation1.participant.name }}</td>
                         <td>{{ match.participation2.participant.name }}</td>
                         <td>{{ match.field }}</td>
                         <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
                         <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                        {% if event.discipline.sets == true %}
+                            <td>{{ match.detail }}</td>
+                        {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+            {% if event.type.name is same as ("Tournoi par équipes") %}
+                <table class="table table-striped table-dark mb-4 mt-4">
+                    <thead>
+                    <tr>
+                        <th scope="col">Equipe 1</th>
+                        <th scope="col">Equipe 2</th>
+                        <th scope="col">Terrain</th>
+                        <th scope="col">Heure</th>
+                        <th scope="col">Score</th>
+                        {% if event.discipline.sets == true %}
+                            <th scope="col">Détail</th>
+                        {% endif %}
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-        {% if event.type.name is same as ("Tournoi par équipes") %}
-            <table class="table table-striped table-dark mb-4 mt-4">
-                <thead>
-                <tr>
-                    <th scope="col">Equipe 1</th>
-                    <th scope="col">Equipe 2</th>
-                    <th scope="col">Terrain</th>
-                    <th scope="col">Heure</th>
-                    <th scope="col">Score</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for match in matchs %}
-                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
-                        <td>{{ match.participation1.participant.name }}</td>
-                        <td>{{ match.participation2.participant.name }}</td>
-                        <td>{{ match.field }}</td>
-                        <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
-                        <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for match in matchs %}
+                        <tr onclick="window.location='{% if event.discipline.multiMatchs %}{{ path('event_afficher_multiMatchs',{"idMatch": match.id, "idEvent": event.id}) }}{% else %}{{ path('event_detail_match', {"id": match.id}) }}{% endif %}'">
+                            <td>{{ match.participation1.participant.name }}</td>
+                            <td>{{ match.participation2.participant.name }}</td>
+                            <td>{{ match.field }}</td>
+                            <td>{{ match.heure|format_datetime("full", "short", locale='fr') }}</td>
+                            <td>{% if match.scoreTeam1 is not same as ("NULL") %}{{ match.scoreTeam1 }} - {{ match.scoreTeam2 }} {% endif %}</td>
+                            {% if event.discipline.sets == true %}
+                                <td>{% if event.discipline.name is same as ("Badminton") %}{{ match.setsTeam1 }} - {{ match.setsTeam2 }}{% else %}{{ match.detail }}{% endif %}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
         {% endif %}
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-        <button class="btn btn-secondary mt-4 mb-4 align-items-center" onclick="window.location='{{ path('event_events', {"idDiscipline": app.user.discipline.id, "idCompetition": app.user.competition.id}) }}'">Retour</button>
+            <button class="btn btn-secondary mt-4 mb-4 align-items-center"
+                    onclick="window.location='{{ path('event_events', {"idDiscipline": app.user.discipline.id, "idCompetition": app.user.competition.id}) }}'">
+                Retour
+            </button>
         {% else %}
-            <button class="btn btn-secondary mt-4 mb-4 align-items-center" onclick="window.location='{{ path('main') }}'">Retour</button>
+            <button class="btn btn-secondary mt-4 mb-4 align-items-center"
+                    onclick="window.location='{{ path('event_show_event', {"idEvent": event.id}) }}'">Retour
+            </button>
         {% endif %}
     </div>
 {% endblock %}
