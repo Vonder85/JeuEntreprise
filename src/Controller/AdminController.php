@@ -807,10 +807,9 @@ class AdminController extends AbstractController
         dump((integer)$idParticipation);
         $pr->deleteParticipationEvent($idEvent, (integer)$idParticipation);
         dump($pr->getParticipationAvecUnParticipant($idEvent, $idParticipation));
-        //$em->remove();
         $em->flush();
         $this->addFlash('success', 'Participation supprimée');
-        return $this->redirectToRoute('admin_events');
+        return $this->redirectToRoute('admin_edit_event', ["id" => $idEvent]);
     }
 
     /**

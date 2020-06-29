@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Evènement | {{ parent() }}{% endblock %}
+{% block body %}
+    <div class="container">
+        <h3>{{ event.name }}</h3>
+        <a href="{{ path('admin_see_planning_meets', {"idEvent": event.id}) }}">
+            <button class="btn btn-secondary">Voir rencontres</button>
+        </a>
+        {% if event.poule %}
+
+            <button class="btn btn-secondary"
+                    onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">
+                Voir classement des poules
+            </button>
+
+        {% elseif event.phaseIn is same as (1) %}
+
+            <button class="btn btn-secondary"
+                    onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">
+                Voir classement
+            </button>
+        {% endif %}
+        {% if event.round.name is same as ('Poule de classement')  %}
+
+            <button class="btn btn-secondary" onclick="window.location='{{ path('event_creation_classement', {"idEvent": event.id}) }}'">Voir classement</button>
+        {% endif %}
+        {% if event.type.name is same as ("Tournoi par équipes") %}
+            <table class="table mb-0 mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Entreprise</th>
+                    <th scope="col">Pays</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% set i = 1 %}
+                {% for participant  in participants %}
+
+                    <tr>
+                        <th scope="row">{{ i }}</th>
+                        <td>{{ participant.teamName }} </td>
+                        <td>{{ participant.companyName }} </td>
+                        <td>{{ participant.countryName }} </td>
+                        <td>
+
+                            <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">
+                                <button class="btn btn-secondary">Désinscrire</button>
+                            </a>
+
+                        </td>
+                    </tr>
+                    {% set i = i+1 %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% elseif event.type.name is same as ('Tournoi individuel') %}
+            <table class="table mb-0 mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom et prénom</th>
+                    <th scope="col">Entreprise</th>
+                    <th scope="col">Pays</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% set i = 1 %}
+                {% for participant  in participants %}
+
+                    <tr>
+                        <th scope="row">{{ i }}</th>
+                        <td>{{ participant.athletName }} {{ participant.athletFirstname }}</td>
+                        <td>{{ participant.athletCompany }} </td>
+                        <td>{{ participant.athletCountry }} </td>
+                        <td>
+                            <a href="{{ path('admin_delete_participation_event', {'idEvent': event.id, 'idParticipation': participant.participantId}) }}">
+                                <button class="btn btn-secondary">Désinscrire</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% set i = i+1 %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        <button class="btn btn-secondary" onclick="window.location='{{ path('main') }}'">Retour</button>
+    </div>
+
+
+{% endblock %}

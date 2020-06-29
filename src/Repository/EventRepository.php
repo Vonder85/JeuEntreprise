@@ -92,11 +92,11 @@ class EventRepository extends ServiceEntityRepository
         $qb->leftJoin('p.athlet', 'a');
         $qb->leftJoin('p.team', 'team');
         $qb->leftJoin('team.company', 'c');
-        $qb->select('a.country, COUNT(pa.goldMedal) as goldMedal, COUNT(pa.silverMedal) as silverMedal, COUNT(pa.bronzeMedal) as bronzeMedal');
+        $qb->select('COALESCE((a.country), c.country) as country, COUNT(pa.goldMedal) as goldMedal, COUNT(pa.silverMedal) as silverMedal, COUNT(pa.bronzeMedal) as bronzeMedal');
         $qb->orderBy('COUNT(pa.goldMedal)', 'desc');
         $qb->addOrderBy('COUNT(pa.silverMedal)', 'desc');
         $qb->addOrderBy('COUNT(pa.bronzeMedal)', 'desc');
-        $qb->groupBy('a.country');
+        $qb->groupBy('country' );
         return $qb->getQuery()->execute();
     }
 
@@ -111,33 +111,17 @@ class EventRepository extends ServiceEntityRepository
         $qb->leftJoin('pa.participant', 'p');
         $qb->leftJoin('p.athlet', 'a');
         $qb->leftJoin('a.company', 'c');
-        $qb->select('c.name, COUNT(pa.goldMedal) as goldMedal, COUNT(pa.silverMedal) as silverMedal, COUNT(pa.bronzeMedal) as bronzeMedal');
+        $qb->leftJoin('p.team', 'team');
+        $qb->leftJoin('team.company', 'tc');
+        $qb->select('COALESCE((c.name), tc.name) as name, COUNT(pa.goldMedal) as goldMedal, COUNT(pa.silverMedal) as silverMedal, COUNT(pa.bronzeMedal) as bronzeMedal');
         $qb->orderBy('COUNT(pa.goldMedal)', 'desc');
         $qb->addOrderBy('COUNT(pa.silverMedal)', 'desc');
         $qb->addOrderBy('COUNT(pa.bronzeMedal)', 'desc');
-        $qb->groupBy('c.name');
+        $qb->groupBy('name');
         return $qb->getQuery()->execute();
     }
 
-    /**
-     * Fonction qui récupère les medailles pour entreprises equipes
-     */
-    public function recuperermedaillesPaysEquipes($competition)
-    {
-        $qb = $this->createQueryBuilder('e');
-        $qb->andWhere('e.competition = :competition')
-            ->setParameter('competition', $competition);
-        $qb->leftJoin('e.participation', "pa");
-        $qb->leftJoin('pa.participant', 'p');
-        $qb->leftJoin('p.team', 't');
-        $qb->leftJoin('t.company', 'c');
-        $qb->select('c.name, COUNT(pa.goldMedal) as goldMedal, COUNT(pa.silverMedal) as silverMedal, COUNT(pa.bronzeMedal) as bronzeMedal');
-        $qb->orderBy('COUNT(pa.goldMedal)', 'desc');
-        $qb->addOrderBy('COUNT(pa.silverMedal)', 'desc');
-        $qb->addOrderBy('COUNT(pa.bronzeMedal)', 'desc');
-        $qb->groupBy('c.name');
-        return $qb->getQuery()->execute();
-    }
+
     // /**
     //  * @return Event[] Returns an array of Event objects
     //  */

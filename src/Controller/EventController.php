@@ -409,4 +409,26 @@ class EventController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/event/{id}", name="show_event", requirements={"idEvent": "\d+"})
+     * show an event
+     */
+    public function editEvent($idEvent, EntityManagerInterface $em, EventRepository $er, Request $request)
+    {
+        $event = $er->find($idEvent);
+        $nbrPoules = $em->getRepository(Participation::class)->nbrPoules($idEvent);
+        $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($id);
+        $eventForm = $this->createForm(EventType::class, $event);
+        $eventForm->handleRequest($request);
+        $participation = new Participation();
+
+        $participants = $em->getRepository(Participation::class)->findParticipationInAnEvent($id);
+
+        return $this->render('admin/edit/event.html.twig', [
+            'eventForm' => $eventForm->createView(),
+            'event' => $event,
+            "participants" => $participants,
+            "nbrPoules" => $nbrPoules
+        ]);
+    }
 }

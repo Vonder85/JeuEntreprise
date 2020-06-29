@@ -56,8 +56,6 @@ class MainController extends AbstractController
 
         $pays = $er->recuperermedaillesPays($competition);
 
-
-
         return $this->render('competition/classementPays.html.twig', [
             'pays'=>$pays,
             'competition' => $competition

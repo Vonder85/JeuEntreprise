@@ -147,9 +147,11 @@
                         {% if event.published %}
                     <a href=" {{ path('event_classement_general',{"idEvent": event.eventId})}}"><button class="btn btn-light btn-sm">Classement Final</button></a>
                     {% endif %}
+                        {% if is_granted("ROLE_ADMIN") %}
                         <a href="{{ path('admin_delete_event', {"id": event.eventId}) }}">
                             <button class="btn btn-light btn-sm">Supprimer</button>
                         </a>
+                        {% endif %}
                     </td>
 
                 </tr>
