@@ -33,11 +33,14 @@ class EventController extends AbstractController
      */
 
     /**
-     * @Route("/match/{id}", name="detail_match", requirements={"id": "\d+"})
+     * @Route("/match/{id}/{csrf}", name="detail_match", requirements={"id": "\d+"})
      */
-    public function voirMatch($id, MatchRepository $mr){
-        $match = $mr->find($id);
-
+    public function voirMatch($id, $csrf,MatchRepository $mr){
+        if (!$this->isCsrfTokenValid('detail_match_' . $id, $csrf)) {
+            throw $this->createAccessDeniedException('Désolé, votre session a expiré !');
+        } else {
+            $match = $mr->find($id);
+        }
         return $this->render('event/match.html.twig', [
             "match" => $match
         ]);
@@ -73,6 +76,7 @@ class EventController extends AbstractController
                 return $ad < $bd ? -1 : 1;
             }
         });
+
         return $this->render('event/planning.html.twig', [
             "matchs" => $matchs,
             "nbrPoules" => $nbrPoules,
@@ -81,23 +85,26 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/events/{idDiscipline}/{idCompetition}", name="events", requirements={"idDiscipline": "\d+", "idCompetition": "\d+"})
+     * @Route("/events/{idDiscipline}/{idCompetition}/{csrf}", name="events", requirements={"idDiscipline": "\d+", "idCompetition": "\d+"})
      * show all events of one discipline
      */
-    public function getEvents($idDiscipline, $idCompetition, EntityManagerInterface $em, Request $req)
+    public function getEvents($idDiscipline, $idCompetition, $csrf, EntityManagerInterface $em, Request $req)
     {
-        $criteria = AdminController::buildCriteria($req, $em);
-        $eventsFiltered = $em->getRepository(Event::class)->findEventsFiltered($criteria);
-        $events = $em->getRepository(Event::class)->findAll();
-        $competitions = $em->getRepository(Competition::class)->findAll();
-        $disciplines = $em->getRepository(Discipline::class)->findAll();
-        $categories = $em->getRepository(Category::class)->findAll();
-        $types = $em->getRepository(Type::class)->findAll();
-        $rounds = $em->getRepository(Round::class)->findAll();
-        $discipline = $em->getRepository(Discipline::class)->find($idDiscipline);
-        $competition = $em->getRepository(Competition::class)->find($idCompetition);
-        $eventss = $em->getRepository(Event::class)->findBy(["discipline" => $discipline, "competition" => $competition]);
-
+        if (!$this->isCsrfTokenValid('event_events_' . $idDiscipline.$idCompetition,  $csrf)) {
+            throw $this->createAccessDeniedException('Désolé, votre session a expiré !');
+        } else {
+            $criteria = AdminController::buildCriteria($req, $em);
+            $eventsFiltered = $em->getRepository(Event::class)->findEventsFiltered($criteria);
+            $events = $em->getRepository(Event::class)->findAll();
+            $competitions = $em->getRepository(Competition::class)->findAll();
+            $disciplines = $em->getRepository(Discipline::class)->findAll();
+            $categories = $em->getRepository(Category::class)->findAll();
+            $types = $em->getRepository(Type::class)->findAll();
+            $rounds = $em->getRepository(Round::class)->findAll();
+            $discipline = $em->getRepository(Discipline::class)->find($idDiscipline);
+            $competition = $em->getRepository(Competition::class)->find($idCompetition);
+            $eventss = $em->getRepository(Event::class)->findBy(["discipline" => $discipline, "competition" => $competition]);
+        }
         return $this->render('event/events.html.twig', [
             "events" => $events,
             "criteria" => $criteria,
@@ -480,20 +487,22 @@ class EventController extends AbstractController
     public function afficherMultiMatchs($idMatch, $idEvent, EntityManagerInterface $em)
     {
         $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
+
         if (empty($rencontres)) {
             $match = $em->getRepository(Match::class)->find($idMatch);
+
             $matchs = RencontreUtils::multiMatchs($match, $match->getEvent());
             foreach ($matchs as $match) {
                 $em->persist($match);
             }
+
             $em->flush();
             $rencontres = $em->getRepository(Rencontre::class)->recupererRencontresAvecIdMatch($idMatch);
         }
         $event = $em->getRepository(Event::class)->find($idEvent);
         $discipline = $event->getDiscipline()->getId();
         $competition = $event->getCompetition()->getId();
-        dump($discipline);
-        dump($competition);
+
         $rencontre = $rencontres[0];
         return $this->render('admin/rencontres.html.twig', [
             "rencontres" => $rencontres,
@@ -502,5 +511,6 @@ class EventController extends AbstractController
             "competition" => $competition
         ]);
     }
+
 
 }

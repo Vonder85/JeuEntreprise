@@ -56,7 +56,7 @@
             <button class="btn btn-secondary" onclick="window.location='{{ path('admin_edit_event', {'id': event.id}) }}'">Retour</button>
         {% else %}
         <button class="btn btn-secondary"
-                onclick="window.location='{{ path('event_voir_rencontres', {"idEvent": event.id}) }}'">Retour
+                onclick="window.location='{{ path('main') }}'">Retour à l'accueil
         </button>
         {% endif %}
     </div>

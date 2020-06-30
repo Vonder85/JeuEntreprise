@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light text-dark" id="nav-menu">
-    <a class="navbar-brand" href="{{ path('main') }}">SpeedResult</a>
+    <a class="navbar-brand" href="{{ path('main') }}">FFSE  Résultats</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -17,9 +17,9 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     {% if app.user.discipline %}
-                    <a class="dropdown-item" href="{{ path('event_events', {"idDiscipline": app.user.discipline.id, "idCompetition": app.user.competition.id}) }}">Résultats</a>
+                    <a class="dropdown-item" href="{{ path('event_events', {"idDiscipline": app.user.discipline.id, "idCompetition": app.user.competition.id, 'csrf':csrf_token('event_events_'~app.user.discipline.id~app.user.competition.id)}) }}">Résultats</a>
                     {% endif %}
-                    <a class="dropdown-item" href="{{ path('modifier_profil', {"id": app.user.id}) }}">Mon profil</a>
+                    <a class="dropdown-item" href="{{ path('modifier_profil', {"id": app.user.id, 'csrf': csrf_token('modifier_profil_'~app.user.id)}) }}">Mon profil</a>
                     <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
                 </div>
             </li>

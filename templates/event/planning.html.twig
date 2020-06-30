@@ -24,8 +24,12 @@
                         <tbody>
                         {% for match in matchs %}
                             {% if match.participation1.poule == 'A' %}
-                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                    {% if is_granted("ROLE_ADMIN") %}
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% elseif (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% endif %}
                                 {% else %}
                                     <tr>
                                 {% endif %}
@@ -60,8 +64,12 @@
                         <tbody>
                         {% for match in matchs %}
                             {% if match.participation1.poule == 'B' %}
-                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                    {% if is_granted("ROLE_ADMIN") %}
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% elseif (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% endif %}
                                 {% else %}
                                     <tr>
                                 {% endif %}
@@ -96,8 +104,12 @@
                         <tbody>
                         {% for match in matchs %}
                             {% if match.participation1.poule == 'C' %}
-                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                    {% if is_granted("ROLE_ADMIN") %}
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% elseif (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% endif %}
                                 {% else %}
                                     <tr>
                                 {% endif %}
@@ -132,8 +144,12 @@
                         <tbody>
                         {% for match in matchs %}
                             {% if match.participation1.poule == 'D' %}
-                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                    {% if is_granted("ROLE_ADMIN") %}
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% elseif (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% endif %}
                                 {% else %}
                                     <tr>
                                 {% endif %}
@@ -168,8 +184,12 @@
                         <tbody>
                         {% for match in matchs %}
                             {% if match.participation1.poule == 'E' %}
-                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                    {% if is_granted("ROLE_ADMIN") %}
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% elseif (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% endif %}
                                 {% else %}
                                     <tr>
                                 {% endif %}
@@ -204,8 +224,12 @@
                         <tbody>
                         {% for match in matchs %}
                             {% if match.participation1.poule == 'F' %}
-                                {% if  (event.disciplineId == app.user.discipline.id  and event.competitionId == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
-                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                    {% if is_granted("ROLE_ADMIN") %}
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% elseif (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) %}
+                                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    {% endif %}
                                 {% else %}
                                     <tr>
                                 {% endif %}
@@ -242,8 +266,12 @@
                     </thead>
                     <tbody>
                     {% for match in matchs %}
-                        {% if  (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) or   is_granted("ROLE_ADMIN") %}
-                        <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            {% if is_granted("ROLE_ADMIN") %}
+                            <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
+                            {% elseif  (event.discipline.id == app.user.discipline.id  and event.competition.id == app.user.competition.id) %}
+                                <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
+                            {% endif %}
                         {% else %}
                             <tr>
                         {% endif %}
@@ -276,7 +304,7 @@
                     </thead>
                     <tbody>
                     {% for match in matchs %}
-                        <tr onclick="window.location='{% if event.discipline.multiMatchs %}{{ path('event_afficher_multiMatchs',{"idMatch": match.id, "idEvent": event.id}) }}{% else %}{{ path('event_detail_match', {"id": match.id}) }}{% endif %}'">
+                        <tr onclick="window.location='{% if event.discipline.multiMatchs %}{{ path('event_afficher_multiMatchs',{"idMatch": match.id, "idEvent": event.id}) }}{% else %}{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}{% endif %}'">
                             <td>{{ match.participation1.participant.name }}</td>
                             <td>{{ match.participation2.participant.name }}</td>
                             <td>{{ match.field }}</td>
@@ -293,7 +321,7 @@
         {% endif %}
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
             <button class="btn btn-secondary mt-4 mb-4 align-items-center"
-                    onclick="window.location='{{ path('event_events', {"idDiscipline": app.user.discipline.id, "idCompetition": app.user.competition.id}) }}'">
+                    onclick="window.location='{{ path('event_events', {"idDiscipline": app.user.discipline.id, "idCompetition": app.user.competition.id, 'csrf':csrf_token('event_events_'~app.user.discipline.id~app.user.competition.id)}) }}'">
                 Retour
             </button>
         {% else %}

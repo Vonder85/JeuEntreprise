@@ -39,21 +39,25 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/profil/{id}", name="modifier_profil", requirements={"id": "\d+"})
+     * @Route("/profil/{id}/{csrf}", name="modifier_profil", requirements={"id": "\d+"})
      */
-    public function modifierProfil($id, UserRepository $ur, EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder){
-        $user = $ur->find($id);
-        $userForm = $this->createForm(UserType::class, $user);
+    public function modifierProfil($id, $csrf,UserRepository $ur, EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder){
+        if (!$this->isCsrfTokenValid('modifier_profil_' . $id, $csrf)) {
+            throw $this->createAccessDeniedException('Désolé, votre session a expiré !');
+        } else {
+            $user = $ur->find($id);
+            $userForm = $this->createForm(UserType::class, $user);
 
-        $userForm->handleRequest($request);
-        if($userForm->isSubmitted() && $userForm->isValid()){
-            //Hasher le mot de passe
-            $hashed = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hashed);
+            $userForm->handleRequest($request);
+            if ($userForm->isSubmitted() && $userForm->isValid()) {
+                //Hasher le mot de passe
+                $hashed = $encoder->encodePassword($user, $user->getPassword());
+                $user->setPassword($hashed);
 
-            $em->flush();
-            $this->addFlash('success', "Profil modifié");
-            return $this->redirectToRoute('modifier_profil', ["id"=> $id]);
+                $em->flush();
+                $this->addFlash('success', "Profil modifié");
+                return $this->redirectToRoute('modifier_profil', ["id" => $id]);
+            }
         }
         return $this->render('user/profil.html.twig', [
             "userForm" => $userForm->createView(),
