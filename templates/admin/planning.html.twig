@@ -305,7 +305,7 @@
                             <tbody>
                             {% for match in matchs %}
                                 {% if match.participation1.poule == 'A' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
                                         <td>{{ match.participation1.participant.name }}</td>
                                         <td>{{ match.participation2.participant.name }}</td>
                                         <td>{{ match.field }}</td>
@@ -337,7 +337,7 @@
                             <tbody>
                             {% for match in matchs %}
                                 {% if match.participation1.poule == 'B' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
                                         <td>{{ match.participation1.participant.name }}</td>
                                         <td>{{ match.participation2.participant.name }}</td>
                                         <td>{{ match.field }}</td>
@@ -369,7 +369,7 @@
                             <tbody>
                             {% for match in matchs %}
                                 {% if match.participation1.poule == 'C' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
                                         <td>{{ match.participation1.participant.name }}</td>
                                         <td>{{ match.participation2.participant.name }}</td>
                                         <td>{{ match.field }}</td>
@@ -401,7 +401,7 @@
                             <tbody>
                             {% for match in matchs %}
                                 {% if match.participation1.poule == 'D' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
                                         <td>{{ match.participation1.participant.name }}</td>
                                         <td>{{ match.participation2.participant.name }}</td>
                                         <td>{{ match.field }}</td>
@@ -433,7 +433,7 @@
                             <tbody>
                             {% for match in matchs %}
                                 {% if match.participation1.poule == 'E' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
                                         <td>{{ match.participation1.participant.name }}</td>
                                         <td>{{ match.participation2.participant.name }}</td>
                                         <td>{{ match.field }}</td>
@@ -465,7 +465,7 @@
                             <tbody>
                             {% for match in matchs %}
                                 {% if match.participation1.poule == 'F' %}
-                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                                    <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
                                         <td>{{ match.participation1.participant.name }}</td>
                                         <td>{{ match.participation2.participant.name }}</td>
                                         <td>{{ match.field }}</td>
@@ -499,7 +499,7 @@
                         </thead>
                         <tbody>
                         {% for match in matchs %}
-                            <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id}) }}'">
+                            <tr onclick="window.location='{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}'">
                                 <td>{{ match.participation1.participant.name }}</td>
                                 <td>{{ match.participation2.participant.name }}</td>
                                 <td>{{ match.field }}</td>
@@ -529,7 +529,7 @@
                         </thead>
                         <tbody>
                         {% for match in matchs %}
-                            <tr onclick="window.location='{% if event.discipline.multiMatchs%}{{ path('event_afficher_multiMatchs',{"idMatch": match.id, "idEvent": event.id}) }}{% else %}{{ path('event_detail_match', {"id": match.id}) }}{% endif %}'">
+                            <tr onclick="window.location='{% if event.discipline.multiMatchs%}{{ path('event_afficher_multiMatchs',{"idMatch": match.id, "idEvent": event.id}) }}{% else %}{{ path('event_detail_match', {"id": match.id, 'csrf':csrf_token('detail_match_'~match.id)}) }}{% endif %}'">
                                 <td>{{ match.participation1.participant.name }}</td>
                                 <td>{{ match.participation2.participant.name }}</td>
                                 <td>{{ match.field }}</td>
