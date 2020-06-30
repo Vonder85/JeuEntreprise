@@ -3,24 +3,7 @@
 {% block title %}Evènements | {{ parent() }}{% endblock %}
 {% block body %}
     <div class="container">
-        <form class="form-inline mt-4 row justify-content-center" action="{{ path('classement_pays') }}">
-            <label for="competitonClassmeent">Classement par pays :</label>
-            <select name="competitionClassement" class="custom-select custom-select-md mr-3">
-                {% for competition in competitions %}
-                    <option value="{{ competition.id }}" selected>{{ competition.name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Valider</button>
-        </form>
-        <form class="form-inline mt-4 row justify-content-center" action="{{ path('classement_entreprises') }}">
-            <label for="competitonClassmeent">Classement par entreprises :</label>
-            <select name="competitionClassement" class="custom-select custom-select-md mr-3">
-                {% for competition in competitions %}
-                    <option value="{{ competition.id }}" selected>{{ competition.name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Valider</button>
-        </form>
+
         <form class="form-inline mt-4 row justify-content-center" action="">
             {% if criteria.search != '' %}
                 <input type="text" name="search" id="search" class="mr-3 form-control" placeholder="Recherche"
@@ -121,14 +104,15 @@
                 <button class="btn btn-secondary pull-right" type="submit">Rechercher</button>
             </div>
         </form>
-        <table class="table table-striped table-dark mb-4 mt-4">
+        <div class="row">
+        <table class="table table-striped table-dark mb-4 mt-4 col-lg-12">
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Discipline</th>
+                <th scope="col" >Discipline</th>
                 <th scope="col">Nom</th>
                 <th scope="col">Tour</th>
-                <th scope="col">Catégorie</th>
+                <th scope="col" >Catégorie</th>
                 <th scope="col">Type</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -142,10 +126,10 @@
                     <tr onclick="window.location='{{ path('event_show_event', {"idEvent": event.eventId}) }}'">
                 {% endif %}
                 <th scope="row">{{ i }}</th>
-                <td>{{ event.disciplineName }}</td>
+                <td class="hidden-xs">{{ event.disciplineName }}</td>
                 <td>{{ event.eventName }}</td>
                 <td>{{ event.roundName }}</td>
-                <td>{{ event.categoryName }}</td>
+                <td class="hidden-xs">{{ event.categoryName }}</td>
                 <td>{{ event.typeName }}</td>
                 <td>
                     {% if event.published %}
@@ -166,6 +150,7 @@
             {% endfor %}
             </tbody>
         </table>
+        </div>
     </div>
     <div class="text-center">
         <a class="btn btn-primary" href="{{ path('admin_home') }}">Retour</a>

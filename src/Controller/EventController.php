@@ -37,7 +37,8 @@ class EventController extends AbstractController
      */
     public function voirMatch($id, $csrf,MatchRepository $mr){
         if (!$this->isCsrfTokenValid('detail_match_' . $id, $csrf)) {
-            throw $this->createAccessDeniedException('Désolé, votre session a expiré !');
+            //On génère une exception
+            throw $this->createNotFoundException('Vous ne pouvez pas accèder !');
         } else {
             $match = $mr->find($id);
         }
@@ -513,4 +514,13 @@ class EventController extends AbstractController
     }
 
 
+    /**
+     * @Route("/homeClassement/", name="home_classement")
+     */
+    public function homeClassement(EntityManagerInterface $em){
+        $competitions = $em->getRepository(Competition::class)->findAll();
+        return $this->render('competition/homeClassement.html.twig', [
+            "competitions" => $competitions
+        ]);
+    }
 }
