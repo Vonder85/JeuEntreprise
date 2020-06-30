@@ -2495,7 +2495,7 @@ class AdminController extends AbstractController
                         $troisieme = $participationsPoule[$i][$j];
                         $dernier = $participationsPoule[0][sizeof($participationsPoule[0]) - 1];
                         $match = $mr->findMatchWithAnEventand2Participations($event, $troisieme, $dernier);
-                        if(!isset($match[0])) {
+                        if (!isset($match[0])) {
                             $match = $mr->findMatchWithAnEventand2Participations($event, $dernier, $troisieme);
                         }
                         if ($match[0]->getParticipation1() == $troisieme) {
@@ -2506,10 +2506,40 @@ class AdminController extends AbstractController
                             $troisieme->setPointsEncaisses($troisieme->getPointsEncaisses() - $match[0]->getScoreTeam1());
                         }
                         if ($match[0]->getWinner() == $troisieme) {
-                            $troisieme->setPointsClassement($troisieme->getPointsClassement() - 3);
                             $troisieme->setVictory($troisieme->getVictory() - 1);
+
+                            if ($event->getDiscipline()->getName() === "Badminton" || $event->getDiscipline()->getName() === "Squash" || $event->getDiscipline()->getName() === "Tennis" || $event->getDiscipline()->getName() === "Tennis de table" || $event->getDiscipline()->getName() === "Fléchettes") {
+                                $troisieme->setPointsClassement($troisieme->getPointsClassement() - 2);
+                            } elseif ($event->getDiscipline()->getName() === "Volley" || $event->getDiscipline()->getName() === "Beach Volley") {
+                                if ($troisieme == $match[0]->getParticipation1()) {
+                                    if ($match[0]->getScoreTeam1() == 2 && $match[0]->getScoreTeam2() == 0) {
+                                        $troisieme->setPointsClassement($troisieme->getPointsClassement() - 3);
+                                    } elseif ($match[0]->getScoreTeam1() == 2 && $match[0]->getScoreTeam2() == 1) {
+                                        $troisieme->setPointsClassement($troisieme->getPointsClassement() - 2);
+                                    }
+                                }elseif($troisieme == $match[0]->getParticipation2()){
+                                    if ($match[0]->getScoreTeam2() == 2 && $match[0]->getScoreTeam1() == 0) {
+                                        $troisieme->setPointsClassement($troisieme->getPointsClassement() - 3);
+                                    } elseif ($match[0]->getScoreTeam2() == 2 && $match[0]->getScoreTeam1() == 1) {
+                                        $troisieme->setPointsClassement($troisieme->getPointsClassement() - 2);
+                                    }
+                                }
+                            }else{
+                                $troisieme->setPointsClassement($troisieme->getPointsClassement() - 3);
+                            }
                         } elseif ($match[0]->getLooser() == $troisieme) {
                             $troisieme->setDefeat($troisieme->getDefeat() - 1);
+                            if ($event->getDiscipline()->getName() === "Volley" || $event->getDiscipline()->getName() === "Beach Volley"){
+                                if ($troisieme == $match[0]->getParticipation1()) {
+                                    if ($match[0]->getScoreTeam1() == 1  && $match[0]->getScoreTeam2() == 2) {
+                                        $troisieme->setPointsClassement($troisieme->getPointsClassement() - 1);
+                                    }
+                                }elseif($troisieme == $match[0]->getParticipation2()){
+                                    if ($match[0]->getScoreTeam1() == 2 && $match[0]->getScoreTeam2() == 1) {
+                                        $troisieme->setPointsClassement($troisieme->getPointsClassement() - 1);
+                                    }
+                                }
+                            }
                         } else {
                             $troisieme->setPointsClassement($troisieme->getPointsClassement() - 1);
                             $troisieme->setNul($troisieme->getNul() - 1);
@@ -2526,7 +2556,7 @@ class AdminController extends AbstractController
             }
         }
         $match = $mr->findMatchWithAnEventand2Participations($event, $troisieme, $dernier);
-        if(!isset($match[0])) {
+        if (!isset($match[0])) {
             $match = $mr->findMatchWithAnEventand2Participations($event, $dernier, $troisieme);
         }
         if ($match[0]->getParticipation1() == $troisieme) {
@@ -2726,8 +2756,6 @@ class AdminController extends AbstractController
     }
 
 
-
-
     /**
      * @Route("/genererResultats/{idEvent}", name="generer_resultats", requirements={"idEvent": "\d+"})
      */
@@ -2747,22 +2775,23 @@ class AdminController extends AbstractController
      * @Route("/attribuerMedailles/{idEvent}", name="attribuer_medailles", requirements={"idEvent": "\d+"})
      * Fonction qui attribue les medailles pour les event à 1 phase
      */
-    public function attribuerMedailles($idEvent, EntityManagerInterface $em, MatchRepository $mr){
+    public function attribuerMedailles($idEvent, EntityManagerInterface $em, MatchRepository $mr)
+    {
         $participations = $em->getRepository(Participation::class)->findParticipationInAnEventSimple($idEvent);
-        $participations =  (new \App\Utils\EventUtils($mr))->classerParPoints($participations);
+        $participations = (new \App\Utils\EventUtils($mr))->classerParPoints($participations);
 
         $participations[0]->setGoldMedal($participations[0]->getGoldMedal() + 1);
         $participations[1]->setSilverMedal($participations[1]->getSilverMedal() + 1);
         $participations[2]->setBronzeMedal($participations[2]->getBronzeMedal() + 1);
 
-        if($participations[0]->getEvent()->getType()->getName() === 'Tournoi individuel'){
+        if ($participations[0]->getEvent()->getType()->getName() === 'Tournoi individuel') {
             $participations[0]->getParticipant()->getAthlet()->setGoldMedal($participations[0]->getParticipant()->getAthlet()->getGoldMedal() + 1);
             $participations[0]->getParticipant()->getAthlet()->getCompany()->setGoldMedal($participations[0]->getParticipant()->getAthlet()->getCompany()->getGoldMedal() + 1);
             $participations[1]->getParticipant()->getAthlet()->setSilverMedal($participations[1]->getParticipant()->getAthlet()->getSilverMedal() + 1);
             $participations[1]->getParticipant()->getAthlet()->getCompany()->setSilverMedal($participations[1]->getParticipant()->getAthlet()->getCompany()->getSilverMedal() + 1);
             $participations[2]->getParticipant()->getAthlet()->setBronzeMedal($participations[2]->getParticipant()->getAthlet()->getBronzeMedal() + 1);
             $participations[2]->getParticipant()->getAthlet()->getCompany()->setBronzeMedal($participations[2]->getParticipant()->getAthlet()->getCompany()->getBronzeMedal() + 1);
-        }else{
+        } else {
             $participations[0]->getParticipant()->getTeam()->getCompany()->setGoldMedal($participations[0]->getParticipant()->getTeam()->getCompany()->getGoldMedal() + 1);
             $participations[1]->getParticipant()->getTeam()->getCompany()->setSilverMedal($participations[1]->getParticipant()->getTeam()->getCompany()->getSilverMedal() + 1);
             $participations[2]->getParticipant()->getTeam()->getCompany()->setGoldMedal($participations[2]->getParticipant()->getTeam()->getCompany()->getGoldMedal() + 1);
