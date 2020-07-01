@@ -1069,7 +1069,8 @@ class AdminController extends AbstractController
         $aPartir = $request->request->get('aPartir');
 
         RencontreUtils::affectationTerrains($matchs, $nbTerrains, $event, (integer)$aPartir);
-
+        die;
+        return $this->render('admin/create/poule.html.twig');
         $em->flush();
         return $this->redirectToRoute('admin_see_planning_meets', [
             "idEvent" => $idEvent
