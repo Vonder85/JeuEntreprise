@@ -16,3 +16,35 @@
         {{ form_end(userForm) }}
     </div>
 {% endblock %}
+{% block javascripts %}
+    <script>
+        $("#user_password_first").keyup(function(){
+            if($(this).val().length < 6){ // si la chaîne de caractères est inférieure à 5
+                $(this).css({ // on rend le champ rouge
+                    borderColor : 'red',
+                    color : 'red'
+                });
+            }
+            else{
+                $(this).css({ // si tout est bon, on le rend vert
+                    borderColor : 'green',
+                    color : 'green'
+                });
+            }
+        });
+        $("#user_password_second").keyup(function(){
+            if($(this).val() != $("#user_password_first").val()){ // si la confirmation est différente du mot de passe
+                $(this).css({ // on rend le champ rouge
+                    borderColor : 'red',
+                    color : 'red'
+                });
+            }
+            else{
+                $(this).css({ // si tout est bon, on le rend vert
+                    borderColor : 'green',
+                    color : 'green'
+                });
+            }
+        });
+    </script>
+{% endblock %}

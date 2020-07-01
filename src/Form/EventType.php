@@ -62,10 +62,11 @@ class EventType extends AbstractType
             ->add('phase', null, ['label' => 'Nombre de phases'])
             ->add('startAt', DateTimeType::class, ['label' => 'Heure de début'])
             ->add('duration', null, ['label' => 'Durée d\'une rencontre'])
-            ->add('breakRest', null, ['label' => 'Durée pause'])
+            ->add('breakRest', null, ['label' => 'Durée repos'])
+            ->add('endsAt', DateTimeType::class, ['label' => 'Heure de fin'])
             ->add('meridianBreakHour', DateTimeType::class, ['label' => 'Heure de début de la pause méridienne'])
             ->add('meridianBreak', null, ['label' => 'Durée pause méridienne'])
-            ->add('poule', null, ['label' => 'Poules ?'])
+            ->add('poule', null, ['label' => 'Plusieurs poules ?'])
             ->add('nbrFields', null, ['label' => 'Nombre de terrains'])
 
 

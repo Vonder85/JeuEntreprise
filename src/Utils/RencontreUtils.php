@@ -231,7 +231,10 @@ class RencontreUtils
 
             if ($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()) {
                 $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
-            } else {
+            } elseif($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getEndsAt()){
+                $date = $event->getStartAt()->add(new \DateInterval('P1DT0H'));
+                $event->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
+            }  else{
                 $date->sub(new \DateInterval('PT0H' . $timeToAdd . 'M'));
                 $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
             }
@@ -256,6 +259,7 @@ class RencontreUtils
     public static function affectationTerrains($rencontres, $nbrTerrains, $event, $aPartir)
     {
         $timeToAdd = $event->getDuration() + $event->getBreakRest();
+
         //get array of fields
         $j= $aPartir;
         for ($i = 0; $i < $nbrTerrains; $i++) {
@@ -281,10 +285,9 @@ class RencontreUtils
                 }
             } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
 
-
             if ($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()) {
                 $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
-            } else {
+            }else {
                 $date->sub(new \DateInterval('PT0H' . $timeToAdd . 'M'));
                 $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
             }

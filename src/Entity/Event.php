@@ -64,6 +64,11 @@ class Event
     private $startAt;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $endsAt;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $poule;
@@ -223,6 +228,23 @@ class Event
     {
         $this->startAt = $startAt;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEndsAt()
+    {
+        return $this->endsAt;
+    }
+
+    /**
+     * @param mixed $endsAt
+     */
+    public function setEndsAt($endsAt): void
+    {
+        $this->endsAt = $endsAt;
+    }
+
 
     /**
      * @return mixed
