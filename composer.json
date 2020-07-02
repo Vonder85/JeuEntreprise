@@ -32,12 +32,7 @@
         "symfony/validator": "5.0.*",
         "symfony/web-link": "5.0.*",
         "symfony/yaml": "5.0.*",
-        "twig/intl-extra": "^3.0",
-        "doctrine/doctrine-fixtures-bundle": "^3.3",
-        "symfony/debug-pack": "*",
-        "symfony/maker-bundle": "^1.0",
-        "symfony/profiler-pack": "^1.0",
-        "symfony/test-pack": "*"
+        "twig/intl-extra": "^3.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
