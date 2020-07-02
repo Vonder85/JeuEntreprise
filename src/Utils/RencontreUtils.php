@@ -201,7 +201,15 @@ class RencontreUtils
     }
 
     public static function affectationTerrainsPoules($rencontres, $nbrTerrains, $event,$aPartir){
+        $heuredej = clone($event->getMeridianBreakHour());
         $timeToAdd = $event->getDuration() + $event->getBreakRest();
+        $heurefinDej = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
+        $heurefinDej->format('Y-m-d H:i:s');
+        date_format($heurefinDej, 'Y-m-d H:i:s');
+
+        $heurefin = clone($event->getEndsAt());
+
+        $heureDebut = clone($event->getStartAt());
         //get array of fields
         $j= $aPartir;
         for ($i = 0; $i < $nbrTerrains; $i++) {
@@ -229,12 +237,15 @@ class RencontreUtils
             } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
 
 
-            if ($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()) {
-                $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
-            } elseif($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getEndsAt()){
-                $date = $event->getStartAt()->add(new \DateInterval('P1DT0H'));
-                $event->setMeridianBreakHour($event->getMeridianBreakHour()->add(new \DateInterval('P1DT0H')));
-            }  else{
+            if ($date->add(new \DateInterval('PT0H' . $timeToAdd*2 . 'M')) > $heuredej && $date < $heurefinDej) {
+                $date = clone($heurefinDej);
+            }elseif($date->sub(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $heurefin){
+                $date =  clone($heureDebut->add(new \DateInterval('P1DT0H')));
+                $heurefin = clone($heurefin->add(new \DateInterval('P1DT0H')));
+                $heuredej = clone($heuredej->add(new \DateInterval('P1DT0H')));
+                $heurefinDej = clone($heurefinDej->add(new \DateInterval('P1DT0H')));
+
+            }else {
                 $date->sub(new \DateInterval('PT0H' . $timeToAdd . 'M'));
                 $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
             }
@@ -258,7 +269,15 @@ class RencontreUtils
 
     public static function affectationTerrains($rencontres, $nbrTerrains, $event, $aPartir)
     {
+        $heuredej = clone($event->getMeridianBreakHour());
         $timeToAdd = $event->getDuration() + $event->getBreakRest();
+        $heurefinDej = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
+        $heurefinDej->format('Y-m-d H:i:s');
+        date_format($heurefinDej, 'Y-m-d H:i:s');
+
+        $heurefin = clone($event->getEndsAt());
+
+        $heureDebut = clone($event->getStartAt());
 
         //get array of fields
         $j= $aPartir;
@@ -285,13 +304,18 @@ class RencontreUtils
                 }
             } while ($k < sizeof($rencontres) && !empty($rencontres) && !empty($fields));
 
-            if ($date->add(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $event->getMeridianBreakHour()) {
-                $date = $event->getMeridianBreakHour()->add(new \DateInterval('PT0H' . $event->getMeridianBreak() . 'M'));
+            if ($date->add(new \DateInterval('PT0H' . $timeToAdd*2 . 'M')) > $heuredej && $date < $heurefinDej) {
+                $date = clone($heurefinDej);
+            }elseif($date->sub(new \DateInterval('PT0H' . $timeToAdd . 'M')) > $heurefin){
+                $date =  clone($heureDebut->add(new \DateInterval('P1DT0H')));
+                $heurefin = clone($heurefin->add(new \DateInterval('P1DT0H')));
+                $heuredej = clone($heuredej->add(new \DateInterval('P1DT0H')));
+                $heurefinDej = clone($heurefinDej->add(new \DateInterval('P1DT0H')));
+
             }else {
                 $date->sub(new \DateInterval('PT0H' . $timeToAdd . 'M'));
                 $date->add(new \DateInterval('PT0H' . $timeToAdd . 'M'));
             }
-
             $numeroPhase++;
             //get array of fields
             $j = $aPartir;
